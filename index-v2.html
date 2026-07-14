@@ -46,6 +46,15 @@
     .hero-inner{padding:76px 22px 64px !important;min-height:0 !important}
     .rule-bar-inner{justify-content:center !important}
   }
+
+  /* ===== reveal animations ===== */
+  .rv{opacity:0;transform:translateY(26px);transition:opacity 0.9s cubic-bezier(0.22,0.61,0.36,1),transform 0.9s cubic-bezier(0.22,0.61,0.36,1);transition-delay:var(--rd,0s)}
+  .rv.in{opacity:1;transform:none}
+  .hero-zoom img{transform:scale(1.07);transition:transform 3s cubic-bezier(0.22,0.61,0.36,1)}
+  .hero-zoom.in img{transform:scale(1)}
+  @media (prefers-reduced-motion:reduce){
+    .rv,.hero-zoom img{transition:none !important;opacity:1 !important;transform:none !important}
+  }
 </style>
 </head>
 <body>
@@ -347,6 +356,48 @@
       });
     }, { threshold: 0.35 });
     obs.observe(section);
+  });
+</script>
+
+<script>
+  // Entrance animations: hero on load, sections on scroll. No-ops under reduced motion.
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var tag = function (el, i) {
+      if (!el) return;
+      el.classList.add('rv');
+      el.style.setProperty('--rd', ((i || 0) * 0.1) + 's');
+    };
+
+    // --- hero: background settles in, content rises in sequence ---
+    var heroInner = document.querySelector('.hero-inner');
+    if (heroInner) {
+      var hero = heroInner.closest('section');
+      var zoom = hero.firstElementChild;
+      zoom.classList.add('hero-zoom');
+      var seq = [].slice.call(heroInner.children).concat([hero.lastElementChild]);
+      seq.forEach(function (el, i) { tag(el, i); el.style.setProperty('--rd', (0.15 + i * 0.12) + 's'); });
+      requestAnimationFrame(function () { requestAnimationFrame(function () {
+        zoom.classList.add('in');
+        seq.forEach(function (el) { el.classList.add('in'); });
+      }); });
+    }
+
+    // --- scroll reveals ---
+    document.querySelectorAll('h2').forEach(function (h) { tag(h.parentElement, 0); });
+    ['.ix-grid > a', '.how-grid > div', '.rates-grid > div', '.press-bar > *', '.visit-grid > div'].forEach(function (sel) {
+      document.querySelectorAll(sel).forEach(tag);
+    });
+    var custodyLink = document.querySelector('.custody-link');
+    if (custodyLink) [].slice.call(custodyLink.closest('section').firstElementChild.children).forEach(tag);
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.rv:not(.in)').forEach(function (el) { io.observe(el); });
   });
 </script>
 </body>
