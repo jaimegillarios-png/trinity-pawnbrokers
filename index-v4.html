@@ -36,11 +36,12 @@
   [data-hero-motion="still"] .hero-beat-zoom{animation:none !important}
 
   @media(max-width:760px){
-    /* mobile: poster only — no loop */
-    .hero-beat{animation:none !important;opacity:0 !important}
-    .hero-beat-poster{opacity:1 !important}
-    .hero-beat-zoom{animation:none !important;transform:translateX(7%) scale(1.2)}
-    .hero-beat-poster .hero-beat-zoom{transform:translateX(0) scale(1.04)}
+    /* mobile: the loop runs here too — every beat is inlined, so later beats cost no extra fetch.
+       Gentler pans than desktop: a narrow viewport magnifies lateral drift. */
+    @keyframes heroPanMobile{0%{transform:translateX(7%) scale(1.2)}23%{transform:translateX(7%) scale(1.3)}100%{transform:translateX(7%) scale(1.3)}}
+    @keyframes heroPanWideMobile{0%{transform:translateX(0) scale(1.04)}23%{transform:translateX(0) scale(1.12)}100%{transform:translateX(0) scale(1.12)}}
+    .hero-beat-zoom{transform:translateX(7%) scale(1.2);animation-name:heroPanMobile}
+    .hero-beat-poster .hero-beat-zoom{transform:translateX(0) scale(1.04);animation-name:heroPanWideMobile}
     #v4-beat-1{object-position:74% 50%}
   }
   @media (prefers-reduced-motion:reduce){
