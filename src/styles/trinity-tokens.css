@@ -1,0 +1,77 @@
+:root {
+  /* ============ COLOUR ============ */
+  /* Greens */
+  --tr-green-vault:   #10271C; /* hero, statement bands, CTA text */
+  --tr-green-footer:  #0B1D14; /* footer, top rule bar (darkest) */
+  --tr-green-leaf:    #1D3D2C; /* links, hover states */
+
+  /* Golds */
+  --tr-gold-deep:     #8A6B26; /* eyebrows, icons, numerals on light */
+  --tr-gold-mid:      #C9A857; /* gold accents on green, chips */
+  --tr-gold-bright:   #D8B968; /* primary CTA fill, hero italics */
+
+  /* Neutrals */
+  --tr-white:         #FFFFFF; /* alternating bands, cards, fields, masthead */
+  --tr-neutral:       #F5F4F2; /* alternating bands, panels on white, light text on green */
+  --tr-warm-panel:    #FAF8F3; /* form card on green, card hover on light */
+  --tr-ink:           #1B1F1C; /* body text */
+
+  /* Support / status */
+  --tr-success:       #5FA982; /* confirm/tick colour (comparison ticks, reassurance) */
+
+  /* Text on dark green (ivory ramp) */
+  --tr-on-green-strong: rgba(245,241,230,0.85);
+  --tr-on-green:        rgba(245,241,230,0.72);
+  --tr-on-green-muted:  rgba(245,241,230,0.65);
+  --tr-on-green-faint:  rgba(245,241,230,0.60);
+
+  /* Ink opacity ramp (text on light) */
+  --tr-ink-80: rgba(27,31,28,0.80);
+  --tr-ink-72: rgba(27,31,28,0.72);
+  --tr-ink-68: rgba(27,31,28,0.68);
+  --tr-ink-62: rgba(27,31,28,0.62);
+  --tr-ink-45: rgba(27,31,28,0.45);
+
+  /* Hairlines / borders */
+  --tr-line-soft:  rgba(27,31,28,0.14); /* section dividers */
+  --tr-line:       rgba(27,31,28,0.16); /* card borders */
+  --tr-line-card:  rgba(27,31,28,0.18);
+  --tr-line-strong:rgba(27,31,28,0.30);
+  --tr-line-gold:  rgba(138,107,38,0.40); /* gold hairline / gold-bordered card */
+
+  /* ============ TYPE ============ */
+  --tr-font-display: 'Cormorant Garamond', Georgia, serif; /* headings, statements, stat figures */
+  --tr-font-body:    'Archivo', Arial, sans-serif;         /* body, UI, buttons */
+  --tr-font-caps:    'Jost', sans-serif;                   /* eyebrows, micro-caps, rule bars */
+
+  /* Type ramp — size / line-height. Family + weight noted in DESIGN_SYSTEM.md */
+  --tr-display: clamp(46px, 5.4vw, 76px)/1.06; /* Cormorant 500 — homepage hero only */
+  --tr-h1:      clamp(40px, 4.6vw, 64px)/1.08; /* Cormorant 500 — interior heroes */
+  --tr-h2:      38px/1.15;                      /* Cormorant 500 — EVERY section heading */
+  --tr-stat:    32px/1.15;                      /* Cormorant 500 — stat figures */
+  --tr-h3:      24px/1.25;                      /* Cormorant 600 — card headings */
+  --tr-h4:      20px/1.3;                       /* Cormorant 600 — step titles, FAQ questions */
+  --tr-quote:   clamp(24px, 2.6vw, 30px)/1.5;   /* Cormorant 500 — pull-quotes on green */
+  --tr-body-lg: 17px/1.7;                       /* Archivo 400 — intros */
+  --tr-body:    16px/1.7;                       /* Archivo 400 — section body */
+  --tr-body-sm: 14.5px/1.6;                     /* Archivo 400 — card body */
+  --tr-label:   15px/1.45;                      /* Archivo 400 — form labels */
+  --tr-caption: 13.5px/1.6;                     /* Archivo 400 — legal, footnotes */
+  --tr-eyebrow-size: 13px;  --tr-eyebrow-track: 0.28em; /* Jost 500 caps, deep gold */
+  --tr-microcaps-size: 12.5px; --tr-microcaps-track: 0.14em; /* Jost 500 caps */
+
+  /* ============ SPACE & SHAPE ============ */
+  --tr-container: 1240px;   /* max content width */
+  --tr-reading:   860px;    /* narrow reading column */
+  --tr-pad-side:  28px;
+  --tr-section-top:    104px;
+  --tr-section-bottom: 110px;
+  --tr-gap-card:  20px;
+  --tr-gap-col:   56px;     /* column gaps range 48–64 */
+
+  --tr-radius:     3px;     /* buttons, cards, fields */
+  --tr-radius-chip:2px;
+
+  --tr-shadow-on-green: 0 24px 48px rgba(0,0,0,0.35);   /* floating card on green */
+  --tr-shadow-on-light: 0 14px 28px rgba(16,39,28,0.10);/* floating card on light (.08–.12) */
+}
