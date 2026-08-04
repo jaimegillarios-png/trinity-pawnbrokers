@@ -94,44 +94,73 @@
 }
 .step-pane { display: flex; flex-direction: column; gap: 14px; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.tr-label {
+/* ---- field: the label sits inside the field, above the value ---------------
+   Compact, modern treatment — one bordered box per field, micro-caps label on
+   the top line, value beneath. The whole box reacts to :focus-within. */
+.tr-field {
   display: block;
-  font: 400 var(--tr-label) var(--tr-font-body);
-  color: var(--tr-ink-80);
-  margin-bottom: 7px;
-}
-.tr-label__opt { text-transform: none; letter-spacing: 0; color: var(--tr-ink-45); }
-input, select, textarea {
-  font-family: var(--tr-font-body);
-  font-size: 16px;
-  color: var(--tr-ink);
+  position: relative;
   background: var(--tr-white);
   border: 1px solid var(--tr-line-strong);
   border-radius: var(--tr-radius);
-  padding: 14px;
+  padding: 9px 14px 10px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.tr-field:hover { border-color: var(--tr-ink-45); }
+.tr-field:focus-within {
+  border-color: var(--tr-gold-deep);
+  box-shadow: 0 0 0 2px var(--tr-focus-ring);
+}
+.tr-field__label {
+  display: block;
+  font: 500 10.5px/1 var(--tr-font-caps);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tr-ink-62);
+  margin: 0 0 5px;
+}
+.tr-field__label .tr-label__opt { color: var(--tr-ink-45); letter-spacing: 0.14em; }
+.tr-field input,
+.tr-field select {
+  display: block;
   width: 100%;
   box-sizing: border-box;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font: 400 16px/1.35 var(--tr-font-body);
+  color: var(--tr-ink);
 }
-select { appearance: none; -webkit-appearance: none; padding-right: 44px; }
-/* Chevron drawn in CSS rather than an SVG data URI, so it takes the gold token. */
-.tr-select { position: relative; display: block; }
-.tr-select::after {
+.tr-field input:focus,
+.tr-field select:focus { outline: none; }
+.tr-field input::placeholder { color: var(--tr-ink-45); }
+
+/* select: native chrome off, chevron drawn in CSS so it takes the gold token */
+.tr-field--select select { appearance: none; -webkit-appearance: none; padding-right: 26px; cursor: pointer; }
+.tr-field--select::after {
   content: "";
   position: absolute;
-  right: 18px;
-  top: 50%;
+  right: 15px;
+  bottom: 17px; /* centres on the value row, not the whole field */
   width: 7px;
   height: 7px;
   border-right: 1.5px solid var(--tr-gold-deep);
   border-bottom: 1.5px solid var(--tr-gold-deep);
-  transform: translateY(-70%) rotate(45deg);
+  transform: rotate(45deg);
   pointer-events: none;
 }
-input:focus, select:focus, textarea:focus {
-  outline: 2px solid var(--tr-focus-ring);
-  outline-offset: 0;
-  border-color: var(--tr-gold-deep);
+
+/* standalone label (e.g. "Add photos", which labels a drop zone, not a field) */
+.tr-label {
+  display: block;
+  font: 500 10.5px/1 var(--tr-font-caps);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tr-ink-62);
+  margin: 0 0 7px;
 }
+.tr-label__opt { text-transform: none; letter-spacing: 0; color: var(--tr-ink-45); }
 .tr-dropzone {
   border: 1.5px dashed var(--tr-dashed);
   border-radius: var(--tr-radius);
