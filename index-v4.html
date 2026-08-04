@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="src/styles/trinity-tokens.css">
+<link rel="stylesheet" href="src/styles/trinity-components.css">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Archivo:wght@400;500;600;700&family=Jost:wght@500;600&display=swap" rel="stylesheet">
 <style>
   /* Derived from the design tokens — see docs/WORKFLOW.md */
@@ -65,8 +66,6 @@
   }
 
   /* ===== hover states (ported from the design's style-hover attributes) ===== */
-  .nav-link{transition:color 0.2s ease}
-  .nav-link:hover{color:var(--tr-green-leaf)}
   .ix-card{transition:background 0.25s ease}
   .ix-card:hover{background:var(--tr-neutral);color:var(--tr-ink)}
   .ix-dark{transition:background 0.25s ease}
@@ -108,34 +107,31 @@
 <body>
 
 <!-- ===== TOP RULE BAR ===== -->
-<div style="background:var(--tr-green-footer);color:var(--tr-on-green);font:500 11px/1 'Jost',sans-serif;letter-spacing:0.22em;text-transform:uppercase">
-  <div class="rule-bar-inner" style="max-width:1240px;margin:0 auto;padding:9px 28px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap">
+<div class="rule-bar">
+  <div class="rule-bar-inner">
     <span>Pawnbrokers · Est. 2013 · City of London</span>
-    <span style="color:var(--tr-gold-mid)">FCA-regulated · Ref 741896</span>
+    <span class="rule-bar__reg">FCA-regulated · Ref 741896</span>
   </div>
 </div>
 
 <!-- ===== MASTHEAD ===== -->
-<header style="background:var(--tr-white);border-bottom:1px solid var(--tr-line-soft)">
-  <div class="masthead-grid" style="max-width:1240px;margin:0 auto;padding:26px 28px 22px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px">
-    <nav style="display:flex;gap:24px;font:600 12.5px/1 'Archivo',sans-serif;letter-spacing:0.14em;text-transform:uppercase">
-      <a href="#index" class="nav-link" style="color:var(--tr-ink);text-decoration:none">What we lend against</a>
-      <a href="#how" class="nav-link" style="color:var(--tr-ink);text-decoration:none">How it works</a>
+<header class="masthead">
+  <div class="masthead-grid">
+    <nav>
+      <a href="#index" class="tr-navlink">What we lend against</a>
+      <a href="#how" class="tr-navlink">How it works</a>
     </nav>
-    <a href="#" style="text-decoration:none;color:var(--tr-ink);text-align:center;display:block">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:2.26px;margin-bottom:9px">
-        <span style="width:9px;height:9px;border-radius:50%;background:var(--tr-gold-deep);display:block"></span>
-        <div style="display:flex;gap:4px">
-          <span style="width:9px;height:9px;border-radius:50%;background:var(--tr-gold-deep);display:block"></span>
-          <span style="width:9px;height:9px;border-radius:50%;background:var(--tr-gold-deep);display:block"></span>
-        </div>
-      </div>
-      <div style="font:600 30px/1 'Cormorant Garamond',Georgia,serif;letter-spacing:0.2em;text-transform:uppercase">Trinity</div>
-      <div style="font:600 9px/1.9 'Archivo',sans-serif;letter-spacing:0.42em;text-transform:uppercase;margin-top:6px;color:var(--tr-ink-72);text-align:center;line-height:14.1px">Pawnbrokers</div>
+    <a href="index-v4.html" class="tr-wordmark">
+      <span class="tr-mark" aria-hidden="true">
+        <span></span>
+        <span class="tr-mark__pair"><span></span><span></span></span>
+      </span>
+      <span class="tr-wordmark__name">Trinity</span>
+      <span class="tr-wordmark__sub">Pawnbrokers</span>
     </a>
-    <nav style="display:flex;gap:24px;justify-content:flex-end;align-items:center;font:600 12.5px/1 'Archivo',sans-serif;letter-spacing:0.14em;text-transform:uppercase">
-      <a href="#" class="nav-link" style="color:var(--tr-ink);text-decoration:none">Trust &amp; security</a>
-      <a href="tel:+442035671300" style="color:var(--tr-green-leaf);text-decoration:none;border:1px solid var(--v4-leaf-border);padding:9px 14px;border-radius:3px">020 3567 1300</a>
+    <nav>
+      <a href="#" class="tr-navlink">Trust &amp; security</a>
+      <a href="tel:+442035671300" class="tr-phone-btn">020 3567 1300</a>
     </nav>
   </div>
 </header>
@@ -414,17 +410,14 @@
 </section>
 
 <!-- ===== FOOTER ===== -->
-<footer style="background:var(--tr-green-footer);color:var(--tr-on-green-faint);padding:66px 28px 78px;font-size:13px;line-height:1.7;text-align:center;display:flex;flex-direction:column;align-items:center">
-  <div style="display:flex;flex-direction:column;align-items:center;gap:2.19px;margin-bottom:8px">
-    <span style="width:6.3px;height:6.3px;border-radius:50%;background:var(--tr-gold-mid);display:block"></span>
-    <div style="display:flex;gap:3.5px">
-      <span style="width:6.3px;height:6.3px;border-radius:50%;background:var(--tr-gold-mid);display:block"></span>
-      <span style="width:6.3px;height:6.3px;border-radius:50%;background:var(--tr-gold-mid);display:block"></span>
-    </div>
-  </div>
-  <div style="font:600 21px/1 'Cormorant Garamond',Georgia,serif;letter-spacing:0.2em;text-transform:uppercase;color:var(--tr-neutral)">Trinity</div>
-  <div style="font:600 6.3px/1.9 'Archivo',sans-serif;letter-spacing:0.42em;text-transform:uppercase;margin-top:4.2px;color:var(--tr-on-green-faint)">Pawnbrokers</div>
-  <div style="max-width:760px;margin:22px auto 0">Trinity Pawnbrokers and Unbolted are trading names of Open Access Finance Ltd, authorised and regulated by the Financial Conduct Authority (ref 741896). Registered in England &amp; Wales. Loans are secured against your goods (pawn loans). [Full regulatory footer subject to compliance sign-off.]</div>
+<footer class="tr-footer">
+  <span class="tr-mark" aria-hidden="true">
+    <span></span>
+    <span class="tr-mark__pair"><span></span><span></span></span>
+  </span>
+  <div class="tr-footer__name">Trinity</div>
+  <div class="tr-footer__sub">Pawnbrokers</div>
+  <div class="tr-footer__legal">Trinity Pawnbrokers and Unbolted are trading names of Open Access Finance Ltd, authorised and regulated by the Financial Conduct Authority (ref 741896). Registered in England &amp; Wales. Loans are secured against your goods (pawn loans). [Full regulatory footer subject to compliance sign-off.]</div>
 </footer>
 
 <script>

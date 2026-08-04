@@ -1,0 +1,284 @@
+/* ==========================================================================
+   Trinity — global components
+   The chrome and primitives shared by EVERY Trinity page: rule bar, masthead,
+   wordmark, footer, bands, type roles, buttons, links, chip, card, ledger.
+
+   Import order on any page:  trinity-tokens.css -> trinity-components.css -> <page>.css
+   Every value resolves to a token. Change a component here and it changes
+   on all pages — that is the point (docs/WORKFLOW.md).
+   ========================================================================== */
+
+:root {
+  /* ---- Derived from system tokens (tints / alphas the system doesn't name) ---- */
+  --tr-gold-tint:      color-mix(in srgb, var(--tr-gold-mid) 8%, transparent);   /* Trinity column ground */
+  --tr-line-gold-mid:  color-mix(in srgb, var(--tr-gold-mid) 40%, transparent);  /* gold column rules */
+  --tr-line-gold-soft: color-mix(in srgb, var(--tr-gold-deep) 18%, transparent); /* inner gold hairline */
+  --tr-line-gold-firm: color-mix(in srgb, var(--tr-gold-deep) 55%, transparent); /* ledger total rule */
+  --tr-focus-ring:     color-mix(in srgb, var(--tr-gold-deep) 55%, transparent);
+  --tr-dashed:         color-mix(in srgb, var(--tr-gold-deep) 50%, transparent);
+  --tr-line-ledger:    color-mix(in srgb, var(--tr-ink) 22%, transparent);       /* ledger rows */
+  --tr-line-table:     color-mix(in srgb, var(--tr-ink) 20%, transparent);       /* table head rule */
+  --tr-ghost-border:   color-mix(in srgb, var(--tr-gold-bright) 55%, transparent);
+  --tr-ghost-bg:       color-mix(in srgb, var(--tr-green-footer) 35%, transparent);
+  --tr-leaf-border:    color-mix(in srgb, var(--tr-green-leaf) 50%, transparent);
+  --tr-leaf-underline: color-mix(in srgb, var(--tr-green-leaf) 40%, transparent);
+  --tr-trust-bg:       color-mix(in srgb, var(--tr-green-footer) 72%, transparent);
+  --tr-trust-rule:     color-mix(in srgb, var(--tr-gold-bright) 35%, transparent);
+  --tr-rule-on-green:  color-mix(in srgb, var(--tr-neutral) 14%, transparent);
+  --tr-rule-on-green-2:color-mix(in srgb, var(--tr-gold-bright) 18%, transparent);
+
+  /* Hero scrim — the vault green at four depths */
+  --tr-hero-scrim: linear-gradient(100deg,
+    color-mix(in srgb, var(--tr-green-vault) 96%, transparent) 0%,
+    color-mix(in srgb, var(--tr-green-vault) 88%, transparent) 40%,
+    color-mix(in srgb, var(--tr-green-vault) 50%, transparent) 66%,
+    color-mix(in srgb, var(--tr-green-footer) 22%, transparent) 100%);
+}
+
+
+/* ========================= base ========================= */
+body {
+  margin: 0;
+  background: var(--tr-neutral);
+  color: var(--tr-ink);
+  font-family: var(--tr-font-body);
+  font: var(--tr-body) var(--tr-font-body);
+}
+a { color: var(--tr-green-leaf); }
+a:hover { color: var(--tr-gold-deep); }
+h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 0; }
+
+/* ========================= band / layout ========================= */
+.tr-band { border-bottom: 1px solid var(--tr-line-soft); }
+.tr-band--white { background: var(--tr-white); }
+.tr-band--grey  { background: var(--tr-neutral); }
+.tr-band--green { background: var(--tr-green-vault); color: var(--tr-neutral); border-bottom: 0; }
+.tr-inner {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: var(--tr-section-top) var(--tr-pad-side) var(--tr-section-bottom);
+}
+.tr-inner--narrow { max-width: var(--tr-reading); }
+
+/* ========================= type roles ========================= */
+.tr-eyebrow {
+  font: 500 var(--tr-eyebrow-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-eyebrow-track);
+  text-transform: uppercase;
+  color: var(--tr-gold-deep);
+  margin-bottom: 14px;
+}
+.tr-eyebrow--on-green { color: var(--tr-gold-mid); }
+.tr-h1 {
+  font: 500 var(--tr-h1) var(--tr-font-display);
+  color: var(--tr-neutral);
+  margin: 22px 0 20px;
+  max-width: 16ch;
+  text-wrap: pretty;
+}
+.tr-h1 em { font-style: italic; color: var(--tr-gold-bright); }
+.tr-h2 {
+  font: 500 var(--tr-h2) var(--tr-font-display);
+  color: var(--tr-green-vault);
+  text-wrap: pretty;
+}
+.tr-h2--on-green { color: var(--tr-neutral); }
+.tr-h3 { font: 600 var(--tr-h3) var(--tr-font-display); color: var(--tr-green-vault); text-wrap: pretty; }
+.tr-h4 { font: 600 var(--tr-h4) var(--tr-font-display); color: var(--tr-green-vault); }
+.tr-intro { font: 400 var(--tr-body-lg) var(--tr-font-body); color: var(--tr-ink-72); max-width: 64ch; text-wrap: pretty; }
+.tr-body  { font: 400 var(--tr-body) var(--tr-font-body); color: var(--tr-ink-72); text-wrap: pretty; }
+.tr-body-sm { font: 400 var(--tr-body-sm) var(--tr-font-body); color: var(--tr-ink-68); }
+.tr-caption { font: 400 var(--tr-caption) var(--tr-font-body); color: var(--tr-ink-62); text-wrap: pretty; }
+.tr-microcaps {
+  font: 500 var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
+  text-transform: uppercase;
+  color: var(--tr-gold-deep);
+}
+.tr-stat { font: 500 var(--tr-stat) var(--tr-font-display); color: var(--tr-green-vault); }
+
+/* ========================= buttons & links ========================= */
+.tr-cta {
+  display: inline-block;
+  font: 700 13px/1 var(--tr-font-body);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  border-radius: var(--tr-radius);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.tr-cta--gold { color: var(--tr-green-vault); background: var(--tr-gold-bright); padding: 18px 34px; }
+.tr-cta--gold:hover { background: var(--tr-gold-mid); color: var(--tr-green-vault); }
+.tr-cta--ghost {
+  color: var(--tr-neutral);
+  background: var(--tr-ghost-bg);
+  border: 1px solid var(--tr-ghost-border);
+  padding: 17px 30px;
+}
+.tr-cta--ghost:hover { border-color: var(--tr-gold-bright); color: var(--tr-gold-bright); }
+.tr-cta--block { width: 100%; }
+
+.tr-phone-btn {
+  color: var(--tr-green-leaf);
+  text-decoration: none;
+  border: 1px solid var(--tr-leaf-border);
+  padding: 9px 14px;
+  border-radius: var(--tr-radius);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.tr-phone-btn:hover { background: var(--tr-green-vault); color: var(--tr-neutral); border-color: var(--tr-green-vault); }
+
+.tr-navlink { color: var(--tr-ink); text-decoration: none; transition: color 0.2s ease; }
+.tr-navlink:hover {
+  color: var(--tr-green-leaf);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 1px;
+}
+.tr-inline-link {
+  font: 400 var(--tr-body) var(--tr-font-body);
+  color: var(--tr-green-leaf);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--tr-leaf-underline);
+}
+
+/* ========================= confirm chip ========================= */
+.confirm-chip {
+  display: inline-block;
+  font: 600 10px/1 var(--tr-font-body);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--tr-gold-mid);
+  color: var(--tr-green-vault);
+  border-radius: var(--tr-radius-chip);
+  padding: 3px 6px;
+  vertical-align: middle;
+}
+[data-confirm-notes="off"] .confirm-chip { display: none !important; }
+
+/* ========================= card (non-clickable — no hover) ========================= */
+.tr-card {
+  background: var(--tr-white);
+  border: 1px solid var(--tr-line);
+  border-radius: var(--tr-radius);
+  padding: 32px 32px 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tr-card__icon { font-size: 36px; color: var(--tr-gold-deep); line-height: 1; margin-bottom: 20px; }
+.tr-card--panel { padding: 36px 38px 38px; gap: 0; }
+
+/* ========================= ledger ========================= */
+.tr-ledger { display: flex; flex-direction: column; margin-top: 26px; }
+.tr-ledger__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  padding: 15px 0;
+  border-top: 1px solid var(--tr-line-ledger);
+}
+.tr-ledger__row--last { border-bottom: 1px solid var(--tr-line-ledger); }
+.tr-ledger__row--total { border-top: 1px solid var(--tr-line-gold-firm); padding: 17px 0 0; }
+.tr-ledger__label {
+  font: 500 12.5px/1 var(--tr-font-caps);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tr-ink-62);
+}
+.tr-ledger__row--total .tr-ledger__label { color: var(--tr-gold-deep); }
+.tr-ledger__value { font: 500 24px/1 var(--tr-font-display); color: var(--tr-green-vault); }
+.tr-ledger__value--sm { font-size: 20px; }
+.tr-ledger__value--total { font: 600 30px/1 var(--tr-font-display); color: var(--tr-gold-deep); }
+
+/* ========================= rule bar ========================= */
+.rule-bar {
+  background: var(--tr-green-footer);
+  color: var(--tr-on-green);
+  font: 500 11px/1 var(--tr-font-caps);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.rule-bar-inner {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 9px var(--tr-pad-side);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.rule-bar__reg { color: var(--tr-gold-mid); }
+
+/* ========================= masthead ========================= */
+.masthead { background: var(--tr-white); border-bottom: 1px solid var(--tr-line-soft); }
+.masthead-grid {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 26px var(--tr-pad-side) 22px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 20px;
+}
+.masthead-grid nav {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  font: 600 12.5px/1 var(--tr-font-body);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.masthead-grid nav:last-of-type { justify-content: flex-end; }
+.tr-wordmark { text-decoration: none; color: var(--tr-ink); text-align: center; display: block; }
+/* Three-ball mark: one above, two below. The dot rule must not also match the
+   pair wrapper, or it would out-specify its `display:flex` and stack all three. */
+.tr-mark { display: flex; flex-direction: column; align-items: center; gap: 2.26px; margin-bottom: 9px; }
+.tr-mark__pair { display: flex; gap: 4px; }
+.tr-mark > span:not(.tr-mark__pair),
+.tr-mark__pair > span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--tr-gold-deep);
+  display: block;
+}
+.tr-wordmark__name {
+  display: block;
+  font: 600 30px/1 var(--tr-font-display);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.tr-wordmark__sub {
+  display: block;
+  font: 600 9px/1.9 var(--tr-font-body);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  margin-top: 6px;
+  color: var(--tr-ink-72);
+  line-height: 14.1px;
+}
+
+/* ========================= footer ========================= */
+.tr-footer {
+  background: var(--tr-green-footer);
+  color: var(--tr-on-green-faint);
+  padding: 66px var(--tr-pad-side) 78px;
+  font: 400 13px/1.7 var(--tr-font-body);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tr-footer .tr-mark { gap: 2.19px; margin-bottom: 8px; }
+.tr-footer .tr-mark__pair { gap: 3.5px; }
+.tr-footer .tr-mark > span:not(.tr-mark__pair),
+.tr-footer .tr-mark__pair > span { width: 6.3px; height: 6.3px; background: var(--tr-gold-mid); }
+.tr-footer__name { font: 600 21px/1 var(--tr-font-display); letter-spacing: 0.2em; text-transform: uppercase; color: var(--tr-neutral); }
+.tr-footer__sub { font: 600 6.3px/1.9 var(--tr-font-body); letter-spacing: 0.42em; text-transform: uppercase; margin-top: 4.2px; color: var(--tr-on-green-faint); }
+.tr-footer__legal { max-width: var(--tr-reading); margin: 22px auto 0; }
+
