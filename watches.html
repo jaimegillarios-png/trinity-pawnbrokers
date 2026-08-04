@@ -18,11 +18,12 @@
 <link rel="stylesheet" href="src/styles/asset-page.css">
 
 <script src="https://widget.reviews.co.uk/badge-modern/dist.js" defer></script>
+<script src="src/scripts/trinity-reveal.js" defer></script>
 <script src="src/scripts/asset-page.js" defer></script>
 </head>
 
 <!-- Set data-confirm-notes="off" to hide every amber compliance chip at launch. -->
-<body data-confirm-notes="on">
+<body data-confirm-notes="on" data-reveal=".lend-grid > *, .borrow-grid > *, .how-grid > .how-step, .value-points > *, .compare-grid > *, .proof-grid > *, .faq-item, .rep-card, .closing-inner > *">
 
 <!-- ===== 1. TOP RULE BAR ===== -->
 <div class="rule-bar">
@@ -62,7 +63,7 @@
   <div class="hero__scrim"></div>
 
   <div class="hero-grid">
-    <div class="hero-copy">
+    <div class="hero-copy" data-reveal-hero>
       <p class="tr-eyebrow">Pawnbroker loans against luxury watches · City of London · Est. 2013</p>
       <h1 id="hero-title" class="tr-h1">Borrow against your watch. <em>Wear it again</em> when you repay.</h1>
       <p class="hero__intro">Trinity makes pawn loans against luxury watches — Rolex, Patek Philippe, Audemars Piguet, Omega, Cartier and more — from £500 with no maximum. Valued by specialists, insured door to door, held securely in the City of London, and returned to you exactly as you left it when you repay.</p>
@@ -74,7 +75,7 @@
     </div>
 
     <!-- Valuation entry — the conversion object -->
-    <div id="value-form" class="hero-form-card" data-valuation-form>
+    <div id="value-form" class="hero-form-card" data-valuation-form data-reveal-skip>
       <h2>What is your watch worth as a loan?</h2>
       <p class="hero-form-card__intro">Tell us the make, model and condition, and send a few photos. A watch specialist reviews it against the current market and comes back with an indicative offer the same day — at no cost, and with no obligation.</p>
 

@@ -282,3 +282,18 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
 .tr-footer__sub { font: 600 6.3px/1.9 var(--tr-font-body); letter-spacing: 0.42em; text-transform: uppercase; margin-top: 4.2px; color: var(--tr-on-green-faint); }
 .tr-footer__legal { max-width: var(--tr-reading); margin: 22px auto 0; }
 
+
+/* ========================= entrance animations ========================= */
+/* Driven by src/scripts/trinity-reveal.js. The hidden state is applied by JS,
+   so with JS off nothing is ever stuck invisible. */
+.rv {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.9s cubic-bezier(0.22, 0.61, 0.36, 1),
+              transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: var(--rd, 0s);
+}
+.rv.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .rv { transition: none !important; opacity: 1 !important; transform: none !important; }
+}

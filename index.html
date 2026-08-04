@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="src/styles/trinity-tokens.css">
 <link rel="stylesheet" href="src/styles/trinity-components.css">
+<script src="src/scripts/trinity-reveal.js" defer></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Archivo:wght@400;500;600;700&family=Jost:wght@500;600&display=swap" rel="stylesheet">
 <style>
   /* Derived from the design tokens — see docs/WORKFLOW.md */
@@ -76,11 +77,6 @@
   .press-img:hover{transform:translateY(-3px);opacity:1}
 
   /* ===== reveal animations ===== */
-  .rv{opacity:0;transform:translateY(26px);transition:opacity 0.9s cubic-bezier(0.22,0.61,0.36,1),transform 0.9s cubic-bezier(0.22,0.61,0.36,1);transition-delay:var(--rd,0s)}
-  .rv.in{opacity:1;transform:none}
-  @media (prefers-reduced-motion:reduce){
-    .rv{transition:none !important;opacity:1 !important;transform:none !important}
-  }
 
   /* ===== responsive ===== */
   @media(max-width:1100px){
@@ -104,7 +100,7 @@
   }
 </style>
 </head>
-<body>
+<body data-reveal=".collage-grid > a, .how-grid > div, .rates-grid > div, .press-logos > img, .visit-grid > div, .custody-inner > *">
 
 <!-- ===== TOP RULE BAR ===== -->
 <div class="rule-bar">
@@ -331,7 +327,7 @@
 
 <!-- ===== CUSTODY STATEMENT ===== -->
 <section style="background:var(--tr-green-vault);color:var(--tr-neutral)">
-  <div style="max-width:900px;margin:0 auto;padding:110px 28px;text-align:center;display:flex;flex-direction:column;align-items:center">
+  <div class="custody-inner" style="max-width:900px;margin:0 auto;padding:110px 28px;text-align:center;display:flex;flex-direction:column;align-items:center">
     <div style="display:flex;flex-direction:column;align-items:center;gap:2.99px;margin-bottom:26px">
       <span style="width:10px;height:10px;border-radius:50%;background:var(--tr-gold-mid);display:block"></span>
       <div style="display:flex;gap:5px">
@@ -437,37 +433,6 @@
       howObs.observe(how);
     }
 
-    // Entrance animations: hero content on load, sections on scroll.
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    var tag = function (el, i) {
-      if (!el) return;
-      el.classList.add('rv');
-      el.style.setProperty('--rd', ((i || 0) * 0.1) + 's');
-    };
-
-    var heroInner = document.querySelector('.hero-inner');
-    if (heroInner) {
-      var seq = [].slice.call(heroInner.children);
-      seq.forEach(function (el, i) { tag(el, i); el.style.setProperty('--rd', (0.15 + i * 0.12) + 's'); });
-      requestAnimationFrame(function () { requestAnimationFrame(function () {
-        seq.forEach(function (el) { el.classList.add('in'); });
-      }); });
-    }
-
-    document.querySelectorAll('h2').forEach(function (h) { tag(h.parentElement, 0); });
-    ['.collage-grid > a', '.how-grid > div', '.rates-grid > div', '.press-logos > img', '.visit-grid > div'].forEach(function (sel) {
-      document.querySelectorAll(sel).forEach(tag);
-    });
-    var custodyLink = document.querySelector('.custody-link');
-    if (custodyLink) [].slice.call(custodyLink.parentElement.children).forEach(tag);
-
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-      });
-    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.rv:not(.in)').forEach(function (el) { io.observe(el); });
   });
 </script>
 </body>
