@@ -16,7 +16,7 @@ export default {
 
   hero: {
     image: { src: 'images/v2/jewellery.jpg', alt: 'A ring examined under a jeweller’s loupe' },
-    eyebrow: 'Pawnbroker loans against jewellery · City of London · Est. 2013',
+    eyebrow: 'Pawnbroker loans against jewellery<br>City of London · Est. 2013',
     heading: 'Borrow against your jewellery. <em>Wear it again</em> when you repay.',
     intro: 'Trinity makes pawn loans against jewellery — rings, necklaces, bracelets and earrings, period and modern, signed and unsigned — from £500 with no maximum. Valued piece by piece by specialists, insured door to door, held securely in the City of London, and returned to you exactly as you left it when you repay.',
     ctaPrimary: { label: 'Value my piece', href: '#value-form' },

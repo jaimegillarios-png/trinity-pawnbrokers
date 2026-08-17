@@ -16,7 +16,7 @@ export default {
 
   hero: {
     image: { src: 'images/v2/silver.jpg', alt: 'Silver bars and coins in low light' },
-    eyebrow: 'Pawnbroker loans against silver · City of London · Est. 2013',
+    eyebrow: 'Pawnbroker loans against silver<br>City of London · Est. 2013',
     heading: 'Borrow against your silver. <em>Yours again</em> when you repay.',
     intro: 'Trinity makes pawn loans against silver — canteens of flatware, hollowware, bars and coins — from £500 with no maximum. Hallmarks read and weight assessed by specialists, insured door to door, held securely in the City of London, and returned to you exactly as you left it when you repay.',
     ctaPrimary: { label: 'Value my piece', href: '#value-form' },
