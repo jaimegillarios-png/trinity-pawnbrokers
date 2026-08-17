@@ -38,10 +38,10 @@
 }
 .hero-copy { padding: 96px 0 84px; }
 .hero-copy .tr-eyebrow { color: var(--tr-gold-bright); line-height: 1.9; }
-/* The asset word — kept ivory and underscored with a fine gold rule, so the
-   heading has one gold moment (the italic promise) rather than two competing
-   ones. text-underline-offset keeps the rule clear of the descenders. */
+/* The asset word — gold, roman, and underscored with a gold rule.
+   text-underline-offset keeps the rule clear of the descenders. */
 .hero-copy .tr-h1 span {
+  color: var(--tr-gold-bright);
   font-style: normal;
   text-decoration: underline;
   text-decoration-color: var(--tr-gold-bright);
