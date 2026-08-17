@@ -426,8 +426,6 @@
 @media (max-width: 620px) {
   .lend-grid, .how-grid, .value-points { grid-template-columns: 1fr; }
 
-  .masthead-grid { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: 18px; }
-  .masthead-grid nav { justify-content: center !important; flex-wrap: wrap; }
 
   /* rule bar stacks to two centred lines */
   .rule-bar { font-size: 10px; letter-spacing: 0.12em; }

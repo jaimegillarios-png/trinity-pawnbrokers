@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="src/styles/trinity-tokens.css">
 <link rel="stylesheet" href="src/styles/trinity-components.css">
+<script src="src/scripts/trinity-nav.js" defer></script>
 <script src="src/scripts/trinity-reveal.js" defer></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Archivo:wght@400;500;600;700&family=Jost:wght@500;600&display=swap" rel="stylesheet">
 <style>
@@ -101,8 +102,6 @@
   @media(max-width:620px){
     .collage-grid{grid-template-columns:1fr !important}
     .how-grid{grid-template-columns:1fr !important}
-    .masthead-grid{grid-template-columns:1fr !important;justify-items:center;text-align:center;gap:18px !important}
-    .masthead-grid nav{justify-content:center !important;flex-wrap:wrap}
     .hero-inner{padding:76px 22px 64px !important;min-height:0 !important}
     .rule-bar-inner{justify-content:center !important}
   }
@@ -137,6 +136,9 @@
       <a href="#" class="tr-navlink">Trust &amp; security</a>
       <a href="tel:+442035671300" class="tr-phone-btn">020 3567 1300</a>
     </nav>
+    <button class="tr-burger" type="button" aria-label="Menu" aria-expanded="false" hidden>
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
 

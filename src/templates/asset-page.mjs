@@ -41,6 +41,9 @@ const masthead = () => `
       <a href="#" class="tr-navlink">Trust &amp; security</a>
       <a href="tel:${site.phoneHref}" class="tr-phone-btn">${site.phone}</a>
     </nav>
+    <button class="tr-burger" type="button" aria-label="Menu" aria-expanded="false" hidden>
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>`;
 
@@ -112,6 +115,7 @@ export default function assetPage(c) {
 <link rel="stylesheet" href="src/styles/asset-page.css">
 
 <script src="${site.reviewsWidget}" defer></script>
+<script src="src/scripts/trinity-nav.js" defer></script>
 <script src="src/scripts/trinity-reveal.js" defer></script>
 <script src="src/scripts/asset-page.js" defer></script>
 </head>

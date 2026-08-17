@@ -297,3 +297,76 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
 @media (prefers-reduced-motion: reduce) {
   .rv { transition: none !important; opacity: 1 !important; transform: none !important; }
 }
+
+/* ========================= mobile navigation ========================= */
+/* The burger is revealed by src/scripts/trinity-nav.js; with JS off it stays
+   hidden and the nav below simply stacks, so every link is still reachable. */
+.tr-burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;              /* 44px touch target */
+  height: 44px;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.tr-burger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  margin: 0 auto;
+  background: var(--tr-ink);
+  transition: transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.18s ease;
+}
+/* bars fold into a cross when open */
+[data-nav="open"] .tr-burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+[data-nav="open"] .tr-burger span:nth-child(2) { opacity: 0; }
+[data-nav="open"] .tr-burger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+@media (prefers-reduced-motion: reduce) { .tr-burger span { transition: none; } }
+
+@media (max-width: 760px) {
+  /* wordmark stays centred — it is the identity; the burger sits to its right */
+  /* Flex column with explicit order: the wordmark stays on top when the menu
+     opens, rather than sitting between the two nav groups as DOM order gives. */
+  .masthead-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    position: relative;
+    text-align: center;
+    gap: 0;
+    padding: 18px var(--tr-pad-side) 16px;
+  }
+  .masthead-grid > .tr-wordmark { order: 1; }
+  .masthead-grid > nav:first-of-type { order: 2; }
+  .masthead-grid > nav:last-of-type { order: 3; }
+  .tr-burger {
+    display: flex;
+    position: absolute;
+    top: 14px;
+    right: calc(var(--tr-pad-side) - 10px);
+  }
+  .masthead-grid > nav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0;
+  }
+  .masthead-grid > nav:first-of-type { margin-top: 18px; }
+  .masthead-grid > nav .tr-navlink {
+    padding: 15px 0;
+    border-top: 1px solid var(--tr-line-soft);
+  }
+  .masthead-grid > nav .tr-navlink:hover { text-decoration: none; color: var(--tr-green-leaf); }
+  .masthead-grid > nav .tr-phone-btn {
+    margin-top: 16px;
+    padding: 15px;
+    text-align: center;
+  }
+  /* collapsed — only ever set once JS has taken over */
+  [data-nav="closed"] .masthead-grid > nav { display: none; }
+}
