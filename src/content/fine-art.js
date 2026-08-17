@@ -20,7 +20,7 @@ export default {
 
   hero: {
     image: { src: 'images/v2/art.jpg', alt: 'A framed painting lit in a gallery' },
-    eyebrow: 'Art finance · Loans against fine art<br>City of London · Est. 2013',
+    eyebrow: 'Art finance · Loans against fine art · City of London · Est. 2013',
     heading: 'Borrow against your <span>art</span>. <em>Keep the work</em>, and take it back when you repay.',
     intro: 'Trinity lends against fine art — paintings, prints, sculpture and whole collections — through our specialist art-finance division. Discreet loans from £500 with no maximum, valued by art specialists on provenance and the market, insured and handled with care, and your work returned exactly as you left it when you repay.',
     ctaPrimary: { label: 'Value my artwork', href: '#value-form' },

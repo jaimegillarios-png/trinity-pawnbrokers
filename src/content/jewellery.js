@@ -20,7 +20,7 @@ export default {
 
   hero: {
     image: { src: 'images/v2/jewellery.jpg', alt: 'A ring examined under a jeweller’s loupe' },
-    eyebrow: 'Pawn loans against fine jewellery<br>City of London · Est. 2013',
+    eyebrow: 'Pawn loans against fine jewellery · City of London · Est. 2013',
     heading: 'Borrow against your <span>jewellery</span>. <em>Wear it again</em> when you repay.',
     intro: 'Trinity makes pawn loans against fine jewellery — signed pieces by Cartier, Tiffany and Van Cleef &amp; Arpels, gemstone and diamond jewellery, and family heirlooms — from £500 with no maximum. Valued for far more than their metal, insured door to door, held securely in the City of London, and returned to you exactly as you left them when you repay.',
     ctaPrimary: { label: 'Value my jewellery', href: '#value-form' },

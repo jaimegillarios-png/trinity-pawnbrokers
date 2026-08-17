@@ -19,7 +19,7 @@ export default {
 
   hero: {
     image: { src: 'images/watches/hero.jpg', alt: 'A luxury watch dial and bezel in low light' },
-    eyebrow: 'Pawnbroker loans against luxury watches<br>City of London · Est. 2013',
+    eyebrow: 'Pawnbroker loans against luxury watches · City of London · Est. 2013',
     heading: 'Borrow against your <span>watch</span>. <em>Wear it again</em> when you repay.',
     intro:
       'Trinity makes pawn loans against luxury watches — Rolex, Patek Philippe, Audemars Piguet, Omega, Cartier and more — from £500 with no maximum. Valued by specialists, insured door to door, held securely in the City of London, and returned to you exactly as you left it when you repay.',

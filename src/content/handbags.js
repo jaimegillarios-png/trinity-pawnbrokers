@@ -20,7 +20,7 @@ export default {
 
   hero: {
     image: { src: 'images/v2/bags.jpg', alt: 'A quilted designer handbag with gold hardware' },
-    eyebrow: 'Pawn loans against designer handbags<br>City of London · Est. 2013',
+    eyebrow: 'Pawn loans against designer handbags · City of London · Est. 2013',
     heading: 'Borrow against your <span>handbag</span>. <em>Carry it again</em> when you repay.',
     intro: 'Trinity makes pawn loans against designer handbags — Hermès Birkin and Kelly, Chanel, Louis Vuitton and other established makers — from £500 with no maximum. Authenticated and valued by specialists, insured door to door, held securely in the City of London, and returned to you exactly as you left it when you repay.',
     ctaPrimary: { label: 'Value my handbag', href: '#value-form' },

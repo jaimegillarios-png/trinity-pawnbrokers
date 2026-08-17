@@ -20,7 +20,7 @@ export default {
 
   hero: {
     image: { src: 'images/v2/silver.jpg', alt: 'Antique silver in low light' },
-    eyebrow: 'Pawn loans against fine &amp; antique silver<br>City of London · Est. 2013',
+    eyebrow: 'Pawn loans against fine &amp; antique silver · City of London · Est. 2013',
     heading: 'Borrow against your <span>silver</span>. <em>Take it back</em> when you repay.',
     intro: 'Trinity makes pawn loans against fine and antique silver — hallmarked pieces, canteens and services, and maker and period holloware — from £500 with no maximum. Valued for the maker and craftsmanship, not the melt, insured door to door, held securely in the City of London, and returned to you exactly as you left it when you repay.',
     ctaPrimary: { label: 'Value my silver', href: '#value-form' },

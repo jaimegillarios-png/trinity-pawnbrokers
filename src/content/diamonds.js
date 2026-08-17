@@ -20,7 +20,7 @@ export default {
 
   hero: {
     image: { src: 'images/v2/diamonds.jpg', alt: 'A loose diamond held with tweezers' },
-    eyebrow: 'Pawn loans against diamonds<br>City of London · Est. 2013',
+    eyebrow: 'Pawn loans against diamonds · City of London · Est. 2013',
     heading: 'Borrow against your <span>diamond</span>. <em>Keep it</em>, and take it back when you repay.',
     intro: 'Trinity makes pawn loans against diamonds — certified and loose stones, engagement rings and fine diamond jewellery — from £500 with no maximum. Valued by specialists on the 4Cs and the market, insured door to door, held securely in the City of London, and returned to you exactly as you left it when you repay.',
     ctaPrimary: { label: 'Value my diamond', href: '#value-form' },
