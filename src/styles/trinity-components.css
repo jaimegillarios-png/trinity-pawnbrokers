@@ -214,6 +214,49 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
 }
 .rule-bar__reg { color: var(--tr-gold-mid); }
 
+/* Desktop: the wrappers collapse away so the two spans remain flex children
+   of .rule-bar-inner and keep their space-between layout. */
+.rule-bar__track { display: contents; }
+.rule-bar__group { display: contents; }
+.rule-bar__group[aria-hidden="true"] { display: none; }
+
+/* Mobile: one line that scrolls, rather than wrapping and doubling the bar's
+   height. The group is duplicated so translating by -50% lands exactly one
+   group along — a seamless loop. Trailing padding sits inside the group so it
+   counts toward that 50%. */
+@media (max-width: 760px) {
+  .rule-bar-inner {
+    display: block;
+    overflow: hidden;
+    padding: 9px 0;
+  }
+  .rule-bar__track {
+    display: flex;
+    width: max-content;
+    animation: ruleBarScroll 30s linear infinite;
+  }
+  .rule-bar__group,
+  .rule-bar__group[aria-hidden="true"] {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 22px;
+    padding-right: 22px;
+    white-space: nowrap;
+  }
+}
+@keyframes ruleBarScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+/* Pause on interaction — WCAG 2.2.2 for auto-moving content */
+.rule-bar:hover .rule-bar__track,
+.rule-bar:focus-within .rule-bar__track { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* No motion at all: fall back to the wrapping bar rather than a clipped one */
+  .rule-bar-inner { display: flex; overflow: visible; padding: 9px var(--tr-pad-side); }
+  .rule-bar__track { display: contents; animation: none; }
+  .rule-bar__group { display: contents; }
+  .rule-bar__group[aria-hidden="true"] { display: none; }
+}
+
 /* ========================= masthead ========================= */
 .masthead { background: var(--tr-white); border-bottom: 1px solid var(--tr-line-soft); }
 .masthead-grid {

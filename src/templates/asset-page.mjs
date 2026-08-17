@@ -15,8 +15,16 @@ const opt = (f) => (f.optional ? ' <span class="tr-label__opt">(optional)</span>
 const ruleBar = () => `
 <div class="rule-bar">
   <div class="rule-bar-inner">
-    <span>${site.ruleBar.left}</span>
-    <span class="rule-bar__reg">${site.ruleBar.right}</span>
+    <div class="rule-bar__track">
+      <div class="rule-bar__group">
+        <span>${site.ruleBar.left}</span>
+        <span class="rule-bar__reg">${site.ruleBar.right}</span>
+      </div>
+      <div class="rule-bar__group" aria-hidden="true">
+        <span>${site.ruleBar.left}</span>
+        <span class="rule-bar__reg">${site.ruleBar.right}</span>
+      </div>
+    </div>
   </div>
 </div>`;
 
