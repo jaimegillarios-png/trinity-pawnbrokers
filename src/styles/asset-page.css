@@ -38,6 +38,8 @@
 }
 .hero-copy { padding: 96px 0 84px; }
 .hero-copy .tr-eyebrow { color: var(--tr-gold-bright); line-height: 1.9; }
+/* the asset word — gold, roman, so it doesn't compete with the italic promise */
+.hero-copy .tr-h1 span { color: var(--tr-gold-bright); font-style: normal; }
 .hero__intro { max-width: 52ch; color: var(--tr-on-green-strong); margin: 0 0 30px; }
 .hero__actions { display: flex; gap: 12px; flex-wrap: wrap; }
 .hero__reassure {

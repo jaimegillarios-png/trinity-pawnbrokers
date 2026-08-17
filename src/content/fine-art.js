@@ -17,7 +17,7 @@ export default {
   hero: {
     image: { src: 'images/v2/art.jpg', alt: 'A framed painting lit in a gallery' },
     eyebrow: 'Pawnbroker loans against fine art<br>City of London · Est. 2013',
-    heading: 'Borrow against your art. <em>Back on the wall</em> when you repay.',
+    heading: 'Borrow against your <span>art</span>. <em>Back on the wall</em> when you repay.',
     intro: 'Trinity makes pawn loans against fine art — paintings, prints, sculpture and works on paper — from £500 with no maximum. Researched and valued against auction records, insured door to door, held in climate-controlled storage in the City of London, and returned to you exactly as you left it when you repay.',
     ctaPrimary: { label: 'Value my work', href: '#value-form' },
     ctaGhost: { label: 'How a pawn loan works', href: '#how' },

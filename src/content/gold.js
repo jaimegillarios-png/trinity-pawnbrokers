@@ -17,7 +17,7 @@ export default {
   hero: {
     image: { src: 'images/v2/gold.jpg', alt: 'Gold bars and sovereigns under low light' },
     eyebrow: 'Pawnbroker loans against gold<br>City of London · Est. 2013',
-    heading: 'Borrow against your gold. <em>Yours again</em> when you repay.',
+    heading: 'Borrow against your <span>gold</span>. <em>Yours again</em> when you repay.',
     intro: 'Trinity makes pawn loans against gold — sovereigns and krugerrands, bars, and the jewellery gold in a drawer — from £500 with no maximum. Tested and weighed by specialists, insured door to door, held securely in the City of London, and returned to you exactly as you left it when you repay.',
     ctaPrimary: { label: 'Value my gold item', href: '#value-form' },
     ctaGhost: { label: 'How a pawn loan works', href: '#how' },
