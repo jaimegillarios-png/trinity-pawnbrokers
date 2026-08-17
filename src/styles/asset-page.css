@@ -38,8 +38,16 @@
 }
 .hero-copy { padding: 96px 0 84px; }
 .hero-copy .tr-eyebrow { color: var(--tr-gold-bright); line-height: 1.9; }
-/* the asset word — gold, roman, so it doesn't compete with the italic promise */
-.hero-copy .tr-h1 span { color: var(--tr-gold-bright); font-style: normal; }
+/* The asset word — kept ivory and underscored with a fine gold rule, so the
+   heading has one gold moment (the italic promise) rather than two competing
+   ones. text-underline-offset keeps the rule clear of the descenders. */
+.hero-copy .tr-h1 span {
+  font-style: normal;
+  text-decoration: underline;
+  text-decoration-color: var(--tr-gold-bright);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 8px;
+}
 .hero__intro { max-width: 52ch; color: var(--tr-on-green-strong); margin: 0 0 30px; }
 .hero__actions { display: flex; gap: 12px; flex-wrap: wrap; }
 .hero__reassure {
