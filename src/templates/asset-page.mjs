@@ -20,7 +20,7 @@ const ruleBar = () => `
         <span>${site.ruleBar.left}</span>
         <span class="rule-bar__reg">${site.ruleBar.right}</span>
       </div>
-      <div class="rule-bar__group" aria-hidden="true">
+      <div class="rule-bar__group" aria-hidden="true" hidden>
         <span>${site.ruleBar.left}</span>
         <span class="rule-bar__reg">${site.ruleBar.right}</span>
       </div>

@@ -44,7 +44,9 @@ for (const file of targets) {
   const out = resolve(root, `${slug}.html`);
   const prev = await readFile(out, 'utf8').catch(() => null);
 
-  if (prev === html) {
+  // ?v= hashes are added afterwards by stamp-assets.mjs — ignore them here
+  const bare = (x) => (x || '').replace(/\?v=[a-f0-9]+/g, '');
+  if (bare(prev) === bare(html)) {
     unchanged++;
     console.log(`  = ${slug}.html (unchanged)`);
   } else {

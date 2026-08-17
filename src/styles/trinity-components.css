@@ -236,7 +236,7 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
     animation: ruleBarScroll 30s linear infinite;
   }
   .rule-bar__group,
-  .rule-bar__group[aria-hidden="true"] {
+  .rule-bar__group[aria-hidden="true"][hidden] {
     display: flex;
     flex: 0 0 auto;
     gap: 22px;
