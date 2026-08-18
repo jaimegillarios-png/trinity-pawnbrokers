@@ -466,13 +466,10 @@
   .lend-grid, .how-grid, .value-points { grid-template-columns: 1fr; }
 
 
-  /* Clear the sticky nav. At 28px the eyebrow sat inside the masthead's own
-     52px, so scrolling back up towards the top slid it under a nav that was
-     showing — the gap appeared to vanish while you were still looking at the
-     top of the page. Tied to the measured height (trinity-nav.js sets it) so
-     the two cannot drift; the fallback matches the phone masthead.
-     Still well short of the 64px + 13px stray margin this started at. */
-  .hero-copy { padding: var(--tr-mast-h, 52px) 0 16px; }
+  /* Even, and tight. The nav no longer needs to be padded around: it keeps
+     clear of the hero on its own (see inHero in trinity-nav.js), so this is
+     free to be a plain design value again. */
+  .hero-copy { padding: 20px 0; }
   /* 48px is the desktop column gap doing double duty as a row gap once the
      hero stacks — far too much between the copy and the form. Together with
      the padding above and the card's own margin it made an 80px void. */

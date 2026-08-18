@@ -49,6 +49,21 @@
     // Tabbing into a hidden nav would otherwise focus something off-screen
     mast.addEventListener('focusin', show);
 
+    // While the hero is on screen the nav stays out of it entirely. Sticky
+    // means anything within the nav's own height scrolls underneath it, and
+    // the hero's first line is right there — so scrolling back up towards the
+    // top slid the eyebrow under a nav that was showing, and the hero's top
+    // padding appeared to vanish. Padding cannot fix that (it only moves the
+    // point where it happens); keeping the nav away from the hero can.
+    var hero = document.querySelector('.hero');
+    var bar = document.querySelector('.rule-bar');
+    // Below this the nav is still in normal flow and cannot overlap anything.
+    function stickPoint() { return bar ? bar.offsetHeight : 0; }
+    function inHero(y) {
+      if (!hero) return false;
+      return y < hero.offsetTop + hero.offsetHeight - mast.offsetHeight;
+    }
+
     window.addEventListener('scroll', function () {
       if (ticking) return;
       ticking = true;
@@ -59,7 +74,8 @@
         if (Math.abs(delta) < JITTER) return;   // leave `last` alone so small moves accumulate
         // Never retract while the mobile menu is open, or near the top of the
         // page where there is nothing to gain by hiding.
-        if (root.getAttribute('data-nav') === 'open' || y <= mast.offsetHeight) show();
+        if (root.getAttribute('data-nav') === 'open' || y <= stickPoint()) show();
+        else if (inHero(y)) root.setAttribute('data-mast', 'hidden');
         else root.setAttribute('data-mast', delta > 0 ? 'hidden' : 'shown');
         last = y;
       });
