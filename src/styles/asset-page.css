@@ -466,10 +466,13 @@
   .lend-grid, .how-grid, .value-points { grid-template-columns: 1fr; }
 
 
-  /* 64px was a scaled-down desktop figure. On a phone the masthead sits
-     directly above, so the eyebrow needs far less air to read as a new
-     block — 28px keeps the separation without the dead band. */
-  .hero-copy { padding: 28px 0 24px; }
+  /* Clear the sticky nav. At 28px the eyebrow sat inside the masthead's own
+     52px, so scrolling back up towards the top slid it under a nav that was
+     showing — the gap appeared to vanish while you were still looking at the
+     top of the page. Tied to the measured height (trinity-nav.js sets it) so
+     the two cannot drift; the fallback matches the phone masthead.
+     Still well short of the 64px + 13px stray margin this started at. */
+  .hero-copy { padding: var(--tr-mast-h, 52px) 0 24px; }
   .tr-h1 { max-width: none; }
   /* Eyebrow steps down so it sits under the 40px h1 rather than competing with
      it. Tracking is set in em, so it scales with the size on its own. */
@@ -492,8 +495,10 @@
   .trust-inner > span { white-space: normal; padding: 13px 0; border-top: 1px solid var(--tr-rule-on-green-2); }
   .trust-inner > span:first-child { border-top: none; }
 
-  /* headings fill greedily rather than balancing into short lines */
-  .tr-h2, h2 { text-wrap: wrap; }
+  /* headings and the form's standfirst fill greedily rather than balancing
+     into short lines — on a 271px measure `pretty` was leaving whole lines
+     40px shy of the edge. */
+  .tr-h2, h2, .hero-form-card__intro { text-wrap: wrap; }
 
   /* Why Trinity header left-aligns to match the table */
   .why-head { text-align: left; margin-bottom: 40px; }
