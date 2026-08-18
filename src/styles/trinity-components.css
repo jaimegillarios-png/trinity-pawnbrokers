@@ -37,6 +37,12 @@
 
 
 /* ========================= base ========================= */
+/* In-page links glide rather than jump — the CTAs that point at the valuation
+   form, and the nav links to #index / #how. CSS-only, so it works whether the
+   link is clicked, focused by keyboard, or opened from a pasted URL. */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
 body {
   margin: 0;
   background: var(--tr-neutral);

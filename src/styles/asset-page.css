@@ -107,6 +107,9 @@
 
 /* ========================= valuation form card ========================= */
 .hero-form-card {
+  /* The CTAs scroll here; leave a little air above so the card does not land
+     flush against the top of the viewport. */
+  scroll-margin-top: 24px;
   position: relative;
   background: var(--tr-warm-panel);
   color: var(--tr-ink);

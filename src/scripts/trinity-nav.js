@@ -10,7 +10,27 @@
 (function () {
   'use strict';
 
+  // --- in-page links -------------------------------------------------------
+  // Scroll even when the hash is already current. Each asset page has TWO
+  // CTAs pointing at #value-form, so clicking the one in the closing band
+  // after the one in the hero would otherwise do nothing at all — the browser
+  // sees no change of hash and stays put. Falls back to the default anchor
+  // jump if this script never runs.
+  function anchors() {
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!a || a.getAttribute('href') === '#') return;
+      var target = document.getElementById(a.getAttribute('href').slice(1));
+      if (!target) return;
+      e.preventDefault();
+      var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      target.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
+      history.replaceState(null, '', a.getAttribute('href'));
+    });
+  }
+
   function init() {
+    anchors();
     var burger = document.querySelector('.tr-burger');
     var masthead = document.querySelector('.masthead-grid');
     if (!burger || !masthead) return;
