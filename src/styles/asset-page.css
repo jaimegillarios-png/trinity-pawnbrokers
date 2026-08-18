@@ -466,10 +466,12 @@
   .lend-grid, .how-grid, .value-points { grid-template-columns: 1fr; }
 
 
-  /* Even, and tight. The nav no longer needs to be padded around: it keeps
-     clear of the hero on its own (see inHero in trinity-nav.js), so this is
-     free to be a plain design value again. */
-  .hero-copy { padding: 20px 0; }
+  /* Even top and bottom. Purely a design value — the nav keeps clear of the
+     hero on its own (see inHero in trinity-nav.js), so nothing here is
+     compensating for it. 20px measured as no gap at all against the hard
+     white edge of the masthead; 40px reads as deliberate and is still less
+     than half what this started at. */
+  .hero-copy { padding: 40px 0; }
   /* 48px is the desktop column gap doing double duty as a row gap once the
      hero stacks — far too much between the copy and the form. Together with
      the padding above and the card's own margin it made an 80px void. */
