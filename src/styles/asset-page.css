@@ -25,6 +25,12 @@
 .hero { position: relative; background: var(--tr-green-vault); color: var(--tr-neutral); overflow: hidden; }
 .hero__media { position: absolute; inset: 0; }
 .hero__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* The hero image settles rather than snapping in. .hero is overflow:hidden,
+   so the oversize never spills, and this is a plain CSS animation — the image
+   is never hidden waiting on anything. */
+.hero__media img { animation: heroSettle 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+@keyframes heroSettle { from { transform: scale(1.06); } to { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .hero__media img { animation: none; } }
 .hero__scrim { position: absolute; inset: 0; pointer-events: none; background: var(--tr-hero-scrim); }
 .hero-grid {
   position: relative;

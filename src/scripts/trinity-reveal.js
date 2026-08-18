@@ -14,7 +14,8 @@
 (function () {
   'use strict';
 
-  var HERO_DELAY = 0.15;   // s before the first hero element moves
+  var HERO_DELAY = 0.24;   // s before the first hero element moves (after the chrome)
+  var CHROME_STEP = 0.07;  // s between the rule bar and the masthead
   var HERO_STEP  = 0.12;   // s between hero elements
   var GROUP_STEP = 0.10;   // s between items within a revealed group
 
@@ -30,21 +31,34 @@
       el.style.setProperty('--rd', ((i || 0) * GROUP_STEP).toFixed(2) + 's');
     }
 
-    // --- hero: plays on load, not on scroll ---------------------------------
+    // --- on load: the chrome settles, then the hero rises --------------------
+    // Both flip in the same pair of frames so they read as one arrival rather
+    // than two animations that happen to overlap.
+    var onLoad = [];
+
+    var chrome = [document.querySelector('.rule-bar'), document.querySelector('.masthead')];
+    chrome.forEach(function (el, i) {
+      if (!el) return;
+      el.classList.add('rv-chrome');
+      el.style.setProperty('--rd', (i * CHROME_STEP).toFixed(2) + 's');
+      onLoad.push(el);
+    });
+
     var hero = document.querySelector('[data-reveal-hero]') || document.querySelector('.hero-inner, .hero-copy');
     if (hero) {
-      var seq = [].slice.call(hero.children);
-      seq.forEach(function (el, i) {
+      [].slice.call(hero.children).forEach(function (el, i) {
         tag(el, i);
         el.style.setProperty('--rd', (HERO_DELAY + i * HERO_STEP).toFixed(2) + 's');
-      });
-      // two frames so the initial (hidden) state is painted before we flip it
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          seq.forEach(function (el) { el.classList.add('in'); });
-        });
+        onLoad.push(el);
       });
     }
+
+    // two frames so the initial (hidden) state is painted before we flip it
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        onLoad.forEach(function (el) { el.classList.add('in'); });
+      });
+    });
 
     // --- everything else: reveals on scroll ---------------------------------
     // Every section opener, plus whatever groups the page declares.
