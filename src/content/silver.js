@@ -38,11 +38,11 @@ export default {
     fields: [
       [
         { id: 'wf-type', label: 'Type of piece', type: 'select', options: ['Canteen / Flatware', 'Tea or coffee service', 'Candlesticks', 'Bowl / Dish', 'Figurative / Sculpture', 'Other'] },
-        { id: 'wf-maker', label: 'Maker or retailer, if you know it', optional: true, type: 'text', placeholder: 'e.g. Garrard, Mappin &amp; Webb, Georg Jensen' },
+        { id: 'wf-maker', label: 'Maker or retailer', optional: true, type: 'text', placeholder: 'e.g. Garrard, Mappin &amp; Webb, Georg Jensen' },
       ],
       [
-        { id: 'wf-hallmarks', label: 'Hallmarks, if you can read them', optional: true, type: 'text' },
-        { id: 'wf-period', label: 'Approximate period', optional: true, type: 'select', options: ['Georgian', 'Victorian', 'Edwardian', '20th c.', 'Not sure'] },
+        { id: 'wf-hallmarks', label: 'Hallmarks', optional: true, type: 'text' },
+        { id: 'wf-period', label: 'Period', optional: true, type: 'select', options: ['Georgian', 'Victorian', 'Edwardian', '20th c.', 'Not sure'] },
       ],
     ],
     photos: { label: 'Add photos', hint: 'The piece, and a close-up of the hallmarks' },

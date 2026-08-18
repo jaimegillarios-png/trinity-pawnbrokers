@@ -42,7 +42,8 @@ export const fontFamily = {
     "sans-serif"
   ],
   "caps": [
-    "Jost",
+    "Archivo",
+    "Arial",
     "sans-serif"
   ]
 };

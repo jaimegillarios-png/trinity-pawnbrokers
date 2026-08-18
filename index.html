@@ -7,11 +7,11 @@
 <meta name="description" content="Trinity makes pawn loans against gold, watches, jewellery, diamonds and fine art — valued by specialists, insured door to door, safeguarded in the City of London, and returned exactly as you left them.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="src/styles/trinity-tokens.css?v=e11d48bc">
-<link rel="stylesheet" href="src/styles/trinity-components.css?v=04c2782d">
-<script src="src/scripts/trinity-nav.js?v=c34830f4" defer></script>
+<link rel="stylesheet" href="src/styles/trinity-tokens.css?v=699fa1e5">
+<link rel="stylesheet" href="src/styles/trinity-components.css?v=7c7471a4">
+<script src="src/scripts/trinity-nav.js?v=bebfbd0a" defer></script>
 <script src="src/scripts/trinity-reveal.js?v=b9ced3bb" defer></script>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Archivo:wght@400;500;600;700&family=Jost:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   /* Derived from the design tokens — see docs/WORKFLOW.md */
   :root{
@@ -128,21 +128,25 @@
 <header class="masthead">
   <div class="masthead-grid">
     <nav>
-      <a href="#index" class="tr-navlink">What we lend against</a>
-      <a href="#how" class="tr-navlink">How it works</a>
+      <div class="nav-panel">
+        <a href="#index" class="tr-navlink">What we lend against</a>
+        <a href="#how" class="tr-navlink">How it works</a>
+      </div>
     </nav>
     <a href="./" class="tr-wordmark" aria-label="Trinity Pawnbrokers — home">
-      <span class="tr-mark" aria-hidden="true">
-        <span></span>
-        <span class="tr-mark__pair"><span></span><span></span></span>
-      </span>
-      <span class="tr-wordmark__name">Trinity</span>
-      <span class="tr-wordmark__sub">Pawnbrokers</span>
+      <img class="tr-logo" src="brand/trinity-logo.svg" alt="" width="179" height="20" decoding="async">
     </a>
     <nav>
-      <a href="#" class="tr-navlink">Trust &amp; security</a>
-      <a href="tel:+442035671300" class="tr-phone-btn">020 3567 1300</a>
+      <div class="nav-panel">
+        <a href="#" class="tr-navlink">Trust &amp; security</a>
+        <a href="tel:+442035671300" class="tr-phone-btn">020 3567 1300</a>
+      </div>
     </nav>
+    <a class="tr-call" href="tel:+442035671300" aria-label="Call Trinity Pawnbrokers on 020 3567 1300">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M6.8 3.5h2.6a1 1 0 0 1 1 .79l.66 3.05a1 1 0 0 1-.5 1.1L8.9 9.6a12.6 12.6 0 0 0 5.5 5.5l1.16-1.66a1 1 0 0 1 1.1-.5l3.05.66a1 1 0 0 1 .79 1v2.6a2 2 0 0 1-2.16 2C10.7 18.65 5.35 13.3 4.8 5.66a2 2 0 0 1 2-2.16z"/>
+      </svg>
+    </a>
     <button class="tr-burger" type="button" aria-label="Menu" aria-expanded="false" hidden>
       <span></span><span></span><span></span>
     </button>
@@ -184,7 +188,7 @@
 
   <div style="position:absolute;inset:0;pointer-events:none;background:var(--v4-hero-scrim)"></div>
   <div class="hero-inner" style="position:relative;max-width:1240px;margin:0 auto;padding:110px 28px 96px;min-height:560px;display:flex;flex-direction:column;justify-content:center">
-    <div style="font:500 13px/1.9 'Jost',sans-serif;letter-spacing:0.28em;text-transform:uppercase;color:var(--tr-gold-bright)">Pawn loans against<br>gold · watches · jewellery · diamonds · fine art</div>
+    <div style="font:500 13px/1.9 var(--tr-font-caps);letter-spacing:0.28em;text-transform:uppercase;color:var(--tr-gold-bright)">Pawn loans against<br>gold · watches · jewellery · diamonds · fine art</div>
     <h1 style="font:500 clamp(46px,5.4vw,76px)/1.06 'Cormorant Garamond',Georgia,serif;margin:24px 0 22px;max-width:15ch;text-wrap:pretty;color:var(--tr-neutral)">The pawnbroker for fine things. <em style="font-style:italic;color:var(--tr-gold-bright)">Yours again</em> when you repay.</h1>
     <p style="max-width:52ch;color:var(--tr-on-green-strong);margin:0 0 34px">Trinity makes pawn loans against the things you own and intend to keep — valued by specialists, insured door to door, safeguarded in the City of London, and returned exactly as you left them.</p>
     <div style="display:flex;gap:12px;flex-wrap:wrap">
@@ -193,7 +197,7 @@
     </div>
   </div>
   <div style="position:relative;border-top:1px solid var(--v4-trust-rule);background:var(--v4-trust-bg);backdrop-filter:blur(6px)">
-    <div style="max-width:1240px;margin:0 auto;padding:16px 28px;display:flex;gap:28px;flex-wrap:wrap;justify-content:space-between;font:500 12.5px/1.5 'Jost',sans-serif;letter-spacing:0.12em;text-transform:uppercase;color:var(--tr-on-green)">
+    <div style="max-width:1240px;margin:0 auto;padding:16px 28px;display:flex;gap:28px;flex-wrap:wrap;justify-content:space-between;font:500 12.5px/1.5 var(--tr-font-caps);letter-spacing:0.12em;text-transform:uppercase;color:var(--tr-on-green)">
       <span style="white-space:nowrap">£10m+ pledged &amp; redeemed since 2013</span>
       <span style="white-space:nowrap">FCA-regulated · Ref 741896</span>
       <span style="white-space:nowrap">No credit checks, nothing on your file</span>
@@ -206,7 +210,7 @@
 <section id="index" style="background:var(--tr-white);border-bottom:1px solid var(--tr-line-soft)">
   <div style="max-width:1240px;margin:0 auto;padding:104px 28px 56px">
     <div style="max-width:680px">
-      <div style="font:500 13px/1 'Jost',sans-serif;letter-spacing:0.28em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:14px">An index of what we lend against</div>
+      <div style="font:500 13px/1 var(--tr-font-caps);letter-spacing:0.28em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:14px">An index of what we lend against</div>
       <h2 style="font:500 38px/1.15 'Cormorant Garamond',Georgia,serif;margin:0;text-wrap:pretty;color:var(--tr-green-vault)">Choose your item — see what it’s worth as a loan</h2>
     </div>
     <p style="max-width:64ch;color:var(--tr-ink-72);font-size:17px;line-height:1.7;margin:18px 0 0">Each page values your item before asking anything of you. Loans from £500 with no maximum — every item insured in transit and storage, with your confirmed offer within 1 business day.</p>
@@ -292,7 +296,7 @@
     </a>
 
     <a href="#" class="ix-dark" style="display:flex;flex-direction:column;justify-content:center;gap:12px;padding:36px 30px;text-decoration:none;color:var(--tr-neutral)">
-      <span style="font:500 13px/1 'Jost',sans-serif;letter-spacing:0.24em;text-transform:uppercase;color:var(--tr-gold-mid)">Something else?</span>
+      <span style="font:500 13px/1 var(--tr-font-caps);letter-spacing:0.24em;text-transform:uppercase;color:var(--tr-gold-mid)">Something else?</span>
       <span style="font:600 24px/1.25 'Cormorant Garamond',Georgia,serif;text-wrap:pretty;color:var(--tr-neutral)">Classic cars, fine wine, musical instruments&hellip;</span>
       <span style="font-size:14.5px;line-height:1.6;color:var(--tr-on-green)">If it&rsquo;s valuable and insurable, we can usually lend against it.</span>
       <span style="margin-top:6px;font:700 12px/1 'Archivo',sans-serif;letter-spacing:0.18em;text-transform:uppercase;color:var(--tr-gold-mid)">Speak to us →</span>
@@ -304,7 +308,7 @@
 <section id="how" style="background:var(--tr-neutral);border-bottom:1px solid var(--tr-line-soft)">
   <div style="max-width:1240px;margin:0 auto;padding:104px 28px 110px">
     <div style="text-align:center;max-width:720px;margin:0 auto 48px">
-      <div style="font:500 13px/1 'Jost',sans-serif;letter-spacing:0.28em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:14px">How a Trinity pawn loan works</div>
+      <div style="font:500 13px/1 var(--tr-font-caps);letter-spacing:0.28em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:14px">How a Trinity pawn loan works</div>
       <h2 style="font:500 38px/1.15 'Cormorant Garamond',Georgia,serif;margin:0 0 16px;color:var(--tr-green-vault)">Five steps. Your item back at the end.</h2>
       <p style="color:var(--tr-ink-72);font-size:16px;margin:0;text-wrap:pretty">A pawn loan is the oldest, simplest borrowing there is: your item is the security, so there are no credit checks and nothing touches your credit file. Plainly, because it matters: if the loan isn’t repaid or renewed at the end of its 6-month term, your item may be sold to settle it — you owe nothing further.</p>
     </div>
@@ -352,7 +356,7 @@
         <span style="width:10px;height:10px;border-radius:50%;background:var(--tr-gold-mid);display:block"></span>
       </div>
     </div>
-    <div style="font:500 13px/1 'Jost',sans-serif;letter-spacing:0.28em;text-transform:uppercase;color:var(--tr-gold-mid);margin-bottom:22px">Who holds your item &middot; who funds your loan</div>
+    <div style="font:500 13px/1 var(--tr-font-caps);letter-spacing:0.28em;text-transform:uppercase;color:var(--tr-gold-mid);margin-bottom:22px">Who holds your item &middot; who funds your loan</div>
     <p style="font:500 clamp(24px,2.6vw,30px)/1.5 'Cormorant Garamond',Georgia,serif;margin:0;text-wrap:pretty">Your item is received, valued and safeguarded by <span style="color:var(--tr-gold-mid)">Trinity Pawnbrokers</span>. Your loan is funded by <span style="color:var(--tr-gold-mid)">Unbolted</span>, the FCA-regulated lender behind Trinity.</p>
     <p style="font-size:16px;line-height:1.7;color:var(--tr-on-green-muted);max-width:54ch;margin:18px auto 0">The house holds the pledge; the platform funds the loan. One firm behind both &mdash; Open Access Finance Ltd, authorised and regulated by the Financial Conduct Authority.</p>
     <a href="#" class="custody-link" style="display:inline-block;margin-top:26px;font:700 12px/1 'Archivo',sans-serif;letter-spacing:0.18em;text-transform:uppercase;color:var(--tr-gold-mid);text-decoration:none;border-bottom:1px solid var(--v4-gold-underline);padding-bottom:6px">How your item is protected →</a>
@@ -363,23 +367,23 @@
 <section style="background:var(--tr-white);border-bottom:1px solid var(--tr-line-soft)">
   <div style="max-width:1240px;margin:0 auto;padding:104px 28px 110px">
     <div style="max-width:640px;margin-bottom:44px">
-      <div style="font:500 13px/1 'Jost',sans-serif;letter-spacing:0.28em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:14px">Fair, and provably so</div>
+      <div style="font:500 13px/1 var(--tr-font-caps);letter-spacing:0.28em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:14px">Fair, and provably so</div>
       <h2 style="font:500 38px/1.15 'Cormorant Garamond',Georgia,serif;margin:0 0 16px;color:var(--tr-green-vault)">Why our rates beat the high street</h2>
       <p style="color:var(--tr-ink-72);font-size:16px;margin:0;text-wrap:pretty">Trinity loans are funded by Unbolted’s own network of lenders — not branch overheads. That is the whole trick, and it is why we lend more of your item’s value at a lower rate than the names you’ve walked past.</p>
     </div>
     <div class="rates-grid" style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--tr-line-strong)">
       <div style="padding:28px 28px 28px 0;border-right:1px solid var(--tr-line-strong)">
-        <div style="font:500 12.5px/1 'Jost',sans-serif;letter-spacing:0.2em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:14px">Loan-to-value</div>
+        <div style="font:500 12.5px/1 var(--tr-font-caps);letter-spacing:0.2em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:14px">Loan-to-value</div>
         <div style="font:500 32px/1.15 'Cormorant Garamond',Georgia,serif;color:var(--tr-green-vault)">Up to 80% on gold</div>
         <p style="font-size:14.5px;color:var(--tr-ink-68);margin:10px 0 0">The highest LTV we offer — with the working shown on screen before you apply.</p>
       </div>
       <div style="padding:28px;border-right:1px solid var(--tr-line-strong)">
-        <div style="font:500 12.5px/1 'Jost',sans-serif;letter-spacing:0.2em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:14px">Track record</div>
+        <div style="font:500 12.5px/1 var(--tr-font-caps);letter-spacing:0.2em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:14px">Track record</div>
         <div style="font:500 32px/1.15 'Cormorant Garamond',Georgia,serif;color:var(--tr-green-vault)">£10m+ since 2013</div>
         <p style="font-size:14.5px;color:var(--tr-ink-68);margin:10px 0 0">Pledged and redeemed through Unbolted, the FCA-regulated lender behind every Trinity loan.</p>
       </div>
       <div style="padding:28px 0 28px 28px">
-        <div style="font:500 12.5px/1 'Jost',sans-serif;letter-spacing:0.2em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:14px">Reviews</div>
+        <div style="font:500 12.5px/1 var(--tr-font-caps);letter-spacing:0.2em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:14px">Reviews</div>
         <div style="font:500 32px/1.15 'Cormorant Garamond',Georgia,serif;color:var(--tr-gold-deep)">★★★★★</div>
         <p style="font-size:14.5px;color:var(--tr-ink-68);margin:10px 0 0">400+ five-star reviews of Unbolted, the lender behind every Trinity loan — read them on our trust page.</p>
       </div>
@@ -392,11 +396,11 @@
 <section style="background:var(--tr-neutral);border-bottom:1px solid var(--tr-line-soft)">
   <div class="visit-grid" style="max-width:1240px;margin:0 auto;padding:104px 28px 110px;display:grid;grid-template-columns:5fr 7fr;gap:56px;align-items:center">
     <div>
-      <div style="font:500 13px/1 'Jost',sans-serif;letter-spacing:0.28em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:14px">Visit us &middot; by appointment</div>
+      <div style="font:500 13px/1 var(--tr-font-caps);letter-spacing:0.28em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:14px">Visit us &middot; by appointment</div>
       <h2 style="font:500 38px/1.15 'Cormorant Garamond',Georgia,serif;margin:0 0 16px;color:var(--tr-green-vault)">Visit our London office</h2>
       <p style="color:var(--tr-ink-72);font-size:16px;line-height:1.7;margin:0 0 28px;max-width:44ch">Prefer an in-person service? Our team is ready to assist you &mdash; valuations, agreements and redemptions, all under one roof in the City.</p>
       <div style="border-top:1px solid var(--v4-rule-gold);padding-top:24px">
-        <div style="font:500 12.5px/1 'Jost',sans-serif;letter-spacing:0.2em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:10px">Address</div>
+        <div style="font:500 12.5px/1 var(--tr-font-caps);letter-spacing:0.2em;text-transform:uppercase;color:var(--tr-gold-deep);margin-bottom:10px">Address</div>
         <p style="font:500 22px/1.45 'Cormorant Garamond',Georgia,serif;margin:0;color:var(--tr-green-vault)">Token House, 11&ndash;12 Token House Yard,<br>London, EC2R 7AS</p>
       </div>
       <a href="https://maps.google.com/?q=Token+House,+11-12+Token+House+Yard,+London+EC2R+7AS" target="_blank" rel="noopener" style="display:inline-block;margin-top:26px;font:700 12px/1 'Archivo',sans-serif;letter-spacing:0.18em;text-transform:uppercase;color:var(--tr-green-leaf);text-decoration:none;border-bottom:1px solid var(--v4-leaf-underline);padding-bottom:6px">Get directions &rarr;</a>
@@ -410,7 +414,7 @@
 <!-- ===== AS SEEN IN ===== -->
 <section style="background:var(--tr-white);border-bottom:1px solid var(--tr-line-soft)">
   <div class="press-bar" style="max-width:1240px;margin:0 auto;padding:34px 28px;display:flex;align-items:center;justify-content:center;gap:28px 40px;flex-wrap:wrap">
-    <div style="font:500 13px/1 'Jost',sans-serif;letter-spacing:0.28em;text-transform:uppercase;color:var(--tr-gold-deep);white-space:nowrap">As seen in</div>
+    <div style="font:500 13px/1 var(--tr-font-caps);letter-spacing:0.28em;text-transform:uppercase;color:var(--tr-gold-deep);white-space:nowrap">As seen in</div>
     <!-- Marks run in their own colour; multiply drops each one's white paper onto the cream. -->
     <div class="press-logos" style="flex:1 1 460px;display:flex;align-items:center;justify-content:space-around;gap:26px 40px;flex-wrap:wrap">
       <img class="press-img" src="data:image/webp;base64,UklGRiYCAABXRUJQVlA4IBoCAABQEwCdASrIAHMAPqVSokymJSMiJtl4MMAUiWdu4XEpwmC+cA29LiXL7OGuXmKLZATsgJ2QE7ICdkBOxOUSt0ajQ4oPpKfqBsz8TlIj+OrjhTFD35W9kOCyWkNbIsp9wdJOa//PAP2BONLeDqvwwJ03Y+w4qYAgmpzUEQA3u0oHeFOiqdgT2spiUJCQOzMcvlnCY2JtAJxSQE7ICdkBOyAnZAJAAP79IZ//w6lobo//I3REaic07AZw1EYRWc5paqixOAe6svHd8auuds+Ve9wWzbiDhV+a2m//dY6F5Cs7cjkDXiH2GEb2dJauxw4fZaCHFMORkwNfiNG9QjuW4EK0mDL2r/pd65/f+epUFgC1+7R/j8oa5lvi6nOqJS9MwuE1UpmoRCnerCcQN0nTFiFEQgJKdYmSpJT/heuKMjJhapfj+vGnemG/1XQ6hQ8HQeQ7kGfF4Ix2PY55YebZUvTh3dOnY2gQTTFp0r50CYVPcu2xEEWDNCGkCIB04PdOXjb5P0i4DU8fVOTr9+q07Pe0W4TDY51vOs6AaY27lmeyDriE02qaBawP322yLlk+X1+FEd8Lmr3kbetZ894ZTMoRd7dzqg22ztv7k8+oRpu3v/1mslJFna+MPC2Ab/aKlvuByqWkYPWqHRpv8v0RDs+9SWMcZs6iMhGCVA9ocRKM8lz/SEiveTeQSEQgF6gXvmPiIrRKjQn8AAAA" alt="Financial Times" style="height:38px;width:auto;display:block;mix-blend-mode:multiply">

@@ -42,7 +42,7 @@
   /* ============ TYPE ============ */
   --tr-font-display: 'Cormorant Garamond', Georgia, serif; /* headings, statements, stat figures */
   --tr-font-body:    'Archivo', Arial, sans-serif;         /* body, UI, buttons */
-  --tr-font-caps:    'Jost', sans-serif;                   /* eyebrows, micro-caps, rule bars */
+  --tr-font-caps:    'Archivo', Arial, sans-serif;         /* eyebrows, micro-caps, rule bars */
 
   /* Type ramp — size / line-height. Family + weight noted in DESIGN_SYSTEM.md */
   --tr-display: clamp(46px, 5.4vw, 76px)/1.06; /* Cormorant 500 — homepage hero only */
@@ -57,8 +57,8 @@
   --tr-body-sm: 14.5px/1.6;                     /* Archivo 400 — card body */
   --tr-label:   15px/1.45;                      /* Archivo 400 — form labels */
   --tr-caption: 13.5px/1.6;                     /* Archivo 400 — legal, footnotes */
-  --tr-eyebrow-size: 13px;  --tr-eyebrow-track: 0.28em; /* Jost 500 caps, deep gold */
-  --tr-microcaps-size: 12.5px; --tr-microcaps-track: 0.14em; /* Jost 500 caps */
+  --tr-eyebrow-size: 13px;  --tr-eyebrow-track: 0.28em; /* Archivo 500 caps, deep gold */
+  --tr-microcaps-size: 12.5px; --tr-microcaps-track: 0.14em; /* Archivo 500 caps */
 
   /* ============ SPACE & SHAPE ============ */
   --tr-container: 1240px;   /* max content width */

@@ -37,7 +37,21 @@
   align-items: center;
 }
 .hero-copy { padding: 96px 0 84px; }
-.hero-copy .tr-eyebrow { color: var(--tr-gold-bright); line-height: 1.9; }
+/* Same reading measure as the h1 (16ch of Cormorant, 488px) and intro (52ch,
+   476px). `ch` is font-relative and measures the "0" advance, so the eyebrow
+   needs its own figure at its own size: 64ch at 13px Archivo = 477px. Without
+   a cap it filled the whole 617px column and ran ~130px past the headline.
+   (This was 59ch while the caps role was Jost, whose "0" is 8.12px against
+   Archivo's 7.45px — the same 59ch would now measure only 440px.) */
+/* margin-top: 0 — .tr-eyebrow is a <p> and only sets margin-bottom, so the
+   UA's default 1em top margin (13px here) was padding the hero out by an
+   amount nobody had written. */
+.hero-copy .tr-eyebrow {
+  color: var(--tr-gold-bright);
+  line-height: 1.9;
+  max-width: 64ch;
+  margin-top: 0;
+}
 /* The asset word — gold, roman, and underscored with a gold rule.
    text-underline-offset keeps the rule clear of the descenders. */
 .hero-copy .tr-h1 span {
@@ -70,7 +84,11 @@
   margin: 0 auto;
   padding: 16px var(--tr-pad-side);
   display: flex;
-  gap: 28px;
+  /* 28px here left the five items needing 1244.7px in a 1240px content box, so
+     the last one wrapped to a line of its own. Archivo sets wider than the Jost
+     this role used to use; 22px restores ~19px of headroom without touching the
+     type. It still wraps rather than overflowing if the copy grows. */
+  gap: 22px;
   flex-wrap: wrap;
   justify-content: space-between;
   font: 500 12.5px/1.5 var(--tr-font-caps);
@@ -104,6 +122,18 @@
 }
 .step-pane { display: flex; flex-direction: column; gap: 14px; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+/* What squeezes these labels onto two lines is the card's width, not the
+   viewport's: between 1020px and 1440px the hero stays side-by-side while the
+   card narrows from 575px to 444px, so no viewport breakpoint describes it.
+   Query the card itself instead. The widest label in a two-up row needs 198px,
+   so a column needs 226px and the pair 466px. NB a container query resolves
+   against the CONTENT box, so this figure excludes the card's 84px of side
+   padding: the 575px desktop card measures 491px here, and keeps its two-up
+   rows with 25px to spare. */
+.hero-form-card { container-type: inline-size; container-name: valuation; }
+@container valuation (max-width: 470px) {
+  .field-row { grid-template-columns: 1fr; }
+}
 /* ---- field: the label sits inside the field, above the value ---------------
    Compact, modern treatment — one bordered box per field, micro-caps label on
    the top line, value beneath. The whole box reacts to :focus-within. */
@@ -369,6 +399,9 @@
 .closing__contact a { color: var(--tr-gold-bright); font-weight: 600; text-decoration: none; }
 
 /* ========================= specimen bar ========================= */
+/* Hidden by the same switch as the compliance chips — both are review
+   annotations, so they should never appear independently of each other. */
+[data-confirm-notes="off"] .specimen-bar { display: none; }
 .specimen-bar {
   position: fixed;
   bottom: 0; left: 0; right: 0;
@@ -427,7 +460,10 @@
   .lend-grid, .how-grid, .value-points { grid-template-columns: 1fr; }
 
 
-  .hero-copy { padding: 64px 0 24px; }
+  /* 64px was a scaled-down desktop figure. On a phone the masthead sits
+     directly above, so the eyebrow needs far less air to read as a new
+     block — 28px keeps the separation without the dead band. */
+  .hero-copy { padding: 28px 0 24px; }
   .tr-h1 { max-width: none; }
   .hero-form-card { padding: 30px 24px 28px; margin: 8px 0 40px; }
 

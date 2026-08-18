@@ -37,15 +37,15 @@ export default {
     },
     fields: [
       [
-        { id: 'wf-setting', label: 'Loose stone or set in a piece?', type: 'select', options: ['Loose', 'Ring', 'Necklace/Pendant', 'Earrings', 'Other'] },
-        { id: 'wf-carat', label: 'Carat weight, if you know it', optional: true, type: 'text', placeholder: 'e.g. 1.05' },
+        { id: 'wf-setting', label: 'Loose or set?', type: 'select', options: ['Loose', 'Ring', 'Necklace/Pendant', 'Earrings', 'Other'] },
+        { id: 'wf-carat', label: 'Carat weight', optional: true, type: 'text', placeholder: 'e.g. 1.05' },
       ],
       [
         { id: 'wf-cert', label: 'Certificate?', optional: true, type: 'select', options: ['GIA', 'IGI', 'HRD', 'Other', 'None'] },
-        { id: 'wf-cert-no', label: 'Certificate number, if you have it', optional: true, type: 'text' },
+        { id: 'wf-cert-no', label: 'Certificate no.', optional: true, type: 'text' },
       ],
       [
-        { id: 'wf-colour-clarity', label: 'Colour & clarity, if known', optional: true, type: 'text', placeholder: 'e.g. G, VS1' },
+        { id: 'wf-colour-clarity', label: 'Colour & clarity', optional: true, type: 'text', placeholder: 'e.g. G, VS1' },
       ],
     ],
     photos: { label: 'Add photos', hint: 'The stone, the certificate, and the piece if set' },

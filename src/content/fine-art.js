@@ -41,11 +41,11 @@ export default {
         { id: 'wf-artist', label: 'Artist / maker', optional: true, type: 'text', placeholder: 'helpful, if you know it' },
       ],
       [
-        { id: 'wf-title', label: 'Title or subject, and approximate date', optional: true, type: 'text' },
+        { id: 'wf-title', label: 'Title or subject', optional: true, type: 'text', placeholder: 'e.g. Untitled, 1998' },
         { id: 'wf-size', label: 'Approximate size', optional: true, type: 'text', placeholder: 'e.g. 60 × 80cm' },
       ],
       [
-        { id: 'wf-provenance', label: 'Provenance &amp; paperwork', optional: true, type: 'text', placeholder: 'certificate of authenticity, receipts, exhibition history' },
+        { id: 'wf-provenance', label: 'Provenance &amp; papers', optional: true, type: 'text', placeholder: 'certificate of authenticity, receipts, exhibition history' },
       ],
     ],
     photos: { label: 'Add photos', hint: 'The full work, the signature or edition mark, and any labels on the reverse' },

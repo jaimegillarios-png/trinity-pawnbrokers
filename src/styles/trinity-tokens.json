@@ -43,7 +43,7 @@
   "font": {
     "display": "'Cormorant Garamond', Georgia, serif",
     "body":    "'Archivo', Arial, sans-serif",
-    "caps":    "'Jost', sans-serif"
+    "caps":    "'Archivo', Arial, sans-serif"
   },
   "type": {
     "display": { "family": "display", "weight": 500, "size": "clamp(46px,5.4vw,76px)", "line": 1.06, "use": "homepage hero only" },

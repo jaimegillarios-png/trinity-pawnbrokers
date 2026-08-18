@@ -17,7 +17,9 @@ This is the **source of truth** for every Trinity page. Design references are bu
 1. **One heading size.** Every section heading is `h2` = Cormorant 500 / 38px / 1.15. Emphasis comes from the eyebrow, colour and spacing — never from resizing.
 2. **Alternate white → neutral.** Sections alternate `--tr-white` and `--tr-neutral`, interrupted only by green statement bands. **Max one green band between hero and footer** per page (hero and footer don't count).
 3. **Gold is an accent, never a ground.** It appears only as type, icons, hairlines, and the primary CTA fill.
-4. **Type roles are fixed.** Cormorant never sets body copy; Archivo never sets headings; Jost is caps-only.
+4. **Type roles are fixed.** Cormorant never sets body copy; Archivo never sets headings.
+   Archivo serves both the body and caps roles — the caps role originally used Jost,
+   dropped so the site ships two families rather than three.
 5. **Compliance chip.** Any unverified figure/claim carries the amber confirm chip (10px Archivo 600 caps, `--tr-gold-mid` bg) until signed off. Provide a global switch to hide all chips at launch.
 6. **Hover = interactive only.** Hover states belong on links, buttons, and clickable cards. Non-clickable cards and logos get no hover.
 7. **Success/confirm colour** is `--tr-success` (#5FA982) — used for ticks in comparison tables and reassurance rows. Use consistently; don't mix with gold for "yes".

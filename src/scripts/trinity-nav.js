@@ -10,8 +10,6 @@
 (function () {
   'use strict';
 
-  var BREAKPOINT = 760; // must match the media query in trinity-components.css
-
   function init() {
     var burger = document.querySelector('.tr-burger');
     var masthead = document.querySelector('.masthead-grid');
@@ -39,10 +37,20 @@
       if (e.key === 'Escape' && isOpen()) { setOpen(false); burger.focus(); }
     });
 
-    // Never leave the menu "closed" behind a burger that is no longer shown
-    var wide = window.matchMedia('(min-width: ' + (BREAKPOINT + 1) + 'px)');
-    var onChange = function () { if (wide.matches && isOpen()) setOpen(false); };
-    wide.addEventListener ? wide.addEventListener('change', onChange) : wide.addListener(onChange);
+    // Never leave the menu "closed" behind a burger that is no longer shown.
+    // Asking whether the burger is actually rendered beats duplicating the
+    // breakpoint here — the media query in trinity-components.css stays the
+    // single place the number is written, so the two cannot drift apart.
+    var queued = false;
+    window.addEventListener('resize', function () {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () {
+        queued = false;
+        var hidden = getComputedStyle(burger).display === 'none';
+        if (hidden && isOpen()) setOpen(false);
+      });
+    });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

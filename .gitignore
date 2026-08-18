@@ -2,3 +2,4 @@
 trinity-pawn-brokers-rebranding/
 node_modules/
 .DS_Store
+.fontcache/

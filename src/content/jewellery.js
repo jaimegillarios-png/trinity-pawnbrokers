@@ -38,14 +38,14 @@ export default {
     fields: [
       [
         { id: 'wf-type', label: 'Type of piece', type: 'select', options: ['Ring', 'Necklace/Pendant', 'Bracelet/Bangle', 'Earrings', 'Brooch', 'Suite', 'Other'] },
-        { id: 'wf-maker', label: 'Maker or brand, if you know it', optional: true, type: 'text', placeholder: 'e.g. Cartier, Tiffany, Van Cleef' },
+        { id: 'wf-maker', label: 'Maker or brand', optional: true, type: 'text', placeholder: 'e.g. Cartier, Tiffany, Van Cleef' },
       ],
       [
-        { id: 'wf-stones', label: 'Main stones, if any', optional: true, type: 'select', options: ['Diamond', 'Ruby', 'Sapphire', 'Emerald', 'Other', 'None'] },
+        { id: 'wf-stones', label: 'Main stones', optional: true, type: 'select', options: ['Diamond', 'Ruby', 'Sapphire', 'Emerald', 'Other', 'None'] },
         { id: 'wf-metal', label: 'Metal', optional: true, type: 'select', options: ['Gold', 'Platinum', 'Other', 'Not sure'] },
       ],
       [
-        { id: 'wf-papers', label: 'Any certificates, boxes or paperwork?', optional: true, type: 'text' },
+        { id: 'wf-papers', label: 'Box or papers?', optional: true, type: 'text' },
       ],
     ],
     photos: { label: 'Add photos', hint: 'The whole piece, any hallmarks and any signature' },

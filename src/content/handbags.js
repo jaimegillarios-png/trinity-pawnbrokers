@@ -38,7 +38,7 @@ export default {
     fields: [
       [
         { id: 'wf-brand', label: 'Brand', type: 'select', options: ['Hermès', 'Chanel', 'Louis Vuitton', 'Dior', 'Gucci', 'Prada', 'Other'] },
-        { id: 'wf-model', label: 'Model, if you know it', optional: true, type: 'text', placeholder: 'e.g. Birkin 30, Classic Flap, Neverfull' },
+        { id: 'wf-model', label: 'Model', optional: true, type: 'text', placeholder: 'e.g. Birkin 30, Classic Flap, Neverfull' },
       ],
       [
         { id: 'wf-colour', label: 'Colour &amp; material', optional: true, type: 'text' },

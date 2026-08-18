@@ -42,7 +42,7 @@ export default {
       [
         { id: 'wf-brand', label: 'Brand', type: 'select',
           options: ['Rolex', 'Patek Philippe', 'Audemars Piguet', 'Omega', 'Cartier', 'Breitling', 'Vacheron Constantin', 'Jaeger-LeCoultre', 'Other'] },
-        { id: 'wf-model', label: 'Model or reference', optional: true, type: 'text', placeholder: 'e.g. Submariner 116610LN' },
+        { id: 'wf-model', label: 'Model or ref', optional: true, type: 'text', placeholder: 'e.g. Submariner 116610LN' },
       ],
       [
         { id: 'wf-papers', label: 'Box and papers?', type: 'select', options: ['Yes', 'Papers only', 'Box only', 'Neither'] },

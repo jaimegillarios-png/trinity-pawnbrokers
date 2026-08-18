@@ -49,7 +49,8 @@ See `tokens.css` / `tokens.json`. Key additions this page relies on: `--tr-succe
 - **Phosphor Icons** web font — Light + Fill stylesheets (`@phosphor-icons/web@2.1.1`).
 - **Reviews.co.uk** badge-modern widget (`widget.reviews.co.uk/badge-modern/dist.js`).
 - Hero + card imagery: Unsplash placeholders via `image-slot` — replace with licensed photography.
-- Fonts: Cormorant Garamond, Archivo, Jost (Google Fonts).
+- Fonts: Cormorant Garamond, Archivo (Google Fonts). Archivo also covers the
+  caps role, which the original handoff gave to Jost.
 
 ## Files
 - `Trinity Asset Template - Watches.dc.html` — the design reference.

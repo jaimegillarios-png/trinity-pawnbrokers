@@ -14,7 +14,7 @@ export default {
     'Trinity Pawnbrokers and Unbolted are trading names of Open Access Finance Ltd, authorised and regulated by the Financial Conduct Authority (ref 741896). Registered in England &amp; Wales. Loans are secured against your goods (pawn loans). [Full regulatory footer subject to compliance sign-off.]',
 
   fontsHref:
-    'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Archivo:wght@400;500;600;700&family=Jost:wght@500;600&display=swap',
+    'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Archivo:wght@400;500;600;700&display=swap',
   phosphorLight: 'https://unpkg.com/@phosphor-icons/web@2.1.1/src/light/style.css',
   phosphorFill: 'https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css',
   reviewsWidget: 'https://widget.reviews.co.uk/badge-modern/dist.js',

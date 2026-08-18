@@ -9,23 +9,25 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Archivo:wght@400;500;600;700&family=Jost:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/light/style.css" rel="stylesheet">
 <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" rel="stylesheet">
 
 <!-- Design tokens: the single source of truth. Imported before any component CSS. -->
-<link rel="stylesheet" href="src/styles/trinity-tokens.css?v=e11d48bc">
-<link rel="stylesheet" href="src/styles/trinity-components.css?v=04c2782d">
-<link rel="stylesheet" href="src/styles/asset-page.css?v=7bd11f5a">
+<link rel="stylesheet" href="src/styles/trinity-tokens.css?v=699fa1e5">
+<link rel="stylesheet" href="src/styles/trinity-components.css?v=7c7471a4">
+<link rel="stylesheet" href="src/styles/asset-page.css?v=049cdb5f">
 
 <script src="https://widget.reviews.co.uk/badge-modern/dist.js" defer></script>
-<script src="src/scripts/trinity-nav.js?v=c34830f4" defer></script>
+<script src="src/scripts/trinity-nav.js?v=bebfbd0a" defer></script>
 <script src="src/scripts/trinity-reveal.js?v=b9ced3bb" defer></script>
 <script src="src/scripts/asset-page.js?v=55a86579" defer></script>
 </head>
 
-<!-- Set data-confirm-notes="off" to hide every amber compliance chip at launch. -->
-<body data-confirm-notes="on" data-reveal=".lend-grid > *, .borrow-grid > *, .how-grid > .how-step, .value-points > *, .compare-grid > *, .proof-grid > *, .faq-item, .rep-card, .closing-inner > *">
+<!-- Review annotations: "on" shows every amber compliance chip and the
+     specimen bar; "off" hides both. Flip this one attribute to bring the
+     review layer back — nothing is deleted from the content files. -->
+<body data-confirm-notes="off" data-reveal=".lend-grid > *, .borrow-grid > *, .how-grid > .how-step, .value-points > *, .compare-grid > *, .proof-grid > *, .faq-item, .rep-card, .closing-inner > *">
 
 <div class="rule-bar">
   <div class="rule-bar-inner">
@@ -45,21 +47,25 @@
 <header class="masthead">
   <div class="masthead-grid">
     <nav>
-      <a href="#index" class="tr-navlink">What we lend against</a>
-      <a href="#how" class="tr-navlink">How it works</a>
+      <div class="nav-panel">
+        <a href="#index" class="tr-navlink">What we lend against</a>
+        <a href="#how" class="tr-navlink">How it works</a>
+      </div>
     </nav>
     <a href="./" class="tr-wordmark" aria-label="Trinity Pawnbrokers — home">
-      <span class="tr-mark" aria-hidden="true">
-        <span></span>
-        <span class="tr-mark__pair"><span></span><span></span></span>
-      </span>
-      <span class="tr-wordmark__name">Trinity</span>
-      <span class="tr-wordmark__sub">Pawnbrokers</span>
+      <img class="tr-logo" src="brand/trinity-logo.svg" alt="" width="179" height="20" decoding="async">
     </a>
     <nav>
-      <a href="#" class="tr-navlink">Trust &amp; security</a>
-      <a href="tel:+442035671300" class="tr-phone-btn">020 3567 1300</a>
+      <div class="nav-panel">
+        <a href="#" class="tr-navlink">Trust &amp; security</a>
+        <a href="tel:+442035671300" class="tr-phone-btn">020 3567 1300</a>
+      </div>
     </nav>
+    <a class="tr-call" href="tel:+442035671300" aria-label="Call Trinity Pawnbrokers on 020 3567 1300">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M6.8 3.5h2.6a1 1 0 0 1 1 .79l.66 3.05a1 1 0 0 1-.5 1.1L8.9 9.6a12.6 12.6 0 0 0 5.5 5.5l1.16-1.66a1 1 0 0 1 1.1-.5l3.05.66a1 1 0 0 1 .79 1v2.6a2 2 0 0 1-2.16 2C10.7 18.65 5.35 13.3 4.8 5.66a2 2 0 0 1 2-2.16z"/>
+      </svg>
+    </a>
     <button class="tr-burger" type="button" aria-label="Menu" aria-expanded="false" hidden>
       <span></span><span></span><span></span>
     </button>
@@ -98,7 +104,7 @@
             <span class="tr-field tr-field--select"><label class="tr-field__label" for="wf-brand">Brand</label><select id="wf-brand"><option>Rolex</option><option>Patek Philippe</option><option>Audemars Piguet</option><option>Omega</option><option>Cartier</option><option>Breitling</option><option>Vacheron Constantin</option><option>Jaeger-LeCoultre</option><option>Other</option></select></span>
           </div>
           <div>
-            <span class="tr-field"><label class="tr-field__label" for="wf-model">Model or reference <span class="tr-label__opt">(optional)</span></label><input id="wf-model" type="text" placeholder="e.g. Submariner 116610LN"></span>
+            <span class="tr-field"><label class="tr-field__label" for="wf-model">Model or ref <span class="tr-label__opt">(optional)</span></label><input id="wf-model" type="text" placeholder="e.g. Submariner 116610LN"></span>
           </div>
         </div>
         <div class="field-row">

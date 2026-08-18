@@ -260,6 +260,8 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
 /* ========================= masthead ========================= */
 .masthead { background: var(--tr-white); border-bottom: 1px solid var(--tr-line-soft); }
 .masthead-grid {
+  --tr-logo-h: 20px;        /* the burger centres on this — see the 760px block */
+  --tr-mast-pad-top: 18px;
   max-width: var(--tr-container);
   margin: 0 auto;
   padding: 26px var(--tr-pad-side) 22px;
@@ -277,7 +279,18 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
   text-transform: uppercase;
 }
 .masthead-grid nav:last-of-type { justify-content: flex-end; }
+.nav-panel { display: contents; }
 .tr-wordmark { text-decoration: none; color: var(--tr-ink); text-align: center; display: block; }
+/* Supplied brand lockup (brand/trinity-logo.svg): inverted mark left, TRINITY
+   right. Natural size is 179x20 — its cap height matches the type-built
+   wordmark it replaced, so the masthead keeps the same optical weight. */
+.tr-logo {
+  display: block;
+  height: var(--tr-logo-h);
+  width: auto;              /* follows the 179:20 intrinsic ratio */
+  margin-inline: auto;      /* on mobile the anchor stretches full width */
+}
+@media (max-width: 400px) { .masthead-grid { --tr-logo-h: 17px; } }
 /* Three-ball mark: one above, two below. The dot rule must not also match the
    pair wrapper, or it would out-specify its `display:flex` and stack all three. */
 .tr-mark { display: flex; flex-direction: column; align-items: center; gap: 2.26px; margin-bottom: 9px; }
@@ -296,6 +309,65 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
+/* ---- horizontal lockup ------------------------------------------------
+   Left-aligned variant: mark on the left, inverted (two dots above one), with
+   the name and descender stacked to its right. Use as:
+     <a class="tr-wordmark tr-wordmark--inline"> … </a>
+   Same markup as the stacked lockup — only the class changes. */
+.tr-wordmark--inline {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  column-gap: 13px;
+  align-items: center;
+  text-align: left;
+}
+/* The mark matches the VISIBLE height of the two text lines — cap-top of
+   TRINITY to the baseline of PAWNBROKERS, measured at 36.2px. Matching the line
+   boxes instead (42.9px) made the mark read noticeably too big, because line
+   boxes carry leading above and below the ink.
+   Its own gaps stay proportional to the dot (0.251 vertical, 0.444 horizontal —
+   the ratios of the stacked lockup), so scaling never distorts the triangle.
+   Total height = 2 dots + 1 vertical gap = 2.251 x dot = 36.2px. */
+.tr-wordmark--inline { --tr-mark-dot: 16.1px; }
+.tr-wordmark--inline .tr-mark {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  flex-direction: column-reverse; /* inverted: the pair sits above the single */
+  align-self: center;
+  margin-bottom: 0;
+  gap: calc(var(--tr-mark-dot) * 0.251);
+  /* Centring on the grid area lands 0.6px low, because the ink is not centred
+     within the two line boxes. Nudge it back onto the cap line. */
+  transform: translateY(-0.6px);
+}
+/* Size the DOTS only. `.tr-mark span` would also match .tr-mark__pair (it is a
+   span), sizing the wrapper and squashing the two dots inside it into ovals. */
+.tr-wordmark--inline .tr-mark > span:not(.tr-mark__pair),
+.tr-wordmark--inline .tr-mark__pair > span {
+  width: var(--tr-mark-dot);
+  height: var(--tr-mark-dot);
+  flex: none;               /* never shrink — the dots must stay circular */
+}
+.tr-wordmark--inline .tr-mark__pair {
+  width: auto;
+  height: auto;
+  gap: calc(var(--tr-mark-dot) * 0.444);
+}
+.tr-wordmark--inline .tr-wordmark__name {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  line-height: 0.86;
+}
+.tr-wordmark--inline .tr-wordmark__sub {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  text-align: left;
+  margin-top: 3px;
+}
+
 .tr-wordmark__sub {
   display: block;
   font: 600 9px/1.9 var(--tr-font-body);
@@ -344,6 +416,28 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
 /* ========================= mobile navigation ========================= */
 /* The burger is revealed by src/scripts/trinity-nav.js; with JS off it stays
    hidden and the nav below simply stacks, so every link is still reachable. */
+/* Mobile call button — mirrors the burger on the opposite side of the logo.
+   Hidden above the burger breakpoint, where the nav carries .tr-phone-btn. */
+.tr-call {
+  display: none;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  color: var(--tr-ink);
+  transition: color 0.2s ease;
+}
+.tr-call svg {
+  width: 22px;    /* same as the burger's bars, so both sides sit flush */
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tr-call:hover { color: var(--tr-green-leaf); }
+
 .tr-burger {
   display: none;
   flex-direction: column;
@@ -370,7 +464,11 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
 [data-nav="open"] .tr-burger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 @media (prefers-reduced-motion: reduce) { .tr-burger span { transition: none; } }
 
-@media (max-width: 760px) {
+/* Tablets get the mobile masthead too: at 1024px the two nav groups, the
+   logo and the phone button are technically still side by side, but with
+   no breathing room. 1024 covers iPad Pro portrait; the rule bar keeps its
+   own 760px breakpoint, which is about line length, not the nav. */
+@media (max-width: 1024px) {
   /* wordmark stays centred — it is the identity; the burger sits to its right */
   /* Flex column with explicit order: the wordmark stays on top when the menu
      opens, rather than sitting between the two nav groups as DOM order gives. */
@@ -381,7 +479,7 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
     position: relative;
     text-align: center;
     gap: 0;
-    padding: 18px var(--tr-pad-side) 16px;
+    padding: var(--tr-mast-pad-top) var(--tr-pad-side) 16px;
   }
   .masthead-grid > .tr-wordmark { order: 1; }
   .masthead-grid > nav:first-of-type { order: 2; }
@@ -389,8 +487,21 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
   .tr-burger {
     display: flex;
     position: absolute;
-    top: 14px;
-    right: calc(var(--tr-pad-side) - 10px);
+    /* Centre the icon on the logo's centre line rather than guessing a top
+       offset — the old 14px was tuned to the 75px stacked lockup and left the
+       burger 9.5px low once the 20px logo replaced it. */
+    top: calc(var(--tr-mast-pad-top) + var(--tr-logo-h) / 2);
+    transform: translateY(-50%);
+    /* The 44px tap target is wider than its 22px bars, so pull it out by half
+       the difference to sit the bars flush with the content padding. */
+    right: calc(var(--tr-pad-side) - 11px);
+  }
+  .tr-call {
+    display: flex;
+    position: absolute;
+    top: calc(var(--tr-mast-pad-top) + var(--tr-logo-h) / 2);
+    transform: translateY(-50%);
+    left: calc(var(--tr-pad-side) - 11px);
   }
   .masthead-grid > nav {
     display: flex;
@@ -399,7 +510,18 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
     justify-content: flex-start;
     gap: 0;
   }
-  .masthead-grid > nav:first-of-type { margin-top: 18px; }
+  .nav-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 0;      /* without this the 0fr row cannot collapse */
+    overflow: hidden;
+  }
+  /* Spacing hangs off the first link, not the nav or the panel. Padding on
+     the panel sits outside the height the grid row imposes, so it would leave
+     18px of dead masthead while collapsed; a child margin is clipped with the
+     rest of the content. */
+  .masthead-grid > nav:first-of-type .nav-panel > *:first-child { margin-top: 18px; }
   .masthead-grid > nav .tr-navlink {
     padding: 15px 0;
     border-top: 1px solid var(--tr-line-soft);
@@ -410,6 +532,41 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
     padding: 15px;
     text-align: center;
   }
-  /* collapsed — only ever set once JS has taken over */
-  [data-nav="closed"] .masthead-grid > nav { display: none; }
+  /* ---- open/close animation ----------------------------------------
+     0fr -> 1fr animates to the content's OWN height, which a max-height
+     guess cannot do: too small clips the menu, too large makes the easing
+     finish early and the panel appear to stall.
+     Everything below is gated on [data-nav], which only exists once the
+     script runs — with no JS the menu stays open and fully visible. */
+  [data-nav] .masthead-grid > nav {
+    display: grid;
+    /* Full-width column. An auto column would size to its content, and the
+       desktop `justify-content: flex-end` on the second nav would then shunt
+       the whole panel to the right. */
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.42s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  [data-nav="open"] .masthead-grid > nav { grid-template-rows: 1fr; }
+
+  /* Links rise and fade in behind the opening panel. */
+  [data-nav] .nav-panel > * {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.28s ease, transform 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  [data-nav="open"] .nav-panel > * { opacity: 1; transform: none; }
+
+  /* Staggered on the way in; on the way out the delays drop to 0 so the
+     menu clears immediately rather than trailing behind the panel. */
+  [data-nav="open"] .masthead-grid > nav:first-of-type .nav-panel > *:nth-child(1) { transition-delay: 0.10s; }
+  [data-nav="open"] .masthead-grid > nav:first-of-type .nav-panel > *:nth-child(2) { transition-delay: 0.16s; }
+  [data-nav="open"] .masthead-grid > nav:last-of-type  .nav-panel > *:nth-child(1) { transition-delay: 0.22s; }
+  [data-nav="open"] .masthead-grid > nav:last-of-type  .nav-panel > *:nth-child(2) { transition-delay: 0.28s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-nav] .masthead-grid > nav,
+    [data-nav] .nav-panel > * { transition: none; }
+    [data-nav="open"] .nav-panel > * { transition-delay: 0s; }
+  }
 }

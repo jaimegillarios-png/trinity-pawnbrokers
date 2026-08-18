@@ -37,18 +37,25 @@ const masthead = () => `
 <header class="masthead">
   <div class="masthead-grid">
     <nav>
-      <a href="#index" class="tr-navlink">What we lend against</a>
-      <a href="#how" class="tr-navlink">How it works</a>
+      <div class="nav-panel">
+        <a href="#index" class="tr-navlink">What we lend against</a>
+        <a href="#how" class="tr-navlink">How it works</a>
+      </div>
     </nav>
     <a href="./" class="tr-wordmark" aria-label="${site.name} — home">
-      ${mark()}
-      <span class="tr-wordmark__name">Trinity</span>
-      <span class="tr-wordmark__sub">Pawnbrokers</span>
+      <img class="tr-logo" src="brand/trinity-logo.svg" alt="" width="179" height="20" decoding="async">
     </a>
     <nav>
-      <a href="#" class="tr-navlink">Trust &amp; security</a>
-      <a href="tel:${site.phoneHref}" class="tr-phone-btn">${site.phone}</a>
+      <div class="nav-panel">
+        <a href="#" class="tr-navlink">Trust &amp; security</a>
+        <a href="tel:${site.phoneHref}" class="tr-phone-btn">${site.phone}</a>
+      </div>
     </nav>
+    <a class="tr-call" href="tel:${site.phoneHref}" aria-label="Call ${site.name} on ${site.phone}">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M6.8 3.5h2.6a1 1 0 0 1 1 .79l.66 3.05a1 1 0 0 1-.5 1.1L8.9 9.6a12.6 12.6 0 0 0 5.5 5.5l1.16-1.66a1 1 0 0 1 1.1-.5l3.05.66a1 1 0 0 1 .79 1v2.6a2 2 0 0 1-2.16 2C10.7 18.65 5.35 13.3 4.8 5.66a2 2 0 0 1 2-2.16z"/>
+      </svg>
+    </a>
     <button class="tr-burger" type="button" aria-label="Menu" aria-expanded="false" hidden>
       <span></span><span></span><span></span>
     </button>
@@ -128,8 +135,10 @@ export default function assetPage(c) {
 <script src="src/scripts/asset-page.js" defer></script>
 </head>
 
-<!-- Set data-confirm-notes="off" to hide every amber compliance chip at launch. -->
-<body data-confirm-notes="on" data-reveal="${revealGroups}">
+<!-- Review annotations: "on" shows every amber compliance chip and the
+     specimen bar; "off" hides both. Flip this one attribute to bring the
+     review layer back — nothing is deleted from the content files. -->
+<body data-confirm-notes="off" data-reveal="${revealGroups}">
 ${ruleBar()}
 ${masthead()}
 <!-- ===== HERO + VALUATION ENTRY ===== -->
