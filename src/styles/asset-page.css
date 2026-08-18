@@ -107,9 +107,6 @@
 
 /* ========================= valuation form card ========================= */
 .hero-form-card {
-  /* The CTAs scroll here; leave a little air above so the card does not land
-     flush against the top of the viewport. */
-  scroll-margin-top: 24px;
   position: relative;
   background: var(--tr-warm-panel);
   color: var(--tr-ink);
@@ -474,7 +471,13 @@
      block — 28px keeps the separation without the dead band. */
   .hero-copy { padding: 28px 0 24px; }
   .tr-h1 { max-width: none; }
+  /* Eyebrow steps down so it sits under the 40px h1 rather than competing with
+     it. Tracking is set in em, so it scales with the size on its own. */
+  .hero-copy .tr-eyebrow { font-size: 11.5px; }
   .hero-form-card { padding: 30px 24px 28px; margin: 8px 0 40px; }
+  /* The form is the conversion object; on a phone it is a full-width panel in
+     its own right, so its heading carries more weight than the shared --tr-h3. */
+  .hero-form-card h2 { font-size: 27px; }
 
   /* trust strip -> centred, hairline-divided list */
   .trust-inner {

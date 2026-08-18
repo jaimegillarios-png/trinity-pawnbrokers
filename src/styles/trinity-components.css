@@ -436,6 +436,25 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
   .rv-chrome { transition: none !important; opacity: 1 !important; transform: none !important; }
 }
 
+/* ---- sticky nav --------------------------------------------------------
+   The masthead follows you down the page: it slides out of the way while you
+   scroll down and returns the moment you scroll up. Sticky rather than fixed,
+   so it still occupies its space in the flow and nothing jumps on load.
+   Must sit after .rv-chrome above — both selectors weigh the same, so source
+   order is what stops the load animation's `transform: none` winning here. */
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  transition: transform 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+[data-mast="hidden"] .masthead { transform: translateY(-100%); }
+@media (prefers-reduced-motion: reduce) { .masthead { transition: none; } }
+
+/* Anchor targets clear the nav when it is showing. --tr-mast-h is measured and
+   kept current by trinity-nav.js; the fallback keeps this sane without JS. */
+section[id], [id].hero-form-card { scroll-margin-top: calc(var(--tr-mast-h, 0px) + 24px); }
+
 /* ---- between pages -----------------------------------------------------
    Navigating asset page -> asset page cross-fades instead of hard-cutting.
    Entirely declarative: browsers without the View Transitions API navigate

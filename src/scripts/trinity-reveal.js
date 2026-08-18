@@ -57,6 +57,19 @@
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
         onLoad.forEach(function (el) { el.classList.add('in'); });
+
+        // The masthead is also the sticky nav, which animates with its own
+        // transform. Hand it back once the settle has played, so the two never
+        // fight over the same property. Timed from HERE, not from init: on a
+        // throttled tab these frames can be ~500ms apart, and an independent
+        // timer would strip the classes before they were ever applied.
+        setTimeout(function () {
+          chrome.forEach(function (el) {
+            if (!el) return;
+            el.classList.remove('rv-chrome', 'in');
+            el.style.removeProperty('--rd');
+          });
+        }, 900);
       });
     });
 

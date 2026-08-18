@@ -29,6 +29,43 @@
     });
   }
 
+  // --- sticky nav ----------------------------------------------------------
+  // Hide on the way down, return on the way up. Reads scroll position inside a
+  // rAF so a fast flick costs one measurement per frame, not one per event.
+  function stickyNav() {
+    var mast = document.querySelector('.masthead');
+    if (!mast) return;
+    var root = document.documentElement;
+    var last = window.scrollY;
+    var ticking = false;
+    var JITTER = 8;   // px of travel before we act, so a trackpad nudge is ignored
+
+    function measure() { root.style.setProperty('--tr-mast-h', mast.offsetHeight + 'px'); }
+    measure();
+    window.addEventListener('resize', measure);
+    root.setAttribute('data-mast', 'shown');
+
+    function show() { root.setAttribute('data-mast', 'shown'); }
+    // Tabbing into a hidden nav would otherwise focus something off-screen
+    mast.addEventListener('focusin', show);
+
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        ticking = false;
+        var y = window.scrollY;
+        var delta = y - last;
+        if (Math.abs(delta) < JITTER) return;   // leave `last` alone so small moves accumulate
+        // Never retract while the mobile menu is open, or near the top of the
+        // page where there is nothing to gain by hiding.
+        if (root.getAttribute('data-nav') === 'open' || y <= mast.offsetHeight) show();
+        else root.setAttribute('data-mast', delta > 0 ? 'hidden' : 'shown');
+        last = y;
+      });
+    }, { passive: true });
+  }
+
   function init() {
     anchors();
     var burger = document.querySelector('.tr-burger');
@@ -38,6 +75,11 @@
     var root = document.documentElement;
     burger.hidden = false;              // JS is running — the burger is now the control
     root.setAttribute('data-nav', 'closed');
+
+    // Only now is the nav collapsed, so the masthead measures its real height.
+    // Called earlier it read 261px — the full open-menu height — and every
+    // anchor would have scrolled to a target sitting 200px too low.
+    stickyNav();
 
     function setOpen(open) {
       root.setAttribute('data-nav', open ? 'open' : 'closed');
