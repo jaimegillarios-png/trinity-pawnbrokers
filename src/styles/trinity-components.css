@@ -267,7 +267,7 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
 .masthead { background: var(--tr-white); border-bottom: 1px solid var(--tr-line-soft); }
 .masthead-grid {
   --tr-logo-h: 20px;        /* the burger centres on this — see the 760px block */
-  --tr-mast-pad-top: 18px;
+  --tr-mast-pad-top: 22px;   /* phones only — the desktop padding is set below */
   max-width: var(--tr-container);
   margin: 0 auto;
   padding: 26px var(--tr-pad-side) 22px;
@@ -536,7 +536,7 @@ section[id], [id].hero-form-card { scroll-margin-top: calc(var(--tr-mast-h, 0px)
     position: relative;
     text-align: center;
     gap: 0;
-    padding: var(--tr-mast-pad-top) var(--tr-pad-side) 16px;
+    padding: var(--tr-mast-pad-top) var(--tr-pad-side) 20px;
   }
   .masthead-grid > .tr-wordmark { order: 1; }
   .masthead-grid > nav:first-of-type { order: 2; }
