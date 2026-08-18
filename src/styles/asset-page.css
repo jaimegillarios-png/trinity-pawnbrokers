@@ -481,7 +481,16 @@
   /* Eyebrow steps down so it sits under the 40px h1 rather than competing with
      it. Tracking is set in em, so it scales with the size on its own. */
   .hero-copy .tr-eyebrow { font-size: 11.5px; }
-  .hero-form-card { padding: 30px 24px 28px; margin: 0 0 40px; }
+  /* Full-bleed: pull the card out through .hero-grid's side padding so it
+     runs edge to edge. Its own padding then takes over that job at the same
+     value, keeping the fields on the page's left margin rather than stepping
+     in twice. Square corners because a radius against the viewport edge just
+     leaks the hero image through at the ends. */
+  .hero-form-card {
+    padding: 30px var(--tr-pad-side) 28px;
+    margin: 0 calc(-1 * var(--tr-pad-side)) 40px;
+    border-radius: 0;
+  }
   /* The form is the conversion object; on a phone it is a full-width panel in
      its own right, so its heading carries more weight than the shared --tr-h3. */
   .hero-form-card h2 { font-size: 27px; }
