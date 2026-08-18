@@ -488,7 +488,9 @@
      leaks the hero image through at the ends. */
   .hero-form-card {
     padding: 30px var(--tr-pad-side) 28px;
-    margin: 0 calc(-1 * var(--tr-pad-side)) 40px;
+    /* No bottom margin: full-bleed, the card meets the trust strip directly.
+       The strip brings its own 4px + 13px of top padding. */
+    margin: 0 calc(-1 * var(--tr-pad-side));
     border-radius: 0;
   }
   /* The form is the conversion object; on a phone it is a full-width panel in
