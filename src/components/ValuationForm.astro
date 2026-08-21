@@ -49,13 +49,13 @@ const stepLabels = { 1: form.stepOneLabel ?? 'Step 1 of 2', 2: form.stepTwoLabel
       ))}
 
       {form.photosLabel && (
-        <div class="tr-photos">
-          <span class="tr-photos__label">{form.photosLabel}</span>
-          <label class="tr-photos__drop" for="wf-photos">
+        <>
+          <p class="tr-label">{form.photosLabel}</p>
+          <label class="tr-dropzone" for="wf-photos">
             {form.photosHint}
             <input id="wf-photos" name="photos" type="file" accept="image/*" multiple hidden />
           </label>
-        </div>
+        </>
       )}
 
       <button type="button" class="tr-cta tr-cta--gold tr-cta--block" data-step-next>
@@ -98,7 +98,7 @@ const stepLabels = { 1: form.stepOneLabel ?? 'Step 1 of 2', 2: form.stepTwoLabel
         <button type="submit" class="tr-cta tr-cta--gold tr-cta--block">
           {form.submitLabel ?? 'Get my valuation'}
         </button>
-        <button type="button" class="tr-link-back" data-step-back>{form.backLabel ?? 'Back'}</button>
+        <button type="button" class="tr-back-btn" data-step-back>{form.backLabel ?? 'Back'}</button>
         {form.noteStep2 && <p class="tr-form-note">{form.noteStep2}</p>}
       </div>
     )}

@@ -253,6 +253,10 @@ async function buildAssetPage(content, order) {
 async function buildSiteSettings() {
   const mod = await import(pathToFileURL(resolve(root, 'legacy/src/templates/trinity.config.mjs')).href);
   const cfg = mod.site ?? mod.default ?? {};
+  if (!cfg.legal && !cfg.legalFooter) {
+    fail('No legal footer found in trinity.config.mjs — refusing to write an empty regulatory footer.');
+  }
+
   return {
     _id: 'siteSettings',
     _type: 'siteSettings',
@@ -263,7 +267,7 @@ async function buildSiteSettings() {
     phone: cfg.phone,
     phoneHref: cfg.phoneHref,
     fcaReference: '741896',
-    legalFooter: cfg.legalFooter ?? '',
+    legalFooter: cfg.legal ?? cfg.legalFooter ?? '',
     // Off by default — the site should present cleanly until compliance asks
     // to see the outstanding markers.
     showConfirmNotes: false,

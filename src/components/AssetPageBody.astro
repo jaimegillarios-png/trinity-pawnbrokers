@@ -1,4 +1,7 @@
 ---
+// Scoped to item pages: the hero, valuation form, trust strip and comparison
+// table are only used here.
+import '../styles/asset-page.css';
 import Hero from './Hero.astro';
 import TrustStrip from './TrustStrip.astro';
 import ValuationForm from './ValuationForm.astro';
@@ -91,11 +94,54 @@ const { page, site } = Astro.props;
     </section>
   )}
 
+  {page.proof && (
+    <section class="tr-band tr-band--grey">
+      <div class="proof-grid">
+        <div>
+          {/* The badge draws its colour from the gold token at runtime, so it
+              stays on-brand without a hex being pasted into the markup. */}
+          <div
+            id="badge-200"
+            style="width:200px;margin-bottom:20px"
+            data-reviews-badge
+            data-store={site.reviewsStore}
+            data-colour-token="--tr-gold-deep"
+          ></div>
+          {page.proof.reviewsNote && (
+            <p class="tr-body" style="margin:0;max-width:44ch">{page.proof.reviewsNote}</p>
+          )}
+        </div>
+
+        {page.proof.caseStudy && (
+          <div class="tr-card tr-card--panel">
+            <p class="tr-spec__label" style="margin-bottom:16px">
+              {page.proof.caseStudy.label}<ConfirmChip note={page.proof.caseStudy.chip} />
+            </p>
+            {page.proof.caseStudy.statement && (
+              <p style="font:500 var(--tr-h3) var(--tr-font-display);line-height:1.45;margin:0;color:var(--tr-green-vault);text-wrap:pretty">
+                {page.proof.caseStudy.statement}
+              </p>
+            )}
+            <Ledger rows={page.proof.caseStudy.rows} />
+            {page.proof.caseStudy.note && (
+              <p class="tr-caption" style="margin:22px 0 0">{page.proof.caseStudy.note}</p>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
+  )}
+
   {page.faqs && (
     <section class="tr-band tr-band--white">
-      <div class="tr-inner faq-split">
-        <SectionOpener intro={page.faqs.intro} />
-        <Faqs items={page.faqs.items} />
+      <div class="tr-inner">
+        <div class="faq-split">
+          <div class="tr-sticky">
+            {page.faqs.intro?.eyebrow && <p class="tr-eyebrow">{page.faqs.intro.eyebrow}</p>}
+            {page.faqs.intro?.heading && <h2 class="tr-h2">{page.faqs.intro.heading}</h2>}
+          </div>
+          <Faqs items={page.faqs.items} />
+        </div>
       </div>
     </section>
   )}
@@ -132,3 +178,6 @@ const { page, site } = Astro.props;
     </section>
   )}
 
+<script>
+  import '../scripts/asset-page.js';
+</script>
