@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { page, ASSET_SLUGS, root, count } from './helpers.mjs';
+import { page, home, ASSET_SLUGS, root, count } from './helpers.mjs';
 
 /**
  * The migration is one-way, so the source content files stay the record of
@@ -58,3 +58,21 @@ for (const slug of ASSET_SLUGS) {
     assert.ok(html.includes(strip(c.hero.intro).slice(0, 60)), 'hero intro');
   });
 }
+
+test('no HTML entities leak through the CMS as literal text', () => {
+  // The content files were written to be interpolated into HTML, so they carry
+  // `&amp;`, `&ndash;` and friends. Sanity stores text — an entity that reaches
+  // a document is escaped again on render and the page shows "&amp;" to the
+  // reader, and the Studio shows it to the client.
+  const leaks = [];
+  for (const slug of ['index', ...ASSET_SLUGS, 'blog']) {
+    const html = slug === 'index' ? home() : page(slug);
+    for (const m of html.matchAll(/&amp;[a-zA-Z#][a-zA-Z#0-9]{1,7};/g)) {
+      leaks.push(`${slug}: ${m[0]} — ${html.slice(Math.max(0, m.index - 40), m.index + 20).replace(/\s+/g, ' ')}`);
+    }
+  }
+  assert.deepEqual(
+    leaks.slice(0, 8), [],
+    `${leaks.length} entities are stored as text instead of characters. Re-run the migration.`,
+  );
+});

@@ -141,8 +141,26 @@ const liftChip = (obj, fields) => {
   return chip ? { ...out, chip } : out;
 };
 
+/**
+ * The content files were written to be interpolated straight into HTML, so
+ * they carry entities. Sanity stores text, not markup — an `&amp;` reaching a
+ * document renders as a literal "&amp;" on the page and, worse, shows up that
+ * way in the Studio for the client to trip over. Every string the migration
+ * writes goes through here (see decodeDeep at the bottom).
+ */
+const decode = (s = '') =>
+  s.replace(/&ndash;/g, '–').replace(/&mdash;/g, '—').replace(/&hellip;/g, '…')
+   .replace(/&rsquo;/g, '’').replace(/&lsquo;/g, '‘').replace(/&middot;/g, '·')
+   .replace(/&ldquo;/g, '“').replace(/&rdquo;/g, '”')
+   .replace(/&rarr;/g, '→').replace(/&larr;/g, '←')
+   .replace(/&nbsp;/g, ' ').replace(/&pound;/g, '£').replace(/&times;/g, '×')
+   .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
+   .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+   // Last, so the entities above can't be resurrected by an &amp;-encoded one.
+   .replace(/&amp;/g, '&');
+
 const deMarkup = (html = '') =>
-  html
+  decode(html)
     .replace(/<span[^>]*>(.*?)<\/span>/gi, '*$1*')
     .replace(/<em[^>]*>(.*?)<\/em>/gi, '$1')
     .replace(/<br\s*\/?>/gi, ' ')
@@ -406,11 +424,6 @@ async function buildHomePage() {
   const html = await readFile(resolve(root, 'legacy/index.html'), 'utf8');
   // Entities and <br> have to survive the trip: the CMS holds plain text, so
   // an undecoded &ndash; ends up rendered literally on the page.
-  const decode = (s = '') =>
-    s.replace(/&ndash;/g, '–').replace(/&mdash;/g, '—').replace(/&hellip;/g, '…')
-     .replace(/&rsquo;/g, '’').replace(/&lsquo;/g, '‘').replace(/&middot;/g, '·')
-     .replace(/&rarr;/g, '→').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&');
-
   const clean = (s = '') =>
     decode(s.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, ''))
       .replace(/[ \t]+/g, ' ')
@@ -709,6 +722,21 @@ const ordered = files.sort((a, b) => {
 
 console.log(`\n  ${DRY ? 'Dry run' : 'Importing'} → project ${projectId}, dataset ${dataset}\n`);
 
+/**
+ * Walks a built document and decodes every string in it. The per-field helpers
+ * above already do this, but they are easy to bypass — a field copied straight
+ * out of a content file (`label: f.label`) never touches them. This is the
+ * backstop, and it is why no entity can reach the CMS by being forgotten.
+ */
+const decodeDeep = (value) => {
+  if (typeof value === 'string') return decode(value);
+  if (Array.isArray(value)) return value.map(decodeDeep);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, decodeDeep(v)]));
+  }
+  return value;
+};
+
 const docs = [await buildSiteSettings(), await buildHomePage(), ...(await blogSeed()), ...legalStubs()];
 for (const [i, file] of ordered.entries()) {
   const mod = await import(pathToFileURL(resolve(dir, file)).href);
@@ -716,15 +744,18 @@ for (const [i, file] of ordered.entries()) {
   console.log(`  · ${basename(file, '.js')}`);
 }
 
+// Nothing goes to Sanity, or to the dry-run preview, carrying markup entities.
+const decoded = docs.map(decodeDeep);
+
 if (DRY) {
-  const sizes = docs.map((d) => `${d._id} (${JSON.stringify(d).length.toLocaleString()} bytes)`);
-  console.log(`\n  Would write ${docs.length} documents:\n    ${sizes.join('\n    ')}`);
+  const sizes = decoded.map((d) => `${d._id} (${JSON.stringify(d).length.toLocaleString()} bytes)`);
+  console.log(`\n  Would write ${decoded.length} documents:\n    ${sizes.join('\n    ')}`);
   const out = resolve(root, '.migration-preview.json');
-  await writeFile(out, JSON.stringify(docs, null, 2));
+  await writeFile(out, JSON.stringify(decoded, null, 2));
   console.log(`\n  Full output written to .migration-preview.json for review.\n`);
   process.exit(0);
 }
 
-const tx = docs.reduce((t, doc) => t.createOrReplace(doc), client.transaction());
+const tx = decoded.reduce((t, doc) => t.createOrReplace(doc), client.transaction());
 await tx.commit();
-console.log(`\n  Wrote ${docs.length} documents.\n`);
+console.log(`\n  Wrote ${decoded.length} documents.\n`);
