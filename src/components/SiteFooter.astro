@@ -1,20 +1,102 @@
 ---
 import type { SiteSettings } from '../lib/types';
+import { getAssetPageCards } from '../lib/sanity/queries';
+
 interface Props { site: SiteSettings }
 const { site } = Astro.props;
+
+/* Driven off the CMS so a new item page appears here without anyone
+   remembering to add it. */
+const items = await getAssetPageCards();
+
+/* Pages the sitemap calls for but that do not exist yet. They are listed so
+   the structure is visible, but deliberately not linked — a footer link to a
+   404 is worse than no link. Give one a route here and it becomes a link. */
+type Entry = { label: string; href?: string };
+
+const house: Entry[] = [
+  { label: 'How it works' },
+  { label: 'Trust & security', href: '/trust-and-security' },
+  { label: 'About the house' },
+  { label: 'Journal', href: '/blog' },
+  { label: 'Frequently asked questions' },
+  { label: 'Contact us' },
+];
+
+const legal: Entry[] = [
+  { label: 'Terms of business', href: '/terms' },
+  { label: 'Privacy policy', href: '/privacy' },
+  { label: 'Cookie policy', href: '/cookies' },
+  { label: 'Complaints procedure', href: '/complaints' },
+];
+
+const addr = site.address;
+const addressLines = [
+  addr?.street,
+  [addr?.locality, addr?.postcode].filter(Boolean).join(' '),
+].filter(Boolean) as string[];
+
+const year = new Date().getFullYear();
 ---
 <footer class="tr-footer">
-  <span class="tr-mark" aria-hidden="true">
-    <span></span>
-    <span class="tr-mark__pair"><span></span><span></span></span>
-  </span>
-  <div class="tr-footer__name">Trinity</div>
-  <div class="tr-footer__sub">Pawnbrokers</div>
+  <div class="tr-footer__inner">
+    <div class="tr-footer__brand">
+      <a class="tr-footer__id" href="/" aria-label={`${site.name} — home`}>
+        <img
+          class="tr-footer__logo"
+          src="/brand/trinity-logo-reversed.svg"
+          alt=""
+          width="179"
+          height="20"
+          decoding="async"
+        />
+      </a>
 
+      <p class="tr-footer__blurb">
+        Discreet, FCA-regulated loans against watches, jewellery, gold and fine art —
+        your item held in insured custody until you redeem it.
+      </p>
 
-  <nav class="tr-footer__nav" aria-label="Site">
-    <a href="/blog">Blog</a>
-  </nav>
+      <div class="tr-footer__contact">
+        <a class="tr-footer__phone" href={`tel:${site.phoneHref}`}>{site.phone}</a>
+        {site.email && <a href={`mailto:${site.email}`}>{site.email}</a>}
+        {addressLines.length > 0 && (
+          <address class="tr-footer__address">
+            {addressLines.map((line, i) => <>{i > 0 && <br />}{line}</>)}
+          </address>
+        )}
+      </div>
+    </div>
 
-  <div class="tr-footer__legal">{site.legalFooter}</div>
+    <nav class="tr-footer__col" aria-label="What we lend against">
+      <h2 class="tr-footer__col-title">What we lend against</h2>
+      <ul class="tr-footer__list">
+        {items.map((item) => (
+          <li><a href={`/${item.slug}`}>{item.title}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <nav class="tr-footer__col" aria-label="The house">
+      <h2 class="tr-footer__col-title">The house</h2>
+      <ul class="tr-footer__list">
+        {house.map((entry) => (
+          <li>
+            {entry.href
+              ? <a href={entry.href}>{entry.label}</a>
+              : <span class="tr-footer__pending">{entry.label}</span>}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+
+  <div class="tr-footer__bar">
+    <div class="tr-footer__bar-inner">
+      <p class="tr-footer__copy">© {year} {site.name}</p>
+      <nav class="tr-footer__legal-nav" aria-label="Legal">
+        {legal.map((entry) => <a href={entry.href}>{entry.label}</a>)}
+      </nav>
+    </div>
+  </div>
 </footer>

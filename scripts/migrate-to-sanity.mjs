@@ -331,6 +331,15 @@ async function buildSiteSettings() {
     reviewsStore: cfg.reviewsStore,
     phone: cfg.phone,
     phoneHref: cfg.phoneHref,
+    // The published London office. It lives here rather than only inside the
+    // homepage "Visit us" copy because the footer and the FinancialService
+    // JSON-LD both need it structured, not as a sentence.
+    address: {
+      street: 'Token House, 11–12 Token House Yard',
+      locality: 'London',
+      postcode: 'EC2R 7AS',
+      country: 'GB',
+    },
     fcaReference: '741896',
     legalFooter: (cfg.legal ?? cfg.legalFooter ?? '')
       .replace(/&amp;/g, '&').replace(/&ndash;/g, '–').replace(/&mdash;/g, '—')

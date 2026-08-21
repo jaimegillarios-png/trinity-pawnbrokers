@@ -75,13 +75,17 @@ test('structured data is present, valid and complete', () => {
   }
 });
 
-test('the regulatory footer is published and not empty', () => {
-  // The migration once wrote this as an empty string, and the page rendered
-  // happily with no authorisation statement on it at all.
+test('the FCA authorisation is published on every item page', () => {
+  // The migration once wrote the regulatory footer as an empty string and the
+  // page rendered happily with no authorisation statement on it at all.
+  //
+  // The visible statement was removed from the footer by design decision, so
+  // this now guards the machine-readable half. The *visible* FCA authorisation
+  // statement still needs a home before launch — see docs/launch-checklist.
   for (const slug of ASSET_SLUGS) {
-    const html = page(slug);
-    const footer = html.match(/class="tr-footer__legal">([^<]*)</)?.[1] ?? '';
-    assert.ok(footer.length > 80, `${slug}: regulatory footer is missing or too short`);
-    assert.match(footer, /Financial Conduct Authority/, `${slug}: no FCA authorisation statement`);
+    const org = structuredData(page(slug)).find((b) => b['@type'] === 'FinancialService');
+    assert.ok(org, `${slug}: no FinancialService block`);
+    assert.match(String(org.identifier?.value ?? ''), /^\d{6}$/,
+      `${slug}: FCA reference is missing or malformed`);
   }
 });

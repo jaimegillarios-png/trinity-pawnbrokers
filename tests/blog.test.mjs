@@ -90,7 +90,8 @@ test('article body copy is styled, not raw', () => {
 });
 
 test('the blog is reachable from the footer', () => {
-  assert.match(index(), /class="tr-footer__nav"[\s\S]*?href="\/blog"/, 'no footer link to the blog');
+  const footer = index().slice(index().lastIndexOf('<footer'));
+  assert.match(footer, /href="\/blog"/, 'no footer link to the blog');
 });
 
 test('placeholder articles are kept out of search', () => {

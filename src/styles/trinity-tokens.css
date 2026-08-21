@@ -38,6 +38,7 @@
   --tr-line-card:  rgba(27,31,28,0.18);
   --tr-line-strong:rgba(27,31,28,0.30);
   --tr-line-gold:  rgba(138,107,38,0.40); /* gold hairline / gold-bordered card */
+  --tr-line-on-green: rgba(245,241,230,0.14); /* hairline on the green grounds */
 
   /* ============ TYPE ============ */
   --tr-font-display: 'Cormorant Garamond', Georgia, serif; /* headings, statements, stat figures */

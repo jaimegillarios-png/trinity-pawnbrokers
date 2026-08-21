@@ -385,23 +385,88 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
 }
 
 /* ========================= footer ========================= */
+/* Three columns over a legal bar. The item links come from the CMS, so adding
+   an item page adds it here without anyone remembering to. */
 .tr-footer {
   background: var(--tr-green-footer);
   color: var(--tr-on-green-faint);
-  padding: 66px var(--tr-pad-side) 78px;
   font: 400 13px/1.7 var(--tr-font-body);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
-.tr-footer .tr-mark { gap: 2.19px; margin-bottom: 8px; }
-.tr-footer .tr-mark__pair { gap: 3.5px; }
-.tr-footer .tr-mark > span:not(.tr-mark__pair),
-.tr-footer .tr-mark__pair > span { width: 6.3px; height: 6.3px; background: var(--tr-gold-mid); }
-.tr-footer__name { font: 600 21px/1 var(--tr-font-display); letter-spacing: 0.2em; text-transform: uppercase; color: var(--tr-neutral); }
-.tr-footer__sub { font: 600 6.3px/1.9 var(--tr-font-body); letter-spacing: 0.42em; text-transform: uppercase; margin-top: 4.2px; color: var(--tr-on-green-faint); }
-.tr-footer__legal { max-width: var(--tr-reading); margin: 22px auto 0; }
+.tr-footer__inner {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 72px var(--tr-pad-side) 52px;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  gap: 56px;
+}
+
+/* ---- brand column ---- */
+.tr-footer__brand { display: flex; flex-direction: column; align-items: flex-start; }
+.tr-footer__id { display: block; line-height: 0; }
+.tr-footer__logo { width: 179px; height: auto; }
+.tr-footer__blurb { margin: 22px 0 0; max-width: 36ch; color: var(--tr-on-green-muted); }
+
+.tr-footer__contact { margin-top: 24px; display: flex; flex-direction: column; gap: 4px; }
+.tr-footer__contact a { color: var(--tr-neutral); text-decoration: none; }
+.tr-footer__contact a:hover { color: var(--tr-gold-mid); }
+.tr-footer__phone { font: 500 18px/1.4 var(--tr-font-display); letter-spacing: 0.04em; }
+.tr-footer__address { font-style: normal; color: var(--tr-on-green-muted); margin-top: 10px; }
+
+/* ---- link columns ---- */
+.tr-footer__col-title {
+  font: 500 10.5px/1 var(--tr-font-caps);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tr-on-green-strong);
+  margin: 0 0 18px;
+}
+.tr-footer__list { list-style: none; margin: 0; padding: 0; }
+.tr-footer__list li + li { margin-top: 10px; }
+.tr-footer__list a {
+  color: var(--tr-on-green);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.tr-footer__list a:hover {
+  color: var(--tr-gold-mid);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+/* Structure we know is coming but haven't built. Shown, never linked. */
+.tr-footer__pending { color: var(--tr-on-green-faint); }
+
+/* ---- legal bar ---- */
+.tr-footer__bar { border-top: 1px solid var(--tr-line-on-green); }
+.tr-footer__bar-inner {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 24px var(--tr-pad-side) 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 32px;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 12px;
+}
+.tr-footer__copy { margin: 0; color: var(--tr-on-green-faint); }
+.tr-footer__legal-nav { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+.tr-footer__legal-nav a {
+  color: var(--tr-on-green-faint);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.tr-footer__legal-nav a:hover { color: var(--tr-gold-mid); text-decoration: underline; text-underline-offset: 4px; }
+
+@media (max-width: 860px) {
+  .tr-footer__inner { grid-template-columns: 1fr 1fr; gap: 44px 32px; }
+  .tr-footer__brand { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .tr-footer__inner { grid-template-columns: 1fr; gap: 36px; padding-top: 54px; }
+  .tr-footer__bar-inner { padding-bottom: 34px; }
+  .tr-footer__copy { order: 2; }
+}
 
 
 /* ========================= entrance animations ========================= */
