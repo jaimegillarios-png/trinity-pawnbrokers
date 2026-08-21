@@ -22,6 +22,7 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@sanity/types": "^6.10.1"
+    "@sanity/types": "^6.10.1",
+    "lightningcss": "^1.33.0"
   }
 }
