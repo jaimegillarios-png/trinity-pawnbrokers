@@ -117,6 +117,30 @@ const contactRows = () => [
  * Sanity holds plain text with *asterisks*, and the template decides what
  * that looks like — so the CMS never stores HTML.
  */
+/**
+ * Some compliance markers were written inline, inside card titles, FAQ answers
+ * and labels. They come out into a field of their own — the marker survives,
+ * and the copy stays plain text.
+ */
+const CHIP_RE = /\s*<span class="confirm-chip">([^<]*)<\/span>/;
+const takeChip = (s = '') => {
+  const m = s.match(CHIP_RE);
+  return { text: s.replace(CHIP_RE, ''), chip: m ? m[1].trim() : undefined };
+};
+
+/** Applies takeChip across an object's text fields, hoisting the first chip. */
+const liftChip = (obj, fields) => {
+  let chip;
+  const out = { ...obj };
+  for (const f of fields) {
+    if (typeof out[f] !== 'string') continue;
+    const taken = takeChip(out[f]);
+    out[f] = taken.text;
+    if (taken.chip && !chip) chip = taken.chip;
+  }
+  return chip ? { ...out, chip } : out;
+};
+
 const deMarkup = (html = '') =>
   html
     .replace(/<span[^>]*>(.*?)<\/span>/gi, '*$1*')
@@ -155,7 +179,7 @@ async function buildAssetPage(content, order) {
     ),
     lendAgainst: {
       intro: intro(content.lendAgainst),
-      cards: keyed((content.lendAgainst?.cards ?? []).map((c) => ({ _type: 'iconCard', ...c })), 'la'),
+      cards: keyed((content.lendAgainst?.cards ?? []).map((c) => liftChip({ _type: 'iconCard', ...c }, ['title', 'body'])), 'la'),
     },
     borrow: {
       intro: intro(content.borrow),
@@ -176,12 +200,12 @@ async function buildAssetPage(content, order) {
     },
     how: {
       intro: intro(content.how),
-      steps: keyed((content.how?.steps ?? []).map((s) => ({ _type: 'iconCard', ...s })), 'how'),
+      steps: keyed((content.how?.steps ?? []).map((s) => liftChip({ _type: 'iconCard', ...s }, ['title', 'body'])), 'how'),
       link: content.how?.link ? { _type: 'cta', ...content.how.link } : undefined,
     },
     valuation: {
       intro: intro(content.valuation),
-      points: keyed((content.valuation?.points ?? []).map((p) => ({ _type: 'iconCard', ...p })), 'val'),
+      points: keyed((content.valuation?.points ?? []).map((p) => liftChip({ _type: 'iconCard', ...p }, ['title', 'body'])), 'val'),
     },
     why: {
       intro: intro(content.why),
@@ -192,7 +216,8 @@ async function buildAssetPage(content, order) {
       caseStudy: content.proof?.caseStudy
         ? {
             _type: 'caseStudy',
-            label: deMarkup(content.proof.caseStudy.label),
+            label: takeChip(content.proof.caseStudy.label).text.trim(),
+            chip: takeChip(content.proof.caseStudy.label).chip,
             statement: deMarkup(content.proof.caseStudy.statement),
             rows: keyed(
               (content.proof.caseStudy.rows ?? []).map((r) => ({ _type: 'ledgerRow', ...r })),
@@ -204,7 +229,7 @@ async function buildAssetPage(content, order) {
     },
     faqs: {
       intro: intro(content.faqs),
-      items: keyed((content.faqs?.items ?? []).map((f) => ({ _type: 'faqItem', ...f })), 'faq'),
+      items: keyed((content.faqs?.items ?? []).map((f) => liftChip({ _type: 'faqItem', ...f }, ['q', 'a'])), 'faq'),
     },
     closing: content.closing
       ? {

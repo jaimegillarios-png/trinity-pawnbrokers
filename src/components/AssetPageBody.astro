@@ -21,19 +21,21 @@ const whyHeading = page.why?.intro?.heading ? splitEmphasis(page.why.intro.headi
 
 <Hero hero={page.hero}>
   <Fragment slot="aside"><ValuationForm form={page.form} /></Fragment>
-</Hero>
 
-{page.trust && page.trust.length > 0 && (
-  <div class="trust">
-    <div class="trust-inner">
-      {page.trust.map((t) => (
-        <span class={t.highlight ? 'trust__highlight' : undefined}>
-          {t.text}<ConfirmChip note={t.chip} />
-        </span>
-      ))}
-    </div>
-  </div>
-)}
+  <Fragment slot="below">
+    {page.trust && page.trust.length > 0 && (
+      <div class="trust">
+        <div class="trust-inner">
+          {page.trust.map((t) => (
+            <span class={t.highlight ? 'trust__highlight' : undefined}>
+              {t.text}<ConfirmChip note={t.chip} />
+            </span>
+          ))}
+        </div>
+      </div>
+    )}
+  </Fragment>
+</Hero>
 
 {page.lendAgainst && (
   <section id="index" class="tr-band tr-band--white">
@@ -116,7 +118,7 @@ const whyHeading = page.why?.intro?.heading ? splitEmphasis(page.why.intro.headi
                 </span>
               </div>
               <p class="how-step__label">{step(i)}</p>
-              <h4 class="tr-h4">{s.title}</h4>
+              <h4 class="tr-h4">{s.title}<ConfirmChip note={s.chip} /></h4>
               <p>{s.body}</p>
             </div>
           ))}

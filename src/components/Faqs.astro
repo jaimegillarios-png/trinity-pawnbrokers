@@ -1,5 +1,6 @@
 ---
 import type { FaqItem } from '../lib/types';
+import ConfirmChip from './ConfirmChip.astro';
 
 interface Props { items?: FaqItem[] }
 const { items = [] } = Astro.props;
@@ -12,7 +13,7 @@ const { items = [] } = Astro.props;
           <span>{item.q}</span>
           <span class="faq-toggle" aria-hidden="true">{i === 0 ? '−' : '+'}</span>
         </button>
-        <p class="faq-a">{item.a}</p>
+        <p class="faq-a">{item.a}<ConfirmChip note={item.chip} /></p>
       </div>
     ))}
   </div>

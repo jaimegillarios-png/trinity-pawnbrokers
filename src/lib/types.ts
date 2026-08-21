@@ -18,11 +18,11 @@ export interface Seo {
 
 export interface Cta { label: string; href: string }
 export interface SectionIntro { eyebrow?: string; heading: string; intro?: string }
-export interface IconCard { icon?: string; title: string; body: string }
+export interface IconCard { icon?: string; title: string; body: string; chip?: string }
 export interface SpecRow { label: string; value: string; chip?: string }
 export interface LedgerRow extends SpecRow { total?: boolean }
 export interface TrustItem { text: string; chip?: string; highlight?: boolean }
-export interface FaqItem { q: string; a: string }
+export interface FaqItem { q: string; a: string; chip?: string }
 
 export interface CompareRow {
   icon?: string;

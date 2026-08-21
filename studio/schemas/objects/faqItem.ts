@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity';
+import { confirmChip } from './confirmable';
 
 export const faqItem = defineType({
   name: 'faqItem',
@@ -8,6 +9,7 @@ export const faqItem = defineType({
   fields: [
     defineField({ name: 'q', title: 'Question', type: 'string', validation: (r) => r.required() }),
     defineField({ name: 'a', title: 'Answer', type: 'text', rows: 4, validation: (r) => r.required() }),
+    confirmChip,
   ],
   preview: { select: { title: 'q', subtitle: 'a' } },
 });
