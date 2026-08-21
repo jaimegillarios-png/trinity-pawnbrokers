@@ -10,7 +10,10 @@
     "deploy": "astro build && wrangler pages deploy ./dist",
     "studio": "npm --prefix studio run dev",
     "studio:deploy": "npm --prefix studio run deploy",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "node --test tests/*.test.mjs",
+    "test:build": "astro build && node --test tests/*.test.mjs",
+    "verify": "astro check && astro build && node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",

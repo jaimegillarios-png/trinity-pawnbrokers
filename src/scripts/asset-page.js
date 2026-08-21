@@ -26,6 +26,13 @@
       panes.forEach(function (pane) {
         var isTarget = pane.getAttribute('data-step') === String(step);
         pane.hidden = !isTarget;
+        // A hidden field that is still required blocks submission, and the
+        // browser reports it against an element nobody can see or focus.
+        // Disabling the hidden pane takes its fields out of validation and
+        // out of the submitted data, which is what we want either way.
+        pane.querySelectorAll('input, select, textarea').forEach(function (el) {
+          el.disabled = !isTarget;
+        });
         if (!isTarget) return;
         pane.classList.toggle('step-back', dir === 'back');
         // restart the CSS animation

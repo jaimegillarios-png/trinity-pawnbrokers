@@ -1,0 +1,32 @@
+name: Verify
+
+on:
+  push:
+    branches: [main, astro-sanity]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Type check
+        run: npx astro check
+
+      # The build reads content from Sanity, so it needs the project ID. The
+      # dataset is public-readable; no token is required for published content.
+      - name: Build
+        run: npx astro build
+        env:
+          PUBLIC_SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
+          PUBLIC_SANITY_DATASET: ${{ vars.SANITY_DATASET }}
+          SITE_URL: ${{ vars.SITE_URL }}
+
+      - name: Test
+        run: node --test tests/*.test.mjs

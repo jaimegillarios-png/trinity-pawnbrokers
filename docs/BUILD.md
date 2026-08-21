@@ -86,3 +86,24 @@ triggering on create/update/delete for `assetPage`, `homePage`, `legalPage` and
 - Legal pages (privacy, terms, cookies, complaints) — schema exists, no content.
 - The valuation form posts to `/api/valuation`, which is not implemented.
 - Analytics and cookie consent.
+
+## Tests
+
+```bash
+npm run verify     # type check, build, then test
+npm test           # test against whatever is already in dist/
+```
+
+44 checks across four suites, written from the failures that actually occurred
+during the rebuild rather than from a checklist:
+
+| Suite | Guards against |
+|---|---|
+| `build` | Pages missing from the build; stylesheets or icon fonts not loaded — the bug that left every item page as unstyled text while the type checker stayed green |
+| `structure` | A whole section disappearing; the trust strip rendering outside the hero, where its translucent background reads wrong; hidden form steps blocking submission |
+| `seo` | Missing or duplicate titles and descriptions, absent canonicals, malformed structured data, an empty regulatory footer |
+| `content` | Compliance markers, FAQs, comparison rows or headlines lost in migration, compared against the source content files |
+
+CI runs the same three commands on every push (`.github/workflows/verify.yml`).
+It needs `SANITY_PROJECT_ID`, `SANITY_DATASET` and `SITE_URL` as repository
+variables — no token, since published content is readable without one.
