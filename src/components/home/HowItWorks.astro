@@ -1,0 +1,32 @@
+---
+import type { IconCard, SectionIntro } from '../../lib/types';
+
+interface Props { intro?: SectionIntro; steps?: IconCard[] }
+const { intro, steps = [] } = Astro.props;
+
+// Roman numerals, as the original set them.
+const NUMERALS = ['I', 'II', 'III', 'IV', 'V'];
+---
+<section id="how" class="home-section home-section--neutral">
+  <div class="home-inner">
+    <div class="how-head">
+      {intro?.eyebrow && <div class="home-eyebrow">{intro.eyebrow}</div>}
+      {intro?.heading && <h2 class="home-h2 home-h2--spaced">{intro.heading}</h2>}
+      {intro?.intro && <p class="home-lede">{intro.intro}</p>}
+    </div>
+
+    <div id="how-track" class="how-track">
+      <div class="how-line how-line--track"></div>
+      <div id="how-fill" class="how-line how-line--fill"></div>
+      <div class="how-grid">
+        {steps.map((step, i) => (
+          <div class="how-step">
+            <div class="how-num">{NUMERALS[i] ?? String(i + 1)}</div>
+            <h4 class="how-step__title">{step.title}</h4>
+            <p class="how-step__body">{step.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

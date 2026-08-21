@@ -1,0 +1,50 @@
+---
+import { urlFor } from '../../lib/sanity/image';
+import SectionOpener from '../SectionOpener.astro';
+import type { AssetPageCard, SectionIntro, Cta } from '../../lib/types';
+
+interface Props {
+  intro?: SectionIntro;
+  items: AssetPageCard[];
+  other?: { eyebrow?: string; title?: string; body?: string; cta?: Cta };
+}
+const { intro, items, other } = Astro.props;
+---
+<section id="index" class="home-section home-section--white">
+  <div class="home-inner home-inner--tight">
+    <div class="collage-head">
+      {intro?.eyebrow && <div class="home-eyebrow">{intro.eyebrow}</div>}
+      {intro?.heading && <h2 class="home-h2">{intro.heading}</h2>}
+    </div>
+    {intro?.intro && <p class="collage-intro">{intro.intro}</p>}
+  </div>
+
+  <div class="collage-grid">
+    {items.map((item) => (
+      <a href={`/${item.slug}`} class="ix-card">
+        <span class="ix-card__media">
+          <img
+            src={urlFor(item.cardImage).width(760).height(600).fit('crop').url()}
+            alt={item.cardImage.alt ?? ''}
+            loading="lazy"
+            decoding="async"
+          />
+        </span>
+        <span class="ix-card__body">
+          <span class="ix-card__title">{item.title}</span>
+          <span class="ix-card__teaser">{item.teaser}</span>
+          <span class="ix-card__more">Value yours →</span>
+        </span>
+      </a>
+    ))}
+
+    {other?.title && (
+      <a href={other.cta?.href ?? '#'} class="ix-dark">
+        {other.eyebrow && <span class="ix-dark__eyebrow">{other.eyebrow}</span>}
+        <span class="ix-dark__title">{other.title}</span>
+        {other.body && <span class="ix-dark__body">{other.body}</span>}
+        {other.cta && <span class="ix-dark__more">{other.cta.label}</span>}
+      </a>
+    )}
+  </div>
+</section>

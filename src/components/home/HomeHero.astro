@@ -1,0 +1,68 @@
+---
+import { urlFor, srcSetFor } from '../../lib/sanity/image';
+import { splitEmphasis } from '../../lib/text';
+import type { HeroSection, SanityImage, TrustItem } from '../../lib/types';
+
+interface Props {
+  hero: HeroSection;
+  /** Additional frames. The hero cycles through them behind the headline. */
+  rotation?: SanityImage[];
+  trust?: TrustItem[];
+}
+const { hero, rotation = [], trust = [] } = Astro.props;
+
+// Beat 1 is the poster frame: it paints first, and it is the only frame shown
+// on a phone or under reduced motion.
+const beats = [hero.image, ...rotation];
+const BEAT_SECONDS = 8;
+const parts = splitEmphasis(hero.heading);
+---
+<section class="home-hero" data-hero-motion="loop">
+  <div class="home-hero__beats">
+    {beats.map((image, i) => (
+      <div
+        class={i === 0 ? 'hero-beat hero-beat-poster' : 'hero-beat'}
+        style={`animation-delay:${i * BEAT_SECONDS}s${i === 0 ? '' : ';opacity:0'}`}
+      >
+        <div class="hero-beat-zoom" style={`animation-delay:${i * BEAT_SECONDS}s`}>
+          <img
+            id={i === 0 ? 'v4-beat-1' : undefined}
+            src={urlFor(image).width(1920).url()}
+            srcset={srcSetFor(image)}
+            sizes="100vw"
+            alt={image.alt ?? ''}
+            fetchpriority={i === 0 ? 'high' : undefined}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <div class="home-hero__scrim"></div>
+
+  <div class="hero-inner">
+    {hero.eyebrow && <div class="home-hero__eyebrow" set:html={hero.eyebrow.replace(/\n/g, '<br>')} />}
+    <h1 class="home-hero__h1">
+      {parts.map((p) => (p.emphasis ? <em>{p.text}</em> : p.text))}
+    </h1>
+    <p class="home-hero__intro">{hero.intro}</p>
+    <div class="home-hero__actions">
+      <a href={hero.ctaPrimary.href} class="cta-gold">{hero.ctaPrimary.label}</a>
+      {hero.ctaGhost && <a href={hero.ctaGhost.href} class="cta-ghost">{hero.ctaGhost.label}</a>}
+    </div>
+  </div>
+
+  {trust.length > 0 && (
+    <div class="home-trust">
+      <div class="home-trust__inner">
+        {trust.map((t) => (
+          <span class={t.highlight ? 'home-trust__item home-trust__item--gold' : 'home-trust__item'}>
+            {t.text}
+          </span>
+        ))}
+      </div>
+    </div>
+  )}
+</section>

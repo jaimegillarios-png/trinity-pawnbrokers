@@ -1,0 +1,46 @@
+---
+import type { SectionIntro, SpecRow, Cta } from '../../lib/types';
+
+interface Props {
+  intro?: SectionIntro;
+  blocks?: SpecRow[];
+  cta?: Cta;
+  mapEmbedUrl?: string;
+}
+const { intro, blocks = [], cta, mapEmbedUrl } = Astro.props;
+---
+<section class="home-section home-section--neutral">
+  <div class="visit-grid">
+    <div>
+      {intro?.eyebrow && <div class="home-eyebrow">{intro.eyebrow}</div>}
+      {intro?.heading && <h2 class="home-h2 home-h2--spaced">{intro.heading}</h2>}
+      {intro?.intro && <p class="visit-lede">{intro.intro}</p>}
+
+      {blocks.map((block) => (
+        <div class="visit-block">
+          <div class="visit-label">{block.label}</div>
+          <p class="visit-value">
+            {block.value.split('\n').map((line, i) => (
+              <>{i > 0 && <br />}{line}</>
+            ))}
+          </p>
+        </div>
+      ))}
+
+      {cta && <a href={cta.href} class="visit-link">{cta.label}</a>}
+    </div>
+
+    {mapEmbedUrl && (
+      <div class="visit-map">
+        <iframe
+          src={mapEmbedUrl}
+          width="100%"
+          height="420"
+          title="Map showing the Trinity Pawnbrokers office"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+    )}
+  </div>
+</section>

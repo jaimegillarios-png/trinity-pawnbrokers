@@ -1,0 +1,28 @@
+---
+import type { SanityImage } from '../../lib/types';
+
+interface Props {
+  label?: string;
+  logos?: Array<SanityImage & { height?: number }>;
+}
+const { label = 'As seen in', logos = [] } = Astro.props;
+---
+{logos.length > 0 && (
+  <section class="home-section home-section--white">
+    <div class="press-bar">
+      <div class="press-label">{label}</div>
+      <div class="press-logos">
+        {logos.map((logo) => (
+          <img
+            class="press-img"
+            src={logo.asset?.url}
+            alt={logo.alt ?? ''}
+            style={`height:${logo.height ?? 30}px`}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+)}

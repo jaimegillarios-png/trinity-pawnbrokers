@@ -1,0 +1,51 @@
+[
+  {
+    "slug": "gold",
+    "name": "gold.jpeg",
+    "alt": "Gold sovereigns and a cast bar",
+    "sha": "262e6c49",
+    "kb": 41
+  },
+  {
+    "slug": "watches",
+    "name": "watches.jpeg",
+    "alt": "Close-up of a luxury watch dial and bezel",
+    "sha": "0391740c",
+    "kb": 16
+  },
+  {
+    "slug": "jewellery",
+    "name": "jewellery.jpeg",
+    "alt": "A ring examined under a jeweller's loupe",
+    "sha": "ba37eed3",
+    "kb": 42
+  },
+  {
+    "slug": "diamonds",
+    "name": "diamonds.jpeg",
+    "alt": "A loose diamond held with tweezers",
+    "sha": "1efa249c",
+    "kb": 23
+  },
+  {
+    "slug": "fine-art",
+    "name": "fine-art.jpeg",
+    "alt": "Corner of a gilt picture frame in raking light",
+    "sha": "68da1f72",
+    "kb": 28
+  },
+  {
+    "slug": "handbags",
+    "name": "handbags.jpeg",
+    "alt": "Designer handbag hardware and stitching",
+    "sha": "2ad67d31",
+    "kb": 33
+  },
+  {
+    "slug": "silver",
+    "name": "silver.jpeg",
+    "alt": "Silver service in low light",
+    "sha": "f3033eda",
+    "kb": 53
+  }
+]

@@ -10,6 +10,10 @@ export const ASSET_SLUGS = [
   'gold', 'watches', 'jewellery', 'diamonds', 'fine-art', 'handbags', 'silver',
 ];
 
+export function home() {
+  return readFileSync(resolve(dist, 'index.html'), 'utf8');
+}
+
 export function page(slug) {
   const path = resolve(dist, slug, 'index.html');
   if (!existsSync(path)) throw new Error(`Not built: ${slug}. Run npm run build first.`);

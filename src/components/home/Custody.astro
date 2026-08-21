@@ -1,0 +1,31 @@
+---
+import { splitEmphasis } from '../../lib/text';
+import type { Cta } from '../../lib/types';
+
+interface Props {
+  eyebrow?: string;
+  statement?: string;
+  note?: string;
+  cta?: Cta;
+}
+const { eyebrow, statement, note, cta } = Astro.props;
+const parts = statement ? splitEmphasis(statement) : [];
+---
+<section class="home-section home-section--vault">
+  <div class="custody-inner">
+    {/* The three-ball mark, at the larger size this section uses. */}
+    <div class="custody-mark" aria-hidden="true">
+      <span></span>
+      <div class="custody-mark__pair"><span></span><span></span></div>
+    </div>
+
+    {eyebrow && <div class="home-eyebrow home-eyebrow--gold-mid">{eyebrow}</div>}
+    {statement && (
+      <p class="custody-statement">
+        {parts.map((p) => (p.emphasis ? <em>{p.text}</em> : p.text))}
+      </p>
+    )}
+    {note && <p class="custody-note">{note}</p>}
+    {cta && <a href={cta.href} class="custody-link">{cta.label}</a>}
+  </div>
+</section>

@@ -125,17 +125,24 @@ export interface AssetPageCard {
   teaser?: string;
 }
 
+export interface RateStat {
+  label?: string;
+  figure?: string;
+  note?: string;
+  gold?: boolean;
+}
+
 export interface HomePage {
   hero: HeroSection;
   heroRotation?: SanityImage[];
   trust?: TrustItem[];
   indexIntro?: SectionIntro;
+  indexOther?: { eyebrow?: string; title?: string; body?: string; cta?: Cta };
   how?: { intro?: SectionIntro; steps?: IconCard[] };
-  custody?: { intro?: SectionIntro; points?: IconCard[] };
-  rates?: { intro?: SectionIntro; specs?: SpecRow[] };
-  visit?: { intro?: SectionIntro; mapEmbedUrl?: string; notes?: SpecRow[] };
-  press?: { label?: string; logos?: SanityImage[] };
-  closing?: ClosingSection;
+  custody?: { eyebrow?: string; statement?: string; note?: string; cta?: Cta };
+  rates?: { intro?: SectionIntro; stats?: RateStat[]; footnote?: string };
+  visit?: { intro?: SectionIntro; blocks?: SpecRow[]; cta?: Cta; mapEmbedUrl?: string };
+  press?: { label?: string; logos?: Array<SanityImage & { height?: number }> };
   seo: Seo;
 }
 

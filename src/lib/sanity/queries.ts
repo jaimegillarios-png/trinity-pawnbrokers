@@ -72,23 +72,33 @@ export const getAssetPageCards = () =>
     "slug": slug.current,
     nounPlural,
     cardImage ${IMAGE},
-    "teaser": hero.intro
+    "teaser": coalesce(cardTeaser, hero.intro)
   }`);
 
-export const getHomePage = () =>
-  query<HomePage>(`*[_type == "homePage"][0]{
-    ...,
+export const getHomePage = async (): Promise<HomePage> => {
+  const home = await query<HomePage | null>(`*[_type == "homePage"][0]{
     hero { ..., image ${IMAGE} },
     heroRotation[] ${IMAGE},
+    trust[],
     indexIntro ${SECTION_INTRO},
+    indexOther,
     how { intro ${SECTION_INTRO}, steps[] },
-    custody { intro ${SECTION_INTRO}, points[] },
-    rates { intro ${SECTION_INTRO}, specs[] },
-    visit { intro ${SECTION_INTRO}, mapEmbedUrl, notes[] },
+    custody,
+    rates { intro ${SECTION_INTRO}, stats[], footnote },
+    visit { intro ${SECTION_INTRO}, blocks[], cta, mapEmbedUrl },
     press { label, logos[] ${IMAGE} },
-    closing,
     ${SEO}
   }`);
+
+  if (!home) {
+    throw new Error(
+      'No "Homepage" document found in Sanity.\n' +
+        '  Open the Studio (npm run studio) and fill it in,\n' +
+        '  or run: node scripts/migrate-to-sanity.mjs',
+    );
+  }
+  return home;
+};
 
 export const getLegalPages = () =>
   query<LegalPage[]>(`*[_type == "legalPage"] | order(title asc) {

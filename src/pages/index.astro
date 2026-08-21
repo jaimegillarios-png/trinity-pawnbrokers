@@ -1,0 +1,56 @@
+---
+import '../styles/home.css';
+import Base from '../layouts/Base.astro';
+import HomeHero from '../components/home/HomeHero.astro';
+import ItemCollage from '../components/home/ItemCollage.astro';
+import HowItWorks from '../components/home/HowItWorks.astro';
+import Custody from '../components/home/Custody.astro';
+import Rates from '../components/home/Rates.astro';
+import Visit from '../components/home/Visit.astro';
+import Press from '../components/home/Press.astro';
+import { getAssetPageCards, getHomePage, getSiteSettings } from '../lib/sanity/queries';
+
+const [home, cards, site] = await Promise.all([
+  getHomePage(),
+  getAssetPageCards(),
+  getSiteSettings(),
+]);
+
+const origin = Astro.site?.origin ?? '';
+
+/** Describes the site as a whole, so it belongs on the homepage only. */
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${origin}/#website`,
+  url: origin,
+  name: site.name,
+  publisher: { '@id': `${origin}/#organisation` },
+  inLanguage: 'en-GB',
+};
+
+const reveal = '.collage-grid > a, .how-grid > div, .rates-grid > div, .visit-grid > div, .press-logos > img, .custody-inner > *';
+---
+<Base seo={home.seo} site={site} schemas={[websiteSchema]} reveal={reveal}>
+  <HomeHero hero={home.hero} rotation={home.heroRotation} trust={home.trust} />
+  <ItemCollage intro={home.indexIntro} items={cards} other={home.indexOther} />
+  <HowItWorks intro={home.how?.intro} steps={home.how?.steps} />
+  <Custody
+    eyebrow={home.custody?.eyebrow}
+    statement={home.custody?.statement}
+    note={home.custody?.note}
+    cta={home.custody?.cta}
+  />
+  <Rates intro={home.rates?.intro} stats={home.rates?.stats} footnote={home.rates?.footnote} />
+  <Visit
+    intro={home.visit?.intro}
+    blocks={home.visit?.blocks}
+    cta={home.visit?.cta}
+    mapEmbedUrl={home.visit?.mapEmbedUrl}
+  />
+  <Press label={home.press?.label} logos={home.press?.logos} />
+
+  <script>
+    import '../scripts/home.js';
+  </script>
+</Base>

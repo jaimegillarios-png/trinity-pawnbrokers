@@ -152,6 +152,43 @@ const deMarkup = (html = '') =>
 
 /* ---------- build documents ------------------------------------------ */
 
+/**
+ * The short line under each item on the homepage grid. It was written into
+ * the homepage markup, not the content files, so it is read back from there.
+ */
+let cardImages = null;
+/**
+ * The homepage grid uses its own photograph per item, not the item page's
+ * hero. They were base64 in the markup and are extracted to images/cards.
+ */
+async function cardImageFor(slug) {
+  if (!cardImages) {
+    cardImages = new Map();
+    try {
+      const manifest = JSON.parse(await readFile(resolve(root, 'images/cards/index.json'), 'utf8'));
+      for (const card of manifest) cardImages.set(card.slug, card);
+    } catch {
+      console.warn('  ! no card image manifest; falling back to the hero image');
+    }
+  }
+  const card = cardImages.get(slug);
+  return card ? uploadImage(`images/cards/${card.name}`, card.alt) : undefined;
+}
+
+let cardTeasers = null;
+async function teaserFor(slug) {
+  if (!cardTeasers) {
+    cardTeasers = new Map();
+    const html = await readFile(resolve(root, 'legacy/index.html'), 'utf8');
+    for (const m of html.matchAll(
+      /<a href="([a-z-]+)\.html" class="ix-card"[\s\S]*?font-size:14\.5px[^"]*">([\s\S]*?)<\/span>/g,
+    )) {
+      cardTeasers.set(m[1], m[2].replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim());
+    }
+  }
+  return cardTeasers.get(slug);
+}
+
 async function buildAssetPage(content, order) {
   const heroImage = await uploadImage(content.hero?.image?.src, content.hero?.image?.alt);
   return {
@@ -162,7 +199,8 @@ async function buildAssetPage(content, order) {
     order,
     nounSingular: content.noun.singular,
     nounPlural: content.noun.plural,
-    cardImage: heroImage,
+    cardImage: (await cardImageFor(content.slug)) ?? heroImage,
+    cardTeaser: await teaserFor(content.slug),
     hero: {
       _type: 'heroSection',
       image: heroImage,
@@ -294,7 +332,9 @@ async function buildSiteSettings() {
     phone: cfg.phone,
     phoneHref: cfg.phoneHref,
     fcaReference: '741896',
-    legalFooter: cfg.legal ?? cfg.legalFooter ?? '',
+    legalFooter: (cfg.legal ?? cfg.legalFooter ?? '')
+      .replace(/&amp;/g, '&').replace(/&ndash;/g, '–').replace(/&mdash;/g, '—')
+      .replace(/&rsquo;/g, '’').replace(/&middot;/g, '·'),
     // Off by default — the site should present cleanly until compliance asks
     // to see the outstanding markers.
     showConfirmNotes: false,
@@ -348,6 +388,183 @@ function legalStubs() {
   }));
 }
 
+
+/**
+ * The homepage, recovered from legacy/index.html. Its copy was written into
+ * the markup, so it is read back out section by section rather than retyped.
+ */
+async function buildHomePage() {
+  const html = await readFile(resolve(root, 'legacy/index.html'), 'utf8');
+  // Entities and <br> have to survive the trip: the CMS holds plain text, so
+  // an undecoded &ndash; ends up rendered literally on the page.
+  const decode = (s = '') =>
+    s.replace(/&ndash;/g, '–').replace(/&mdash;/g, '—').replace(/&hellip;/g, '…')
+     .replace(/&rsquo;/g, '’').replace(/&lsquo;/g, '‘').replace(/&middot;/g, '·')
+     .replace(/&rarr;/g, '→').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&');
+
+  const clean = (s = '') =>
+    decode(s.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, ''))
+      .replace(/[ \t]+/g, ' ')
+      .replace(/ *\n */g, '\n')
+      .trim();
+
+  /** Keeps the gold spans as *asterisks*, which the template renders back. */
+  const cleanEmphasis = (s = '') =>
+    clean(s.replace(/<span[^>]*gold-mid[^>]*>([\s\S]*?)<\/span>/g, '*$1*'));
+  const between = (from, to) => {
+    const a = html.indexOf(from);
+    const b = to ? html.indexOf(to, a) : html.length;
+    return a === -1 ? '' : html.slice(a, b);
+  };
+
+  const hero = between('<!-- ===== HERO', '<!-- ===== ASSET COLLAGE');
+  const collage = between('<!-- ===== ASSET COLLAGE', '<!-- ===== HOW IT WORKS');
+  const how = between('<!-- ===== HOW IT WORKS', '<!-- ===== CUSTODY');
+  const custody = between('<!-- ===== CUSTODY', '<!-- ===== PROOF');
+  const rates = between('<!-- ===== PROOF', '<!-- ===== VISIT');
+  const visit = between('<!-- ===== VISIT', '<!-- ===== AS SEEN');
+  const press = between('<!-- ===== AS SEEN', '<!-- ===== FOOTER');
+
+  const pressLogos = [];
+  try {
+    const manifest = JSON.parse(await readFile(resolve(root, 'images/press/index.json'), 'utf8'));
+    for (const [i, logo] of manifest.entries()) {
+      const img = await uploadImage(`images/press/${logo.name}`, logo.alt);
+      if (img) pressLogos.push({ _key: `logo${i}`, ...img, height: logo.height });
+    }
+  } catch {
+    console.warn('  ! no press logo manifest, skipping');
+  }
+
+  // The hero frames were embedded as base64 in the markup. They are extracted
+  // to images/hero rather than guessed at from the image folder — the poster
+  // frame in particular is a specific photograph, not any street scene.
+  const heroFrames = JSON.parse(await readFile(resolve(root, 'images/hero/index.json'), 'utf8'));
+  const heroImage = await uploadImage(`images/hero/${heroFrames[0].name}`, heroFrames[0].alt);
+  const rotation = [];
+  for (const frame of heroFrames.slice(1)) {
+    const img = await uploadImage(`images/hero/${frame.name}`, frame.alt);
+    if (img) rotation.push({ _key: 'beat' + rotation.length, ...img });
+  }
+
+  const heroH1 = clean((hero.match(/<h1[^>]*>([\s\S]*?)<\/h1>/) || [])[1]);
+  const heroEm = clean((hero.match(/<em[^>]*>([\s\S]*?)<\/em>/) || [])[1]);
+  const heroIntro = clean((hero.match(/<p style="max-width:52ch[^>]*>([\s\S]*?)<\/p>/) || [])[1]);
+  const heroCtas = [...hero.matchAll(/<a href="([^"]+)" class="cta-(gold|ghost)"[^>]*>([^<]+)<\/a>/g)];
+
+  const trust = [...hero.matchAll(/<span style="white-space:nowrap([^"]*)">([\s\S]*?)<\/span>/g)].map((m, i) => ({
+    _key: 'trust' + i,
+    _type: 'trustItem',
+    text: clean(m[2]),
+    highlight: m[1].includes('gold-bright'),
+  }));
+
+  const steps = [...how.matchAll(/<h4[^>]*>([\s\S]*?)<\/h4>\s*<p[^>]*>([\s\S]*?)<\/p>/g)].map((m, i) => ({
+    _key: 'step' + i,
+    _type: 'iconCard',
+    title: clean(m[1]),
+    body: clean(m[2]),
+  }));
+
+  // The figure's own style decides whether it is set in gold. Testing the whole
+  // match caught the label, which is always gold, and made every figure gold.
+  const stats = [...rates.matchAll(
+    /<div style="font:500 12\.5px[^"]*">([\s\S]*?)<\/div>\s*<div style="(font:500 32px[^"]*)">([\s\S]*?)<\/div>\s*<p[^>]*>([\s\S]*?)<\/p>/g,
+  )].map((m, i) => ({
+    _key: 'stat' + i,
+    _type: 'rateStat',
+    label: clean(m[1]),
+    figure: clean(m[3]),
+    note: clean(m[4]),
+    gold: m[2].includes('gold-deep'),
+  }));
+
+  const visitBlocks = [...visit.matchAll(
+    /<div style="font:500 12\.5px[^"]*">([\s\S]*?)<\/div>\s*<p style="font:500 22px[^"]*">([\s\S]*?)<\/p>/g,
+  )].map((m, i) => ({ _key: 'visit' + i, _type: 'specRow', label: clean(m[1]), value: clean(m[2]) }));
+
+  return {
+    _id: 'homePage',
+    _type: 'homePage',
+    hero: {
+      _type: 'heroSection',
+      image: heroImage,
+      eyebrow: 'Pawn loans against\ngold · watches · jewellery · diamonds · fine art',
+      // The italic phrase was an <em>; asterisks carry that intent as plain text.
+      heading: heroEm ? heroH1.replace(heroEm, '*' + heroEm + '*') : heroH1,
+      intro: heroIntro,
+      ctaPrimary: heroCtas[0]
+        ? { _type: 'cta', label: clean(heroCtas[0][3]), href: heroCtas[0][1] }
+        : { _type: 'cta', label: 'Value your item', href: '#index' },
+      ctaGhost: heroCtas[1] ? { _type: 'cta', label: clean(heroCtas[1][3]), href: heroCtas[1][1] } : undefined,
+    },
+    heroRotation: rotation,
+    trust,
+    indexIntro: {
+      eyebrow: clean((collage.match(/<div style="font:500 13px[^"]*">([\s\S]*?)<\/div>/) || [])[1]),
+      heading: clean((collage.match(/<h2[^>]*>([\s\S]*?)<\/h2>/) || [])[1]),
+      intro: clean((collage.match(/<p style="max-width:64ch[^"]*">([\s\S]*?)<\/p>/) || [])[1]),
+    },
+    indexOther: {
+      eyebrow: clean((collage.match(/letter-spacing:0\.24em[^"]*">([\s\S]*?)<\/span>/) || [])[1]),
+      title: clean((collage.match(/text-wrap:pretty;color:var\(--tr-neutral\)">([\s\S]*?)<\/span>/) || [])[1]),
+      body: clean((collage.match(/color:var\(--tr-on-green\)">([\s\S]*?)<\/span>/) || [])[1]),
+      cta: { _type: 'cta', label: 'Speak to us →', href: '/contact' },
+    },
+    how: {
+      intro: {
+        eyebrow: clean((how.match(/<div style="font:500 13px[^"]*">([\s\S]*?)<\/div>/) || [])[1]),
+        heading: clean((how.match(/<h2[^>]*>([\s\S]*?)<\/h2>/) || [])[1]),
+        intro: clean((how.match(/<p style="color:var\(--tr-ink-72\)[^"]*">([\s\S]*?)<\/p>/) || [])[1]),
+      },
+      steps,
+    },
+    custody: {
+      eyebrow: clean((custody.match(/letter-spacing:0\.28em[^"]*">([\s\S]*?)<\/div>/) || [])[1]),
+      statement: cleanEmphasis((custody.match(/<p style="font:500 clamp\(24px[^"]*">([\s\S]*?)<\/p>/) || [])[1]),
+      note: clean((custody.match(/max-width:54ch[^"]*">([\s\S]*?)<\/p>/) || [])[1]),
+      cta: {
+        _type: 'cta',
+        label: clean((custody.match(/class="custody-link"[^>]*>([\s\S]*?)<\/a>/) || [])[1]) || 'How your item is protected →',
+        href: (custody.match(/class="custody-link"[^>]*href="([^"]*)"/) || [])[1]
+          || (custody.match(/href="([^"]*)"[^>]*class="custody-link"/) || [])[1]
+          || '/how-it-works',
+      },
+    },
+    rates: {
+      intro: {
+        eyebrow: clean((rates.match(/<div style="font:500 13px[^"]*">([\s\S]*?)<\/div>/) || [])[1]),
+        heading: clean((rates.match(/<h2[^>]*>([\s\S]*?)<\/h2>/) || [])[1]),
+        intro: clean((rates.match(/<p style="color:var\(--tr-ink-72\)[^"]*">([\s\S]*?)<\/p>/) || [])[1]),
+      },
+      stats,
+      footnote: clean((rates.match(/padding:18px 22px[^"]*">([\s\S]*?)<\/div>/) || [])[1]),
+    },
+    visit: {
+      intro: {
+        eyebrow: clean((visit.match(/<div style="font:500 13px[^"]*">([\s\S]*?)<\/div>/) || [])[1]),
+        heading: clean((visit.match(/<h2[^>]*>([\s\S]*?)<\/h2>/) || [])[1]),
+        intro: clean((visit.match(/<p style="color:var\(--tr-ink-72\)[^"]*">([\s\S]*?)<\/p>/) || [])[1]),
+      },
+      blocks: visitBlocks,
+      cta: { _type: 'cta', label: 'Get directions →', href: '#' },
+      mapEmbedUrl: (visit.match(/<iframe[^>]*src="([^"]+)"/) || [])[1],
+    },
+    press: {
+      label: 'As seen in',
+      // The logos were base64 in the markup; scripts/extract-press-logos wrote
+      // them to images/press. Each keeps its own display height, because they
+      // are optically balanced rather than uniform.
+      logos: pressLogos,
+    },
+    seo: {
+      _type: 'seo',
+      title: clean((html.match(/<title>([^<]*)<\/title>/) || [])[1]),
+      description: clean((html.match(/<meta name="description" content="([^"]*)"/) || [])[1]),
+    },
+  };
+}
+
 /* ---------- run ------------------------------------------------------- */
 
 const dir = resolve(root, 'legacy/src/content');
@@ -363,7 +580,7 @@ const ordered = files.sort((a, b) => {
 
 console.log(`\n  ${DRY ? 'Dry run' : 'Importing'} → project ${projectId}, dataset ${dataset}\n`);
 
-const docs = [await buildSiteSettings(), ...legalStubs()];
+const docs = [await buildSiteSettings(), await buildHomePage(), ...legalStubs()];
 for (const [i, file] of ordered.entries()) {
   const mod = await import(pathToFileURL(resolve(dir, file)).href);
   docs.push(await buildAssetPage(mod.default, i));

@@ -53,6 +53,14 @@ export const assetPage = defineType({
       validation: (r) => r.required(),
     }),
     defineField({
+      name: 'cardTeaser',
+      title: 'Homepage teaser',
+      type: 'text',
+      rows: 2,
+      description: 'The short line under this item on the homepage grid.',
+      group: 'content',
+    }),
+    defineField({
       name: 'cardImage',
       title: 'Homepage card image',
       type: 'image',

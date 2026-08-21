@@ -1,0 +1,28 @@
+---
+import type { SectionIntro } from '../../lib/types';
+
+interface RateStat { label?: string; figure?: string; note?: string; gold?: boolean }
+interface Props { intro?: SectionIntro; stats?: RateStat[]; footnote?: string }
+const { intro, stats = [], footnote } = Astro.props;
+---
+<section class="home-section home-section--white">
+  <div class="home-inner">
+    <div class="rates-head">
+      {intro?.eyebrow && <div class="home-eyebrow">{intro.eyebrow}</div>}
+      {intro?.heading && <h2 class="home-h2 home-h2--spaced">{intro.heading}</h2>}
+      {intro?.intro && <p class="home-lede">{intro.intro}</p>}
+    </div>
+
+    <div class="rates-grid">
+      {stats.map((stat) => (
+        <div>
+          {stat.label && <div class="rates-label">{stat.label}</div>}
+          <div class={stat.gold ? 'rates-figure rates-figure--gold' : 'rates-figure'}>{stat.figure}</div>
+          {stat.note && <p class="rates-note">{stat.note}</p>}
+        </div>
+      ))}
+    </div>
+
+    {footnote && <div class="rates-footnote">{footnote}</div>}
+  </div>
+</section>

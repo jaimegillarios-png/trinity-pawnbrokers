@@ -1,0 +1,27 @@
+[
+  {
+    "name": "financial-times.webp",
+    "alt": "Financial Times",
+    "height": 38
+  },
+  {
+    "name": "the-guardian.png",
+    "alt": "The Guardian",
+    "height": 26
+  },
+  {
+    "name": "this-is-money.png",
+    "alt": "This is Money",
+    "height": 31
+  },
+  {
+    "name": "the-huffington-post.png",
+    "alt": "The Huffington Post",
+    "height": 15
+  },
+  {
+    "name": "antiques-trade-gazette.png",
+    "alt": "Antiques Trade Gazette",
+    "height": 38
+  }
+]
