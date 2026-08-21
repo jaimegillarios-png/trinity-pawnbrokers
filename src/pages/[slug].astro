@@ -45,7 +45,10 @@ if (props.kind === 'asset') {
     ]),
   );
   if (page.faqs?.items?.length) schemas.push(faqSchema(page.faqs.items));
-  reveal = '.lend-grid > article, .how-grid > div, .value-points > div, .compare-grid .cmp-row, .faq';
+  reveal = [
+    '.lend-grid > *', '.borrow-grid > *', '.how-grid > .how-step', '.value-points > *',
+    '.compare-grid > *', '.proof-grid > *', '.faq-item', '.rep-card', '.closing-inner > *',
+  ].join(', ');
 } else {
   schemas.push(
     breadcrumbSchema([

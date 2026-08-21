@@ -1,0 +1,10 @@
+---
+import type { IconCard } from '../lib/types';
+interface Props { card: IconCard }
+const { card } = Astro.props;
+---
+<article class="tr-card">
+  <i class={`ph-light ${card.icon} tr-card__icon`} aria-hidden="true"></i>
+  <h3 class="tr-h3">{card.title}</h3>
+  <p class="tr-body-sm">{card.body}</p>
+</article>

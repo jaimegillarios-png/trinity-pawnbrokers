@@ -71,7 +71,9 @@ const keyed = (items, prefix) =>
   (items ?? []).map((item, i) => ({ _key: `${prefix}${i}`, ...item }));
 
 const intro = (s) =>
-  s ? { eyebrow: s.eyebrow, heading: s.heading, intro: s.intro } : undefined;
+  s
+    ? { eyebrow: deMarkup(s.eyebrow), heading: deMarkup(s.heading), intro: deMarkup(s.intro) }
+    : undefined;
 
 /** Legacy `fields: [[f, f], [f, f], [f]]` becomes rows of the formRow object. */
 const toRows = (rows, prefix) =>
@@ -148,7 +150,7 @@ async function buildAssetPage(content, order) {
       reassurance: content.hero.reassurance,
     },
     trust: keyed(
-      (content.trust ?? []).map((t) => ({ _type: 'trustItem', text: t.text, chip: t.chip })),
+      (content.trust ?? []).map((t) => ({ _type: 'trustItem', text: t.text, chip: t.chip, highlight: Boolean(t.highlight) })),
       'trust',
     ),
     lendAgainst: {

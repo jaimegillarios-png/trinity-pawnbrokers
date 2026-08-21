@@ -1,19 +1,28 @@
 ---
 import type { LedgerRow } from '../lib/types';
-import ConfirmChip from './ConfirmChip.astro';
 
-interface Props { rows?: LedgerRow[] }
-const { rows = [] } = Astro.props;
+interface Props { rows?: LedgerRow[]; small?: boolean }
+const { rows = [], small = false } = Astro.props;
+
+// Matches legacy/src/templates/asset-page.mjs exactly: the last row is marked
+// unless one of them is the total, and values take a small variant.
+const hasTotal = rows.some((r) => r.total);
+const rowClass = (r: LedgerRow, i: number) =>
+  r.total
+    ? 'tr-ledger__row tr-ledger__row--total'
+    : i === rows.length - 1 && !hasTotal
+      ? 'tr-ledger__row tr-ledger__row--last'
+      : 'tr-ledger__row';
+const valueClass = (r: LedgerRow) =>
+  r.total ? 'tr-ledger__value--total' : `tr-ledger__value${small ? ' tr-ledger__value--sm' : ''}`;
 ---
 {rows.length > 0 && (
-  <dl class="tr-ledger">
-    {rows.map((row) => (
-      <div class={`tr-ledger__row${row.total ? ' tr-ledger__row--total' : ''}`}>
-        <dt class="tr-ledger__label">{row.label}</dt>
-        <dd class={row.total ? 'tr-ledger__value tr-ledger__value--total' : 'tr-ledger__value'}>
-          {row.value}<ConfirmChip note={row.chip} />
-        </dd>
+  <div class="tr-ledger">
+    {rows.map((r, i) => (
+      <div class={rowClass(r, i)}>
+        <span class="tr-ledger__label">{r.label}</span>
+        <span class={valueClass(r)}>{r.value}</span>
       </div>
     ))}
-  </dl>
+  </div>
 )}

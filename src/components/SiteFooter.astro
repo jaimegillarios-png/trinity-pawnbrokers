@@ -2,7 +2,6 @@
 import type { SiteSettings } from '../lib/types';
 interface Props { site: SiteSettings }
 const { site } = Astro.props;
-const year = new Date().getFullYear();
 ---
 <footer class="tr-footer">
   <span class="tr-mark" aria-hidden="true">
@@ -12,13 +11,6 @@ const year = new Date().getFullYear();
   <div class="tr-footer__name">Trinity</div>
   <div class="tr-footer__sub">Pawnbrokers</div>
 
-  <nav class="tr-footer__nav" aria-label="Legal">
-    <a href="/privacy">Privacy</a>
-    <a href="/terms">Terms</a>
-    <a href="/cookies">Cookies</a>
-    <a href="/complaints">Complaints</a>
-  </nav>
 
   <div class="tr-footer__legal">{site.legalFooter}</div>
-  <div class="tr-footer__copy">© {year} {site.name}</div>
 </footer>

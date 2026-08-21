@@ -1,182 +1,283 @@
 ---
-// Scoped to item pages: the hero, valuation form, trust strip and comparison
-// table are only used here.
+// A faithful port of legacy/src/templates/asset-page.mjs. The structure,
+// class names and inline styles are deliberately identical — this is the
+// same page, driven by Sanity instead of a content file.
 import '../styles/asset-page.css';
 import Hero from './Hero.astro';
-import TrustStrip from './TrustStrip.astro';
 import ValuationForm from './ValuationForm.astro';
-import SectionOpener from './SectionOpener.astro';
-import CardGrid from './CardGrid.astro';
+import IconCard from './IconCard.astro';
 import Ledger from './Ledger.astro';
 import Faqs from './Faqs.astro';
 import ConfirmChip from './ConfirmChip.astro';
+import { splitEmphasis } from '../lib/text';
 import type { AssetPage, SiteSettings } from '../lib/types';
 
 interface Props { page: AssetPage; site: SiteSettings }
 const { page, site } = Astro.props;
+
+const step = (i: number) => `Step ${String(i + 1).padStart(2, '0')}`;
+const whyHeading = page.why?.intro?.heading ? splitEmphasis(page.why.intro.heading) : [];
 ---
 
+<Hero hero={page.hero}>
+  <Fragment slot="aside"><ValuationForm form={page.form} /></Fragment>
+</Hero>
 
-  <Hero hero={page.hero}>
-    <Fragment slot="aside"><ValuationForm form={page.form} /></Fragment>
-  </Hero>
+{page.trust && page.trust.length > 0 && (
+  <div class="trust">
+    <div class="trust-inner">
+      {page.trust.map((t) => (
+        <span class={t.highlight ? 'trust__highlight' : undefined}>
+          {t.text}<ConfirmChip note={t.chip} />
+        </span>
+      ))}
+    </div>
+  </div>
+)}
 
-  <TrustStrip items={page.trust} />
-
-  {page.lendAgainst && (
-    <section class="tr-band tr-band--white" id="index">
-      <div class="tr-inner">
-        <SectionOpener intro={page.lendAgainst.intro} />
-        <CardGrid cards={page.lendAgainst.cards} class="lend-grid" />
+{page.lendAgainst && (
+  <section id="index" class="tr-band tr-band--white">
+    <div class="tr-inner">
+      <div class="tr-head">
+        {page.lendAgainst.intro?.eyebrow && <p class="tr-eyebrow">{page.lendAgainst.intro.eyebrow}</p>}
+        {page.lendAgainst.intro?.heading && <h2 class="tr-h2">{page.lendAgainst.intro.heading}</h2>}
       </div>
-    </section>
-  )}
+      {page.lendAgainst.intro?.intro && (
+        <p class="tr-intro tr-section-intro">{page.lendAgainst.intro.intro}</p>
+      )}
+      <div class="lend-grid">
+        {(page.lendAgainst.cards ?? []).map((c) => <IconCard card={c} />)}
+      </div>
+    </div>
+  </section>
+)}
 
-  {page.borrow && (
-    <section class="tr-band tr-band--grey">
-      <div class="tr-inner">
-        <SectionOpener intro={page.borrow.intro} />
-        <div class="borrow-grid">
-          <Ledger rows={page.borrow.specs} />
-          {page.borrow.example && (
-            <div class="tr-card tr-card--panel">
-              <p class="tr-microcaps">
-                {page.borrow.example.label}<ConfirmChip note={page.borrow.example.chip} />
-              </p>
-              {page.borrow.example.statement && <p class="tr-body">{page.borrow.example.statement}</p>}
-              <Ledger rows={page.borrow.example.rows} />
-              {page.borrow.example.note && <p class="tr-body-sm">{page.borrow.example.note}</p>}
-            </div>
+{page.borrow && (
+  <section class="tr-band tr-band--grey">
+    <div class="tr-inner">
+      <div class="borrow-grid">
+        <div>
+          {page.borrow.intro?.eyebrow && <p class="tr-eyebrow">{page.borrow.intro.eyebrow}</p>}
+          {page.borrow.intro?.heading && (
+            <h2 class="tr-h2" style="margin-bottom:16px">{page.borrow.intro.heading}</h2>
           )}
+          {page.borrow.intro?.intro && (
+            <p class="tr-body" style="margin:0 0 24px">{page.borrow.intro.intro}</p>
+          )}
+
+          <div class="tr-specs">
+            {(page.borrow.specs ?? []).map((s) => (
+              <div>
+                <p class="tr-spec__label">{s.label}<ConfirmChip note={s.chip} /></p>
+                <p class="tr-spec__value">{s.value}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
-  )}
 
-  {page.how && (
-    <section class="tr-band tr-band--white" id="how">
-      <div class="tr-inner">
-        <SectionOpener intro={page.how.intro} />
-        <CardGrid cards={page.how.steps} class="how-grid" />
-        {page.how.link && <a class="tr-inline-link" href={page.how.link.href}>{page.how.link.label}</a>}
+        {page.borrow.example && (
+          <div class="tr-card tr-card--panel example-panel">
+            <div class="tr-spec__label" style="margin-bottom:16px">
+              {page.borrow.example.label}<ConfirmChip note={page.borrow.example.chip} />
+            </div>
+            {page.borrow.example.statement && (
+              <p class="rep-card__statement" style="font-size:26px;line-height:1.3;text-align:left">
+                {page.borrow.example.statement}
+              </p>
+            )}
+            <Ledger rows={page.borrow.example.rows} />
+            {page.borrow.example.note && (
+              <p class="tr-body-sm" style="margin:24px 0 0">{page.borrow.example.note}</p>
+            )}
+          </div>
+        )}
       </div>
-    </section>
-  )}
+    </div>
+  </section>
+)}
 
-  {page.valuation && (
-    <section class="tr-band tr-band--grey">
-      <div class="tr-inner">
-        <SectionOpener intro={page.valuation.intro} />
-        <CardGrid cards={page.valuation.points} class="value-points" />
+{page.how && (
+  <section id="how" class="tr-band tr-band--white">
+    <div class="tr-inner">
+      <div class="tr-head--centred">
+        {page.how.intro?.eyebrow && <p class="tr-eyebrow">{page.how.intro.eyebrow}</p>}
+        {page.how.intro?.heading && <h2 class="tr-h2">{page.how.intro.heading}</h2>}
       </div>
-    </section>
-  )}
 
-  {page.why?.rows?.length && (
-    <section class="tr-band tr-band--green">
-      <div class="tr-inner">
-        <div class="why-head"><SectionOpener intro={page.why.intro} onGreen /></div>
-        <div class="compare-grid">
-          {page.why.rows.map((row) => (
-            <>
-              <div class="cmp-row">
-                {row.icon && <i class={`ph-light ${row.icon}`} aria-hidden="true"></i>}
-                {row.label}
+      <div id="how-track">
+        <div class="how-line how-line--track" aria-hidden="true"></div>
+        <div class="how-line how-line--fill" aria-hidden="true"></div>
+        <div class="how-grid">
+          {(page.how.steps ?? []).map((s, i) => (
+            <div class="how-step">
+              <div class="how-num" aria-hidden="true">
+                <span class="how-num__glyph">
+                  <i class={`ph-fill ${s.icon}`}></i><i class={`ph-light ${s.icon}`}></i>
+                </span>
               </div>
-              <div class="cmp-tri">
-                <span>{row.trinity}<ConfirmChip note={row.trinityChip} /></span>
-              </div>
-              <div class="cmp-hs"><span>{row.highStreet}</span></div>
-            </>
+              <p class="how-step__label">{step(i)}</p>
+              <h4 class="tr-h4">{s.title}</h4>
+              <p>{s.body}</p>
+            </div>
           ))}
         </div>
       </div>
-    </section>
-  )}
 
-  {page.proof && (
-    <section class="tr-band tr-band--grey">
-      <div class="proof-grid">
-        <div>
-          {/* The badge draws its colour from the gold token at runtime, so it
-              stays on-brand without a hex being pasted into the markup. */}
-          <div
-            id="badge-200"
-            style="width:200px;margin-bottom:20px"
-            data-reviews-badge
-            data-store={site.reviewsStore}
-            data-colour-token="--tr-gold-deep"
-          ></div>
-          {page.proof.reviewsNote && (
-            <p class="tr-body" style="margin:0;max-width:44ch">{page.proof.reviewsNote}</p>
+      {page.how.link && (
+        <p style="text-align:center;margin-top:44px">
+          <a href={page.how.link.href} class="tr-inline-link">{page.how.link.label}</a>
+        </p>
+      )}
+    </div>
+  </section>
+)}
+
+{page.valuation && (
+  <section class="tr-band tr-band--grey">
+    <div class="tr-inner">
+      <div class="value-split">
+        <div class="tr-sticky">
+          {page.valuation.intro?.eyebrow && <p class="tr-eyebrow">{page.valuation.intro.eyebrow}</p>}
+          {page.valuation.intro?.heading && (
+            <h2 class="tr-h2" style="margin-bottom:16px">{page.valuation.intro.heading}</h2>
+          )}
+          {page.valuation.intro?.intro && (
+            <p class="tr-body" style="margin:0">{page.valuation.intro.intro}</p>
           )}
         </div>
-
-        {page.proof.caseStudy && (
-          <div class="tr-card tr-card--panel">
-            <p class="tr-spec__label" style="margin-bottom:16px">
-              {page.proof.caseStudy.label}<ConfirmChip note={page.proof.caseStudy.chip} />
-            </p>
-            {page.proof.caseStudy.statement && (
-              <p style="font:500 var(--tr-h3) var(--tr-font-display);line-height:1.45;margin:0;color:var(--tr-green-vault);text-wrap:pretty">
-                {page.proof.caseStudy.statement}
-              </p>
-            )}
-            <Ledger rows={page.proof.caseStudy.rows} />
-            {page.proof.caseStudy.note && (
-              <p class="tr-caption" style="margin:22px 0 0">{page.proof.caseStudy.note}</p>
-            )}
-          </div>
-        )}
-      </div>
-    </section>
-  )}
-
-  {page.faqs && (
-    <section class="tr-band tr-band--white">
-      <div class="tr-inner">
-        <div class="faq-split">
-          <div class="tr-sticky">
-            {page.faqs.intro?.eyebrow && <p class="tr-eyebrow">{page.faqs.intro.eyebrow}</p>}
-            {page.faqs.intro?.heading && <h2 class="tr-h2">{page.faqs.intro.heading}</h2>}
-          </div>
-          <Faqs items={page.faqs.items} />
+        <div class="value-points">
+          {(page.valuation.points ?? []).map((c) => <IconCard card={c} />)}
         </div>
       </div>
-    </section>
-  )}
+    </div>
+  </section>
+)}
 
-  {page.repExample && (
-    <section class="tr-band tr-band--grey">
-      <div class="tr-inner tr-inner--narrow">
-        <p class="tr-microcaps">
+{page.why && (
+  <section class="tr-band tr-band--white">
+    <div class="tr-inner" style="padding-top:110px;padding-bottom:110px">
+      <div class="why-head">
+        {page.why.intro?.eyebrow && <p class="tr-eyebrow">{page.why.intro.eyebrow}</p>}
+        <h2 class="tr-h2">
+          {whyHeading.map((part) =>
+            part.emphasis ? <span style="color:var(--tr-gold-deep)">{part.text}</span> : part.text,
+          )}
+        </h2>
+        {page.why.intro?.intro && <p class="tr-intro">{page.why.intro.intro}</p>}
+      </div>
+
+      <div class="compare-grid">
+        <div class="cmp-head-spacer"></div>
+        <div class="cmp-head-tri"><div>Trinity</div></div>
+        <div class="cmp-head-hs"><div>The high street</div></div>
+        {(page.why.rows ?? []).map((r) => (
+          <>
+            <div class="cmp-row"><i class={`ph-light ${r.icon}`} aria-hidden="true"></i>{r.label}</div>
+            <div class="cmp-tri">
+              <i class="ph-fill ph-check-circle" aria-hidden="true"></i>
+              <span>{r.trinity}<ConfirmChip note={r.trinityChip} /></span>
+            </div>
+            <div class="cmp-hs">
+              <i class="ph-light ph-x" aria-hidden="true"></i><span>{r.highStreet}</span>
+            </div>
+          </>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+{page.proof && (
+  <section class="tr-band tr-band--grey">
+    <div class="proof-grid">
+      <div>
+        <div
+          id="badge-200"
+          style="width:200px;margin-bottom:20px"
+          data-reviews-badge
+          data-store={site.reviewsStore}
+          data-colour-token="--tr-gold-deep"
+        ></div>
+        {page.proof.reviewsNote && (
+          <p class="tr-body" style="margin:0;max-width:44ch">{page.proof.reviewsNote}</p>
+        )}
+      </div>
+
+      {page.proof.caseStudy && (
+        <div class="tr-card tr-card--panel">
+          <p class="tr-spec__label" style="margin-bottom:16px">
+            {page.proof.caseStudy.label}<ConfirmChip note={page.proof.caseStudy.chip} />
+          </p>
+          {page.proof.caseStudy.statement && (
+            <p style="font:500 var(--tr-h3) var(--tr-font-display);line-height:1.45;margin:0;color:var(--tr-green-vault);text-wrap:pretty">
+              {page.proof.caseStudy.statement}
+            </p>
+          )}
+          <Ledger rows={page.proof.caseStudy.rows} small />
+          {page.proof.caseStudy.note && (
+            <p class="tr-caption" style="margin:22px 0 0">{page.proof.caseStudy.note}</p>
+          )}
+        </div>
+      )}
+    </div>
+  </section>
+)}
+
+{page.faqs && (
+  <section class="tr-band tr-band--white">
+    <div class="tr-inner">
+      <div class="faq-split">
+        <div class="tr-sticky">
+          {page.faqs.intro?.eyebrow && <p class="tr-eyebrow">{page.faqs.intro.eyebrow}</p>}
+          {page.faqs.intro?.heading && <h2 class="tr-h2">{page.faqs.intro.heading}</h2>}
+        </div>
+        <Faqs items={page.faqs.items} />
+      </div>
+    </div>
+  </section>
+)}
+
+{page.repExample && (
+  <section class="tr-band tr-band--grey">
+    <div
+      class="tr-inner tr-inner--narrow"
+      style="max-width:760px;padding:90px var(--tr-pad-side);display:flex;flex-direction:column;align-items:center"
+    >
+      <div class="rep-card">
+        <p class="tr-spec__label" style="justify-content:center;margin-bottom:18px">
           {page.repExample.label}<ConfirmChip note={page.repExample.chip} />
         </p>
-        <p class="tr-body">{page.repExample.statement}</p>
-        {page.repExample.note && <p class="tr-body-sm">{page.repExample.note}</p>}
-      </div>
-    </section>
-  )}
-
-  {page.closing && (
-    <section class="closing tr-band tr-band--green">
-      <div class="closing-inner">
-        {page.closing.eyebrow && <p class="tr-eyebrow tr-eyebrow--on-green">{page.closing.eyebrow}</p>}
-        <h2 class="tr-h2 tr-h2--on-green">{page.closing.heading}</h2>
-        {page.closing.intro && <p class="tr-intro">{page.closing.intro}</p>}
-        {page.closing.cta && (
-          <a href={page.closing.cta.href} class="tr-cta tr-cta--gold">{page.closing.cta.label}</a>
-        )}
-        {page.closing.contactPrefix && (
-          <p class="tr-body-sm">
-            {page.closing.contactPrefix}
-            <a href={`tel:${site.phoneHref}`} class="tr-inline-link">{site.phone}</a>
-            {page.closing.contactSuffix}
+        <p class="rep-card__statement">{page.repExample.statement}</p>
+        {page.repExample.note && (
+          <p class="tr-body-sm" style="margin:20px 0 0;color:var(--tr-ink-62);text-wrap:pretty">
+            {page.repExample.note}
           </p>
         )}
       </div>
-    </section>
-  )}
+    </div>
+  </section>
+)}
+
+{page.closing && (
+  <section class="closing">
+    <div class="closing-inner">
+      {page.closing.eyebrow && (
+        <p class="tr-eyebrow tr-eyebrow--on-green" style="margin-bottom:18px">{page.closing.eyebrow}</p>
+      )}
+      <h2>{page.closing.heading}</h2>
+      {page.closing.intro && <p class="closing__intro">{page.closing.intro}</p>}
+      {page.closing.cta && (
+        <a href={page.closing.cta.href} class="tr-cta tr-cta--gold">{page.closing.cta.label}</a>
+      )}
+      {page.closing.contactPrefix && (
+        <p class="closing__contact">
+          {page.closing.contactPrefix} <a href={`tel:${site.phoneHref}`}>{site.phone}</a>{' '}
+          {page.closing.contactSuffix}
+        </p>
+      )}
+    </div>
+  </section>
+)}
 
 <script>
   import '../scripts/asset-page.js';

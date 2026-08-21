@@ -12,6 +12,13 @@ export const trustItem = defineType({
       description: 'Short. These sit on one line across the strip.',
       validation: (r) => r.required().max(44).warning('Long items push the strip onto two lines.'),
     }),
+    defineField({
+      name: 'highlight',
+      title: 'Emphasise in gold',
+      type: 'boolean',
+      description: 'Picks this item out from the rest of the strip.',
+      initialValue: false,
+    }),
     confirmChip,
   ],
   preview: { select: { title: 'text', subtitle: 'chip' } },
