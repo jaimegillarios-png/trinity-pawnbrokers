@@ -28,7 +28,7 @@ test('exactly one article is featured, and it is not repeated in the grid', () =
   assert.equal(count(html, /class="blog-featured__title"/g), 1, 'there should be one featured article');
 
   // The feature and the grid must not both link to the same piece.
-  const featuredHref = html.match(/class="blog-featured__inner">\s*<a href="([^"]+)"/)?.[1];
+  const featuredHref = html.match(/<a class="blog-featured" href="([^"]+)"/)?.[1];
   assert.ok(featuredHref, 'the featured article is not linked');
   const gridSection = html.split('class="blog-list"')[1] ?? '';
   assert.ok(!gridSection.includes(`href="${featuredHref}"`),
@@ -41,6 +41,18 @@ test('the grid holds every article except the featured one', () => {
     .filter((e) => e.isDirectory()).length;
   assert.equal(count(html, /class="blog-card"/g), total - 1,
     'the grid should hold every article but the featured one');
+});
+
+test('the featured band carries its image, scrim and call to action', () => {
+  const html = index();
+  assert.match(html, /class="blog-featured__media"/, 'no featured image');
+  assert.match(html, /class="blog-featured__scrim"/, 'no scrim over the image');
+  assert.match(html, /class="blog-featured__more"/, 'no call to action');
+  // The image is decorative here: the headline beside it carries the meaning,
+  // so an alt text would be read out twice.
+  const img = html.match(/class="blog-featured__media">\s*<img[^>]*alt="([^"]*)"/);
+  assert.ok(img, 'the featured image is missing');
+  assert.equal(img[1], '', 'the decorative featured image should have empty alt text');
 });
 
 test('every article carries a cover image with alt text', () => {

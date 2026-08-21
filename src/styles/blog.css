@@ -7,95 +7,122 @@
    ========================================================================== */
 
 /* ---- index ---- */
-.blog-head {
-  background: var(--tr-white);
-  border-bottom: 1px solid var(--tr-line-soft);
-}
+/* The page runs white -> green -> ivory, the same rhythm as every other page
+   on the site. The head introduces, the featured band carries, the grid
+   archives. No rules between them; the colour change is the division. */
+.blog-head { background: var(--tr-white); }
 .blog-head__inner {
   max-width: var(--tr-container);
   margin: 0 auto;
-  padding: 96px var(--tr-pad-side) 64px;
+  padding: 88px var(--tr-pad-side) 56px;
 }
 .blog-head h1 {
   font: 500 var(--tr-h2) var(--tr-font-display);
   color: var(--tr-green-vault);
-  margin: 0;
-  max-width: 20ch;
+  margin: 12px 0 0;
+  max-width: 18ch;
   text-wrap: balance;
 }
 .blog-head__standfirst {
   font: 400 var(--tr-body-lg) var(--tr-font-body);
   color: var(--tr-ink-72);
-  max-width: 60ch;
+  max-width: 56ch;
   margin: 18px 0 0;
   text-wrap: pretty;
 }
 
 /* ---- featured article ----
-   The lead piece runs wide, image beside the copy, above the grid. It sits on
-   white so it reads as part of the masthead block rather than as the first
-   card in the list. */
-.blog-featured { background: var(--tr-white); border-bottom: 1px solid var(--tr-line-soft); }
-.blog-featured__inner {
-  max-width: var(--tr-container);
-  margin: 0 auto;
-  padding: 0 var(--tr-pad-side) 72px;
-}
-.blog-featured a {
-  display: grid;
-  grid-template-columns: 7fr 5fr;
-  gap: 44px;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-}
-.blog-featured__media {
+   Built as a hero, because that is what this site does with an image and a
+   headline: full bleed, the vault-green scrim over the photograph, copy set
+   over it. One article's copy is too short to sit beside an image without
+   leaving a hole — over it, that problem does not exist, and the page gains
+   the dark band its rhythm was missing. */
+.blog-featured {
+  position: relative;
   display: block;
   overflow: hidden;
-  border-radius: var(--tr-radius);
-  aspect-ratio: 3 / 2;
-  background: var(--tr-line-soft);
+  background: var(--tr-green-vault);
+  text-decoration: none;
+  color: var(--tr-neutral);
 }
+.blog-featured__media { position: absolute; inset: 0; }
 .blog-featured__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transform: scale(1.02);
+  transition: transform 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-.blog-featured a:hover .blog-featured__media img { transform: scale(1.03); }
+.blog-featured:hover .blog-featured__media img { transform: scale(1.06); }
+.blog-featured__scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--tr-hero-scrim);
+}
+.blog-featured__inner {
+  position: relative;
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 96px var(--tr-pad-side);
+  min-height: 440px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .blog-featured__label {
-  font: 500 var(--tr-microcaps-size)/1 var(--tr-font-caps);
-  letter-spacing: var(--tr-microcaps-track);
+  font: 500 var(--tr-eyebrow-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-eyebrow-track);
   text-transform: uppercase;
-  color: var(--tr-gold-deep);
+  color: var(--tr-gold-bright);
 }
 .blog-featured__title {
-  font: 500 var(--tr-h3) var(--tr-font-display);
-  color: var(--tr-green-vault);
-  margin: 14px 0 0;
-  text-wrap: balance;
-}
-.blog-featured a:hover .blog-featured__title { color: var(--tr-green-leaf); }
-.blog-featured__excerpt {
-  font: 400 var(--tr-body) var(--tr-font-body);
-  color: var(--tr-ink-72);
-  margin: 14px 0 0;
+  font: 500 var(--tr-h2) var(--tr-font-display);
+  color: var(--tr-neutral);
+  margin: 20px 0 0;
+  max-width: 20ch;
   text-wrap: pretty;
 }
-.blog-featured__date {
-  display: block;
-  font: 400 var(--tr-caption) var(--tr-font-body);
-  color: var(--tr-ink-62);
-  margin-top: 16px;
+.blog-featured__excerpt {
+  font: 400 var(--tr-body-lg) var(--tr-font-body);
+  color: var(--tr-on-green-strong);
+  max-width: 52ch;
+  margin: 18px 0 0;
+  text-wrap: pretty;
 }
+.blog-featured__meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 28px;
+}
+.blog-featured__date {
+  font: 400 var(--tr-body-sm) var(--tr-font-body);
+  color: var(--tr-on-green-muted);
+}
+.blog-featured__more {
+  font: 700 12px/1 var(--tr-font-body);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tr-gold-bright);
+  border-bottom: 1px solid var(--tr-line-gold-mid);
+  padding-bottom: 4px;
+  transition: border-color 0.2s ease;
+}
+.blog-featured:hover .blog-featured__more { border-bottom-color: var(--tr-gold-bright); }
+
 @media (prefers-reduced-motion: reduce) {
   .blog-featured__media img,
-  .blog-featured a:hover .blog-featured__media img { transition: none; transform: none; }
+  .blog-featured:hover .blog-featured__media img { transition: none; transform: none; }
 }
 @media (max-width: 860px) {
-  .blog-featured a { grid-template-columns: 1fr; gap: 20px; }
-  .blog-featured__inner { padding-bottom: 48px; }
+  .blog-featured__inner { padding: 64px var(--tr-pad-side); min-height: 0; }
+  .blog-featured__title { max-width: none; }
+}
+@media (max-width: 620px) {
+  .blog-head__inner { padding: 44px var(--tr-pad-side) 32px; }
+  .blog-featured__inner { padding: 48px var(--tr-pad-side); }
 }
 
 /* The grid below the feature is the rest of the archive. */
@@ -103,7 +130,7 @@
 .blog-list__label {
   max-width: var(--tr-container);
   margin: 0 auto;
-  padding: 56px var(--tr-pad-side) 0;
+  padding: 72px var(--tr-pad-side) 0;
   font: 500 var(--tr-microcaps-size)/1 var(--tr-font-caps);
   letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;

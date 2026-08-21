@@ -41,30 +41,31 @@ const rest = posts.filter((post) => post !== featured);
   </section>
 
   {featured && (
-    <section class="blog-featured">
-      <div class="blog-featured__inner">
-        <a href={`/blog/${featured.slug}`}>
-          <span class="blog-featured__media">
-            <img
-              src={urlFor(featured.coverImage).width(1100).height(734).fit('crop').url()}
-              alt={featured.coverImage.alt ?? ''}
-              width="1100"
-              height="734"
-              fetchpriority="high"
-              decoding="async"
-            />
-          </span>
-          <span>
-            <span class="blog-featured__label">Latest</span>
-            <h2 class="blog-featured__title">{featured.title}</h2>
-            <p class="blog-featured__excerpt">{featured.excerpt}</p>
-            <time class="blog-featured__date" datetime={featured.publishedAt}>
-              {dateOf(featured.publishedAt)}
-            </time>
-          </span>
-        </a>
-      </div>
-    </section>
+    <a class="blog-featured" href={`/blog/${featured.slug}`}>
+      <span class="blog-featured__media">
+        <img
+          src={urlFor(featured.coverImage).width(1920).height(900).fit('crop').url()}
+          alt=""
+          width="1920"
+          height="900"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </span>
+      <span class="blog-featured__scrim"></span>
+
+      <span class="blog-featured__inner">
+        <span class="blog-featured__label">Latest</span>
+        <h2 class="blog-featured__title">{featured.title}</h2>
+        <p class="blog-featured__excerpt">{featured.excerpt}</p>
+        <span class="blog-featured__meta">
+          <time class="blog-featured__date" datetime={featured.publishedAt}>
+            {dateOf(featured.publishedAt)}
+          </time>
+          <span class="blog-featured__more">Read the article →</span>
+        </span>
+      </span>
+    </a>
   )}
 
   <section class="blog-list">
