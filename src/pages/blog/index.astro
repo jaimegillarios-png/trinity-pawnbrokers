@@ -22,6 +22,14 @@ const schemas = [
 
 const dateOf = (iso: string) =>
   new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+/**
+ * The lead article: whichever is ticked as featured, or the newest if none is.
+ * Posts already arrive newest first, so the first match is the right one
+ * either way, and several ticked resolves to the most recent of them.
+ */
+const featured = posts.find((post) => post.featured) ?? posts[0];
+const rest = posts.filter((post) => post !== featured);
 ---
 <Base seo={seo} site={site} schemas={schemas} reveal=".blog-card">
   <section class="blog-head">
@@ -32,12 +40,41 @@ const dateOf = (iso: string) =>
     </div>
   </section>
 
+  {featured && (
+    <section class="blog-featured">
+      <div class="blog-featured__inner">
+        <a href={`/blog/${featured.slug}`}>
+          <span class="blog-featured__media">
+            <img
+              src={urlFor(featured.coverImage).width(1100).height(734).fit('crop').url()}
+              alt={featured.coverImage.alt ?? ''}
+              width="1100"
+              height="734"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </span>
+          <span>
+            <span class="blog-featured__label">Latest</span>
+            <h2 class="blog-featured__title">{featured.title}</h2>
+            <p class="blog-featured__excerpt">{featured.excerpt}</p>
+            <time class="blog-featured__date" datetime={featured.publishedAt}>
+              {dateOf(featured.publishedAt)}
+            </time>
+          </span>
+        </a>
+      </div>
+    </section>
+  )}
+
   <section class="blog-list">
     {posts.length === 0 ? (
       <p class="blog-empty">No articles yet.</p>
-    ) : (
+    ) : rest.length === 0 ? null : (
+      <>
+      <p class="blog-list__label">More articles</p>
       <div class="blog-grid">
-        {posts.map((post) => (
+        {rest.map((post) => (
           <article class="blog-card">
             <a href={`/blog/${post.slug}`}>
               <span class="blog-card__media">
@@ -57,6 +94,7 @@ const dateOf = (iso: string) =>
           </article>
         ))}
       </div>
+      </>
     )}
   </section>
 </Base>

@@ -566,21 +566,105 @@ async function buildHomePage() {
 }
 
 /**
- * The blog has no content yet and no equivalent on the old site, so this seeds
- * the index heading and one placeholder article. The article is marked
- * noindex and says plainly what it is — it exists so the layout can be
- * reviewed, and it should be deleted once real writing replaces it.
+ * The blog has no content and no equivalent on the old site, so this seeds the
+ * index and five placeholder articles — enough to judge the layout, including
+ * the featured slot. Every one is noindex, and every one opens by saying what
+ * it is. They are meant to be replaced or deleted before launch.
  */
 async function blogSeed() {
-  const cover = await uploadImage('images/cards/watches.jpeg', 'A luxury watch dial and bezel in low light');
-  const para = (key, text) => ({
+  const para = (key, text, style = 'normal') => ({
     _key: key,
     _type: 'block',
-    style: 'normal',
+    style,
     markDefs: [],
     children: [{ _key: key + 's', _type: 'span', marks: [], text }],
   });
-  const heading = (key, text) => ({ ...para(key, text), style: 'h2' });
+
+  const PLACEHOLDER =
+    'Placeholder article. The layout is real; the words are not. Replace this with real writing, or delete the article, before the site goes live.';
+
+  const drafts = [
+    {
+      slug: 'what-a-watch-specialist-looks-at',
+      title: 'What a watch specialist actually looks at',
+      excerpt:
+        'Reference numbers, service history, the state of the bracelet — the things that move a valuation, and the things that do not.',
+      image: 'watches',
+      related: 'watches',
+      featured: true,
+      date: '2026-08-14T09:00:00.000Z',
+    },
+    {
+      slug: 'why-a-hallmark-matters-more-than-weight',
+      title: 'Why a hallmark matters more than the weight',
+      excerpt:
+        'Scrap value is the floor, not the price. What the marks on a piece of silver tell a specialist about what it is worth.',
+      image: 'silver',
+      related: 'silver',
+      date: '2026-08-07T09:00:00.000Z',
+    },
+    {
+      slug: 'certificated-or-not',
+      title: 'Certificated or not: what changes when you borrow against a diamond',
+      excerpt:
+        'A GIA report makes a valuation faster and firmer. It is not a requirement, and an uncertificated stone is not a lesser one.',
+      image: 'diamonds',
+      related: 'diamonds',
+      date: '2026-07-31T09:00:00.000Z',
+    },
+    {
+      slug: 'what-happens-while-we-hold-it',
+      title: 'What happens to your item while we hold it',
+      excerpt:
+        'Insured door to door, held in the City, never displayed and never sold while the loan is running. What custody actually means.',
+      image: 'jewellery',
+      related: 'jewellery',
+      date: '2026-07-24T09:00:00.000Z',
+    },
+    {
+      slug: 'redeeming-early',
+      title: 'Redeeming early, and what it saves you',
+      excerpt:
+        'Interest is charged for the time the loan runs. Repay in month two of a six-month term and you pay for two months.',
+      image: 'gold',
+      related: 'gold',
+      date: '2026-07-17T09:00:00.000Z',
+    },
+  ];
+
+  const covers = JSON.parse(await readFile(resolve(root, 'images/cards/index.json'), 'utf8'));
+  const coverFor = async (slug) => {
+    const card = covers.find((c) => c.slug === slug);
+    return card ? uploadImage(`images/cards/${card.name}`, card.alt) : undefined;
+  };
+
+  const posts = [];
+  for (const draft of drafts) {
+    posts.push({
+      _id: `post-${draft.slug}`,
+      _type: 'post',
+      title: draft.title,
+      slug: { _type: 'slug', current: draft.slug },
+      publishedAt: draft.date,
+      featured: Boolean(draft.featured),
+      excerpt: draft.excerpt,
+      coverImage: await coverFor(draft.image),
+      relatedAssets: [{ _key: 'rel0', _type: 'reference', _ref: `assetPage-${draft.related}` }],
+      body: [
+        para('p1', PLACEHOLDER),
+        para('h1', 'A sub-heading looks like this', 'h2'),
+        para('p2', 'Body copy sits at a comfortable measure, in the same type and colour as the rest of the site. Links, lists, quotes and images are all available to whoever is writing.'),
+        para('p3', 'Related item pages appear at the end. That is how the blog earns its keep for search: an article answers a question someone asks before they pawn something, then points at the page that serves them.'),
+      ],
+      seo: {
+        _type: 'seo',
+        title: draft.title,
+        description: draft.excerpt,
+        // Placeholder copy must never be indexable.
+        noIndex: true,
+      },
+    });
+  }
 
   return [
     {
@@ -597,29 +681,7 @@ async function blogSeed() {
           'Notes on pawnbroking, valuation and looking after what you own, from the specialists at Trinity Pawnbrokers.',
       },
     },
-    {
-      _id: 'post-placeholder',
-      _type: 'post',
-      title: 'What a watch specialist actually looks at',
-      slug: { _type: 'slug', current: 'what-a-watch-specialist-looks-at' },
-      publishedAt: '2026-08-01T09:00:00.000Z',
-      excerpt:
-        'Placeholder article. Written to show the layout, not to be published — replace or delete it before launch.',
-      coverImage: cover,
-      relatedAssets: [{ _key: 'rel0', _type: 'reference', _ref: 'assetPage-watches' }],
-      body: [
-        para('p1', 'This is placeholder copy so the article layout can be reviewed. Replace it with real writing, or delete this article, before the site goes live.'),
-        heading('h1', 'A sub-heading looks like this'),
-        para('p2', 'Body copy sits at a comfortable measure, with the same type and colour as the rest of the site. Links, lists, quotes and images are all available to whoever is writing.'),
-        para('p3', 'Related item pages appear at the end, which is how the blog earns its keep for search: articles answer the questions people ask before they pawn something, and point at the page that serves them.'),
-      ],
-      seo: {
-        _type: 'seo',
-        title: 'What a watch specialist actually looks at',
-        description: 'Placeholder article used to review the blog layout.',
-        noIndex: true,
-      },
-    },
+    ...posts,
   ];
 }
 

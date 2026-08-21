@@ -183,6 +183,7 @@ export interface Post {
   title: string;
   slug: string;
   publishedAt: string;
+  featured?: boolean;
   excerpt: string;
   coverImage: SanityImage;
   relatedAssets?: Array<{ title: string; slug: string; nounPlural: string }>;

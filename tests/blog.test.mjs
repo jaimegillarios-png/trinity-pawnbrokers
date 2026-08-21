@@ -20,7 +20,27 @@ test('the index lists every published article, each with a link, date and excerp
   assert.ok(cards >= 1, 'no articles listed');
   assert.equal(count(html, /class="blog-card__date"/g), cards, 'an article is missing its date');
   assert.equal(count(html, /class="blog-card__excerpt"/g), cards, 'an article is missing its excerpt');
-  assert.equal(count(html, /href="\/blog\//g), cards, 'an article is not linked');
+  assert.equal(count(html, /class="blog-card__title"/g), cards, 'an article is missing its title');
+});
+
+test('exactly one article is featured, and it is not repeated in the grid', () => {
+  const html = index();
+  assert.equal(count(html, /class="blog-featured__title"/g), 1, 'there should be one featured article');
+
+  // The feature and the grid must not both link to the same piece.
+  const featuredHref = html.match(/class="blog-featured__inner">\s*<a href="([^"]+)"/)?.[1];
+  assert.ok(featuredHref, 'the featured article is not linked');
+  const gridSection = html.split('class="blog-list"')[1] ?? '';
+  assert.ok(!gridSection.includes(`href="${featuredHref}"`),
+    'the featured article also appears in the grid');
+});
+
+test('the grid holds every article except the featured one', () => {
+  const html = index();
+  const total = readdirSync(resolve(dist, 'blog'), { withFileTypes: true })
+    .filter((e) => e.isDirectory()).length;
+  assert.equal(count(html, /class="blog-card"/g), total - 1,
+    'the grid should hold every article but the featured one');
 });
 
 test('every article carries a cover image with alt text', () => {

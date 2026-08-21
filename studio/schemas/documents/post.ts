@@ -29,6 +29,15 @@ export const post = defineType({
       validation: (r) => r.required(),
     }),
     defineField({
+      name: 'featured',
+      title: 'Feature at the top',
+      type: 'boolean',
+      description:
+        'Runs large at the top of the blog. If none is ticked, the newest article is featured. If several are, the newest of them wins.',
+      initialValue: false,
+      group: 'content',
+    }),
+    defineField({
       name: 'excerpt',
       type: 'text',
       rows: 3,

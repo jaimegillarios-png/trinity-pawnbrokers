@@ -31,7 +31,85 @@
   text-wrap: pretty;
 }
 
+/* ---- featured article ----
+   The lead piece runs wide, image beside the copy, above the grid. It sits on
+   white so it reads as part of the masthead block rather than as the first
+   card in the list. */
+.blog-featured { background: var(--tr-white); border-bottom: 1px solid var(--tr-line-soft); }
+.blog-featured__inner {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 0 var(--tr-pad-side) 72px;
+}
+.blog-featured a {
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  gap: 44px;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+.blog-featured__media {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--tr-radius);
+  aspect-ratio: 3 / 2;
+  background: var(--tr-line-soft);
+}
+.blog-featured__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.blog-featured a:hover .blog-featured__media img { transform: scale(1.03); }
+.blog-featured__label {
+  font: 500 var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
+  text-transform: uppercase;
+  color: var(--tr-gold-deep);
+}
+.blog-featured__title {
+  font: 500 var(--tr-h3) var(--tr-font-display);
+  color: var(--tr-green-vault);
+  margin: 14px 0 0;
+  text-wrap: balance;
+}
+.blog-featured a:hover .blog-featured__title { color: var(--tr-green-leaf); }
+.blog-featured__excerpt {
+  font: 400 var(--tr-body) var(--tr-font-body);
+  color: var(--tr-ink-72);
+  margin: 14px 0 0;
+  text-wrap: pretty;
+}
+.blog-featured__date {
+  display: block;
+  font: 400 var(--tr-caption) var(--tr-font-body);
+  color: var(--tr-ink-62);
+  margin-top: 16px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .blog-featured__media img,
+  .blog-featured a:hover .blog-featured__media img { transition: none; transform: none; }
+}
+@media (max-width: 860px) {
+  .blog-featured a { grid-template-columns: 1fr; gap: 20px; }
+  .blog-featured__inner { padding-bottom: 48px; }
+}
+
+/* The grid below the feature is the rest of the archive. */
 .blog-list { background: var(--tr-neutral); }
+.blog-list__label {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 56px var(--tr-pad-side) 0;
+  font: 500 var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
+  text-transform: uppercase;
+  color: var(--tr-gold-deep);
+}
+.blog-list__label + .blog-grid { padding-top: 28px; }
 .blog-grid {
   max-width: var(--tr-container);
   margin: 0 auto;

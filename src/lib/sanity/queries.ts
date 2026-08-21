@@ -119,6 +119,7 @@ const POST = `{
   title,
   "slug": slug.current,
   publishedAt,
+  featured,
   excerpt,
   coverImage ${IMAGE},
   relatedAssets[]->{ title, "slug": slug.current, nounPlural },
