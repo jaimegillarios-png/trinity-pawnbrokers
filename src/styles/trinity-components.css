@@ -397,8 +397,10 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
   margin: 0 auto;
   padding: 72px var(--tr-pad-side) 52px;
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr;
-  gap: 56px;
+  /* Brand takes the slack; the link columns are content-width and sit hard
+     against the right edge of the container. */
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 56px 88px;
 }
 
 /* ---- brand column ---- */
@@ -461,6 +463,9 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
 @media (max-width: 860px) {
   .tr-footer__inner { grid-template-columns: 1fr 1fr; gap: 44px 32px; }
   .tr-footer__brand { grid-column: 1 / -1; }
+}
+@media (max-width: 1100px) and (min-width: 861px) {
+  .tr-footer__inner { gap: 56px 56px; }
 }
 @media (max-width: 560px) {
   .tr-footer__inner { grid-template-columns: 1fr; gap: 36px; padding-top: 54px; }
