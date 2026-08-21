@@ -20,7 +20,7 @@
   font: 500 var(--tr-h2) var(--tr-font-display);
   color: var(--tr-green-vault);
   margin: 12px 0 0;
-  max-width: 18ch;
+  max-width: 34ch;
   text-wrap: balance;
 }
 .blog-head__standfirst {
