@@ -270,6 +270,53 @@ async function buildSiteSettings() {
   };
 }
 
+/**
+ * Stubs for the pages the footer and nav link to. Real wording has to come
+ * from the business — but an empty document that says so is better than a
+ * dead link, and it puts the gap where the client will see it.
+ */
+function legalStubs() {
+  const pages = [
+    ['privacy', 'Privacy policy', 'How we collect, use and protect personal information.'],
+    ['terms', 'Terms of business', 'The terms on which Trinity provides pawn loans.'],
+    ['cookies', 'Cookie policy', 'What we store on your device, and why.'],
+    ['complaints', 'Complaints procedure', 'How to complain, and what happens next.'],
+    ['trust-and-security', 'Trust & security', 'How your item is valued, insured and stored.'],
+  ];
+  const today = new Date().toISOString().slice(0, 10);
+  return pages.map(([slug, title, description]) => ({
+    _id: `legalPage-${slug}`,
+    _type: 'legalPage',
+    title,
+    slug: { _type: 'slug', current: slug },
+    updatedAt: today,
+    body: [
+      {
+        _key: 'placeholder',
+        _type: 'block',
+        style: 'normal',
+        markDefs: [],
+        children: [
+          {
+            _key: 'placeholder0',
+            _type: 'span',
+            marks: [],
+            text:
+              'This page is awaiting its final wording. Replace this text in the Studio before the site goes live.',
+          },
+        ],
+      },
+    ],
+    seo: {
+      _type: 'seo',
+      title,
+      description,
+      // Kept out of search until the real wording is in.
+      noIndex: true,
+    },
+  }));
+}
+
 /* ---------- run ------------------------------------------------------- */
 
 const dir = resolve(root, 'legacy/src/content');
@@ -285,7 +332,7 @@ const ordered = files.sort((a, b) => {
 
 console.log(`\n  ${DRY ? 'Dry run' : 'Importing'} → project ${projectId}, dataset ${dataset}\n`);
 
-const docs = [await buildSiteSettings()];
+const docs = [await buildSiteSettings(), ...legalStubs()];
 for (const [i, file] of ordered.entries()) {
   const mod = await import(pathToFileURL(resolve(dir, file)).href);
   docs.push(await buildAssetPage(mod.default, i));

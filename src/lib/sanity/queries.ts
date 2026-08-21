@@ -35,12 +35,27 @@ const ASSET_PAGE = `{
   ${SEO}
 }`;
 
-export const getSiteSettings = () =>
-  query<SiteSettings>(`*[_type == "siteSettings"][0]{
+/**
+ * Every page depends on this, so a missing document has to say so. Without the
+ * guard the build dies on `Cannot read properties of null`, which tells whoever
+ * is looking at the failure nothing about what to do next.
+ */
+export const getSiteSettings = async (): Promise<SiteSettings> => {
+  const settings = await query<SiteSettings | null>(`*[_type == "siteSettings"][0]{
     ...,
     organisationLogo ${IMAGE},
     defaultSeo { ..., ogImage ${IMAGE} }
   }`);
+
+  if (!settings) {
+    throw new Error(
+      'No "Site settings" document found in Sanity.\n' +
+        '  Open the Studio (npm run studio) and fill in Site settings,\n' +
+        '  or run: node scripts/migrate-to-sanity.mjs',
+    );
+  }
+  return settings;
+};
 
 export const getAssetPage = (slug: string) =>
   query<AssetPage | null>(`*[_type == "assetPage" && slug.current == $slug][0] ${ASSET_PAGE}`, {
