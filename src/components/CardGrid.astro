@@ -1,0 +1,16 @@
+---
+import type { IconCard } from '../lib/types';
+interface Props { cards?: IconCard[]; class?: string }
+const { cards = [], class: className = 'lend-grid' } = Astro.props;
+---
+{cards.length > 0 && (
+  <div class={className}>
+    {cards.map((card) => (
+      <article class="tr-card">
+        {card.icon && <i class={`ph-light ${card.icon} tr-card__icon`} aria-hidden="true"></i>}
+        <h3 class="tr-h3">{card.title}</h3>
+        <p class="tr-body-sm">{card.body}</p>
+      </article>
+    ))}
+  </div>
+)}

@@ -1,0 +1,557 @@
+/* ==========================================================================
+   Trinity — asset page layout
+   Page-specific layout for the six asset pages. Global chrome (masthead,
+   footer, buttons, cards, type) lives in trinity-components.css.
+   Requires: trinity-tokens.css, trinity-components.css
+   ========================================================================== */
+/* ========================= spec grid (loan size / term / fees / credit file) ==== */
+.tr-specs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; }
+.tr-specs > div { padding: 18px 0 20px; border-top: 1px solid var(--tr-line-card); }
+.tr-specs > div:nth-child(n+3) { padding-bottom: 0; }
+.tr-spec__label {
+  font: 500 12.5px/1.4 var(--tr-font-caps);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tr-gold-deep);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tr-spec__value { font: 500 22px/1.2 var(--tr-font-display); color: var(--tr-green-vault); }
+
+/* ========================= hero ========================= */
+.hero { position: relative; background: var(--tr-green-vault); color: var(--tr-neutral); overflow: hidden; }
+.hero__media { position: absolute; inset: 0; }
+.hero__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* The hero image settles rather than snapping in. .hero is overflow:hidden,
+   so the oversize never spills, and this is a plain CSS animation — the image
+   is never hidden waiting on anything. */
+.hero__media img { animation: heroSettle 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+@keyframes heroSettle { from { transform: scale(1.06); } to { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .hero__media img { animation: none; } }
+.hero__scrim { position: absolute; inset: 0; pointer-events: none; background: var(--tr-hero-scrim); }
+.hero-grid {
+  position: relative;
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 0 var(--tr-pad-side);
+  display: grid;
+  grid-template-columns: 6fr 5.6fr;
+  gap: 48px;
+  align-items: center;
+}
+.hero-copy { padding: 96px 0 84px; }
+/* Same reading measure as the h1 (16ch of Cormorant, 488px) and intro (52ch,
+   476px). `ch` is font-relative and measures the "0" advance, so the eyebrow
+   needs its own figure at its own size: 64ch at 13px Archivo = 477px. Without
+   a cap it filled the whole 617px column and ran ~130px past the headline.
+   (This was 59ch while the caps role was Jost, whose "0" is 8.12px against
+   Archivo's 7.45px — the same 59ch would now measure only 440px.) */
+/* margin-top: 0 — .tr-eyebrow is a <p> and only sets margin-bottom, so the
+   UA's default 1em top margin (13px here) was padding the hero out by an
+   amount nobody had written. */
+.hero-copy .tr-eyebrow {
+  color: var(--tr-gold-bright);
+  line-height: 1.9;
+  max-width: 64ch;
+  margin-top: 0;
+}
+/* The asset word — gold, roman, and underscored with a gold rule.
+   text-underline-offset keeps the rule clear of the descenders. */
+.hero-copy .tr-h1 span {
+  color: var(--tr-gold-bright);
+  font-style: normal;
+  text-decoration: underline;
+  text-decoration-color: var(--tr-gold-bright);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 8px;
+}
+.hero__intro { max-width: 52ch; color: var(--tr-on-green-strong); margin: 0 0 30px; }
+.hero__actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero__reassure {
+  font: 500 11.5px/1.6 var(--tr-font-caps);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tr-on-green);
+  margin: 22px 0 0;
+}
+
+/* ---- trust strip ---- */
+.trust {
+  position: relative;
+  border-top: 1px solid var(--tr-trust-rule);
+  background: var(--tr-trust-bg);
+  backdrop-filter: blur(6px);
+}
+.trust-inner {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 16px var(--tr-pad-side);
+  display: flex;
+  /* 28px here left the five items needing 1244.7px in a 1240px content box, so
+     the last one wrapped to a line of its own. Archivo sets wider than the Jost
+     this role used to use; 22px restores ~19px of headroom without touching the
+     type. It still wraps rather than overflowing if the copy grows. */
+  gap: 22px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  font: 500 12.5px/1.5 var(--tr-font-caps);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tr-on-green);
+}
+.trust-inner > span { white-space: nowrap; }
+.trust__highlight { color: var(--tr-gold-bright); }
+
+/* ========================= valuation form card ========================= */
+.hero-form-card {
+  position: relative;
+  background: var(--tr-warm-panel);
+  color: var(--tr-ink);
+  border-radius: var(--tr-radius);
+  box-shadow: var(--tr-shadow-on-green);
+  padding: 44px 42px 40px;
+  margin: 56px 0;
+}
+.hero-form-card h2 { font: 600 var(--tr-h3) var(--tr-font-display); color: var(--tr-green-vault); margin: 0 0 8px; text-align: center; }
+.hero-form-card__intro { font: 400 var(--tr-body-sm) var(--tr-font-body); color: var(--tr-ink-72); margin: 0 0 22px; text-align: center; text-wrap: pretty; }
+.step-divider { display: flex; align-items: center; gap: 12px; margin: 0 0 22px; }
+.step-divider::before, .step-divider::after { content: ""; flex: 1; height: 1px; background: var(--tr-line); }
+.step-divider span {
+  font: 500 11px/1 var(--tr-font-caps);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--tr-gold-deep);
+  white-space: nowrap;
+}
+.step-pane { display: flex; flex-direction: column; gap: 14px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+/* What squeezes these labels onto two lines is the card's width, not the
+   viewport's: between 1020px and 1440px the hero stays side-by-side while the
+   card narrows from 575px to 444px, so no viewport breakpoint describes it.
+   Query the card itself instead. The widest label in a two-up row needs 198px,
+   so a column needs 226px and the pair 466px. NB a container query resolves
+   against the CONTENT box, so this figure excludes the card's 84px of side
+   padding: the 575px desktop card measures 491px here, and keeps its two-up
+   rows with 25px to spare. */
+.hero-form-card { container-type: inline-size; container-name: valuation; }
+@container valuation (max-width: 470px) {
+  .field-row { grid-template-columns: 1fr; }
+}
+/* ---- field: the label sits inside the field, above the value ---------------
+   Compact, modern treatment — one bordered box per field, micro-caps label on
+   the top line, value beneath. The whole box reacts to :focus-within. */
+.tr-field {
+  display: block;
+  position: relative;
+  background: var(--tr-white);
+  border: 1px solid var(--tr-line-strong);
+  border-radius: var(--tr-radius);
+  padding: 9px 14px 10px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.tr-field:hover { border-color: var(--tr-ink-45); }
+.tr-field:focus-within {
+  border-color: var(--tr-gold-deep);
+  box-shadow: 0 0 0 2px var(--tr-focus-ring);
+}
+.tr-field__label {
+  display: block;
+  font: 500 10.5px/1 var(--tr-font-caps);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tr-ink-62);
+  margin: 0 0 5px;
+}
+.tr-field__label .tr-label__opt { color: var(--tr-ink-45); letter-spacing: 0.14em; }
+.tr-field input,
+.tr-field select {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font: 400 16px/1.35 var(--tr-font-body);
+  color: var(--tr-ink);
+}
+.tr-field input:focus,
+.tr-field select:focus { outline: none; }
+.tr-field input::placeholder { color: var(--tr-ink-45); }
+
+/* select: native chrome off, chevron drawn in CSS so it takes the gold token */
+.tr-field--select select { appearance: none; -webkit-appearance: none; padding-right: 26px; cursor: pointer; }
+.tr-field--select::after {
+  content: "";
+  position: absolute;
+  right: 15px;
+  bottom: 17px; /* centres on the value row, not the whole field */
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid var(--tr-gold-deep);
+  border-bottom: 1.5px solid var(--tr-gold-deep);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+/* standalone label (e.g. "Add photos", which labels a drop zone, not a field) */
+.tr-label {
+  display: block;
+  font: 500 10.5px/1 var(--tr-font-caps);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tr-ink-62);
+  margin: 0 0 7px;
+}
+.tr-label__opt { text-transform: none; letter-spacing: 0; color: var(--tr-ink-45); }
+.tr-dropzone {
+  border: 1.5px dashed var(--tr-dashed);
+  border-radius: var(--tr-radius);
+  padding: 16px;
+  text-align: center;
+  font: 400 var(--tr-caption) var(--tr-font-body);
+  color: var(--tr-ink-62);
+  background: var(--tr-white);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+.tr-dropzone:hover { border-color: var(--tr-gold-deep); }
+.tr-form-note { font: 400 12.5px/1.6 var(--tr-font-body); color: var(--tr-ink-62); margin: 2px 0 0; text-align: center; text-wrap: pretty; }
+.tr-back-btn {
+  font: 600 12px/1 var(--tr-font-body);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tr-ink-62);
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  align-self: center;
+}
+.tr-back-btn:hover { color: var(--tr-green-leaf); }
+
+/* step transition */
+@keyframes stepInRight { from { opacity: 0; transform: translateX(26px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes stepInLeft  { from { opacity: 0; transform: translateX(-26px); } to { opacity: 1; transform: translateX(0); } }
+.step-pane { animation: stepInRight 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+.step-pane.step-back { animation-name: stepInLeft; }
+.step-pane[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { .step-pane { animation: none !important; } }
+
+/* ========================= section openers ========================= */
+.tr-head { max-width: 680px; }
+.tr-head--centred { text-align: center; max-width: 720px; margin: 0 auto 48px; }
+.tr-section-intro { margin: 18px 0 44px; }
+
+/* "Why Trinity" opener — kept in CSS (not inline) so the 620 rule can left-align it */
+.why-head { max-width: 720px; margin: 0 auto 52px; text-align: center; }
+.why-head .tr-eyebrow { line-height: 1.5; margin-bottom: 22px; }
+.why-head .tr-intro { max-width: 60ch; margin: 18px auto 0; }
+
+/* ========================= grids ========================= */
+.lend-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--tr-gap-card); }
+.borrow-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: start; }
+.value-split { display: grid; grid-template-columns: minmax(0, 4.5fr) minmax(0, 7fr); gap: 64px; align-items: start; }
+.value-points { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--tr-gap-card); }
+.faq-split { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 64px; align-items: start; }
+.proof-grid {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: var(--tr-section-top) var(--tr-pad-side) var(--tr-section-bottom);
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: var(--tr-gap-col);
+  align-items: start;
+}
+.tr-sticky { position: sticky; top: 40px; }
+
+/* ========================= how it works ========================= */
+#how-track { position: relative; }
+.how-line { position: absolute; left: calc(12.5% - 26px); top: 26px; height: 1px; }
+.how-line--track { right: calc(12.5% - 26px); background: var(--tr-line); }
+.how-line--fill { width: 0; max-width: calc(75% + 52px); background: var(--tr-gold-deep); transition: width 2.4s cubic-bezier(0.25, 0.1, 0.25, 1); }
+.how-grid { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
+.how-step { min-width: 0; text-align: center; display: flex; flex-direction: column; align-items: center; }
+.how-num {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid currentColor;
+  border-radius: 5px;
+  box-shadow: 0 0 0 10px var(--tr-white);
+  background: var(--tr-warm-panel);
+  color: var(--tr-ink-62);
+  transition: color 0.6s ease, border-color 0.6s ease;
+}
+.how-num.is-lit { color: var(--tr-gold-deep); }
+.how-num__glyph { position: relative; display: inline-flex; width: 26px; height: 26px; }
+.how-num__glyph i { position: absolute; inset: 0; font-size: 26px; line-height: 1; }
+.how-num__glyph .ph-fill { color: var(--tr-white); }
+.how-num__glyph .ph-light { color: var(--tr-gold-deep); }
+.how-step__label {
+  font: 600 11px/1 var(--tr-font-body);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--tr-gold-deep);
+  margin: 26px 0 12px;
+}
+.how-step h4 { margin: 0 0 10px; }
+/* Scoped to its own class — a bare `.how-step p` would out-specify .how-step__label
+   and eat the 26px that clears the badge's halo. */
+.how-step__body { font: 400 var(--tr-body-sm) var(--tr-font-body); color: var(--tr-ink-68); margin: 0; }
+
+/* ========================= comparison table ========================= */
+.compare-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 190px) minmax(0, 1fr) minmax(0, 1fr);
+  border-top: 1px solid var(--tr-line-table);
+}
+.cmp-head-spacer { padding: 22px 0 20px; }
+.cmp-head-tri {
+  padding: 22px 24px 20px;
+  background: var(--tr-gold-tint);
+  border-left: 1px solid var(--tr-line-gold-mid);
+  border-right: 1px solid var(--tr-line-gold-mid);
+}
+.cmp-head-hs { padding: 22px 24px 20px; }
+.cmp-head-tri > div, .cmp-head-hs > div {
+  font: 600 12px/1 var(--tr-font-body);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.cmp-head-tri > div { color: var(--tr-gold-mid); }
+.cmp-head-hs > div { color: var(--tr-ink-45); }
+.cmp-row {
+  padding: 20px 0;
+  border-top: 1px solid var(--tr-line-soft);
+  font: 500 12px/1.5 var(--tr-font-caps);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tr-gold-deep);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cmp-row i { font-size: 22px; line-height: 1; flex-shrink: 0; }
+.cmp-tri, .cmp-hs { padding: 20px 24px; display: flex; gap: 12px; align-items: flex-start; }
+.cmp-tri {
+  background: var(--tr-gold-tint);
+  border-left: 1px solid var(--tr-line-gold-mid);
+  border-right: 1px solid var(--tr-line-gold-mid);
+  border-top: 1px solid var(--tr-line-gold-soft);
+}
+.cmp-hs { border-top: 1px solid var(--tr-line-soft); }
+.cmp-tri i { font-size: 22px; color: var(--tr-success); line-height: 1.35; flex-shrink: 0; }
+.cmp-hs i { font-size: 22px; color: var(--tr-ink-45); line-height: 1.35; flex-shrink: 0; }
+.cmp-tri span { font-size: 15.5px; line-height: 1.5; color: var(--tr-green-vault); }
+.cmp-hs span { font-size: 15.5px; line-height: 1.5; color: var(--tr-ink-62); }
+.compare-grid > :nth-last-child(-n+3) { border-bottom: 1px solid var(--tr-line-soft); }
+.compare-grid > .cmp-tri:nth-last-child(2) { border-bottom: 1px solid var(--tr-line-gold-mid); }
+
+/* ========================= FAQs ========================= */
+.faq-list { display: flex; flex-direction: column; border-top: 1px solid var(--tr-line-table); }
+.faq-item { border-bottom: 1px solid var(--tr-line); }
+.faq-q {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 22px 4px;
+  cursor: pointer;
+  text-align: left;
+}
+.faq-q > span:first-child { font: 600 var(--tr-h3) var(--tr-font-display); color: var(--tr-green-vault); text-wrap: pretty; }
+.faq-toggle { font: 400 32px/1 var(--tr-font-display); color: var(--tr-gold-deep); flex-shrink: 0; }
+.faq-a { font: 400 var(--tr-body) var(--tr-font-body); color: var(--tr-ink-72); margin: 0; padding: 0 4px 24px; max-width: 64ch; }
+.faq-a[hidden] { display: none; }
+
+/* ========================= representative example ========================= */
+.rep-card {
+  width: 100%;
+  max-width: 720px;
+  box-sizing: border-box; /* required — padding would otherwise overflow on phones */
+  background: var(--tr-white);
+  border: 1px solid var(--tr-line-gold);
+  border-radius: var(--tr-radius);
+  padding: 40px 46px 44px;
+  text-align: center;
+}
+.rep-card__statement { font: 500 30px/1.32 var(--tr-font-display); color: var(--tr-green-vault); text-wrap: pretty; }
+
+/* ========================= closing CTA ========================= */
+.closing { background: var(--tr-green-vault); color: var(--tr-neutral); }
+.closing-inner {
+  max-width: var(--tr-reading);
+  margin: 0 auto;
+  padding: 90px var(--tr-pad-side) var(--tr-section-bottom);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.closing h2 { font: 500 44px/1.12 var(--tr-font-display); color: var(--tr-neutral); margin: 0 0 16px; text-wrap: pretty; }
+.closing__intro { color: var(--tr-on-green); font: 400 var(--tr-body-lg) var(--tr-font-body); margin: 0 0 32px; max-width: 44ch; }
+.closing__contact { font: 400 var(--tr-body-sm) var(--tr-font-body); color: var(--tr-on-green); margin: 22px 0 0; }
+.closing__contact a { color: var(--tr-gold-bright); font-weight: 600; text-decoration: none; }
+
+/* ========================= specimen bar ========================= */
+/* Hidden by the same switch as the compliance chips — both are review
+   annotations, so they should never appear independently of each other. */
+[data-confirm-notes="off"] .specimen-bar { display: none; }
+.specimen-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--tr-green-vault);
+  color: var(--tr-gold-mid);
+  font: 600 10px/1 var(--tr-font-body);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 7px;
+  z-index: 9;
+  border-top: 1px solid var(--tr-line-gold-mid);
+}
+
+/* ==========================================================================
+   Responsive — breakpoints 1020 / 960 / 620 (see docs/ASSET_PAGE_HANDOFF.md)
+   ========================================================================== */
+
+/* ---- 1020: hero stacks, copy above the form ---- */
+@media (max-width: 1020px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-form-card { max-width: 640px; margin: 12px 0 44px; }
+  .hero-copy { padding: 96px 0 28px; }
+}
+
+/* ---- 960: multi-col grids collapse, splits stack, sticky releases ---- */
+@media (max-width: 960px) {
+  .lend-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .how-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 28px; }
+  .how-line { display: none; }
+  .value-points { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .value-split, .faq-split { grid-template-columns: 1fr; gap: 40px; }
+  .faq-split { gap: 32px; }
+  .tr-sticky { position: static; }
+  .borrow-grid { grid-template-columns: 1fr; gap: 40px; }
+  .proof-grid { grid-template-columns: 1fr; }
+  .field-row { grid-template-columns: 1fr; }
+  .tr-card--panel { padding: 30px 26px 32px; }
+
+  /* comparison table -> 2 columns, label spans the full width as its own row */
+  .compare-grid { grid-template-columns: 1fr 1fr; }
+  .compare-grid .cmp-head-spacer { display: none; }
+  .compare-grid .cmp-head-tri { border-right: none; }
+  .compare-grid .cmp-row {
+    grid-column: 1 / -1;
+    padding: 22px 0 6px;
+    border-top: 1px solid var(--tr-rule-on-green);
+    border-bottom: none;
+  }
+  .compare-grid .cmp-tri { border-top: none; border-bottom: none; border-right: none; }
+  .compare-grid .cmp-hs { border-top: none; border-bottom: none; }
+}
+
+/* ---- 620 (phone): single column throughout ---- */
+@media (max-width: 620px) {
+  .lend-grid, .how-grid, .value-points { grid-template-columns: 1fr; }
+
+
+  /* Even top and bottom. Purely a design value — the nav keeps clear of the
+     hero on its own (see inHero in trinity-nav.js), so nothing here is
+     compensating for it. 20px measured as no gap at all against the hard
+     white edge of the masthead; 40px reads as deliberate and is still less
+     than half what this started at. */
+  .hero-copy { padding: 40px 0; }
+  /* 48px is the desktop column gap doing double duty as a row gap once the
+     hero stacks — far too much between the copy and the form. Together with
+     the padding above and the card's own margin it made an 80px void. */
+  .hero-grid { row-gap: 12px; }
+  .tr-h1 { max-width: none; }
+  /* Eyebrow steps down so it sits under the 40px h1 rather than competing with
+     it. Tracking is set in em, so it scales with the size on its own. */
+  .hero-copy .tr-eyebrow { font-size: 11.5px; }
+  /* Full-bleed: pull the card out through .hero-grid's side padding so it
+     runs edge to edge. Its own padding then takes over that job at the same
+     value, keeping the fields on the page's left margin rather than stepping
+     in twice. Square corners because a radius against the viewport edge just
+     leaks the hero image through at the ends. */
+  .hero-form-card {
+    padding: 30px var(--tr-pad-side) 28px;
+    /* No bottom margin: full-bleed, the card meets the trust strip directly.
+       The strip brings its own 4px + 13px of top padding. */
+    margin: 0 calc(-1 * var(--tr-pad-side));
+    border-radius: 0;
+  }
+  /* The form is the conversion object; on a phone it is a full-width panel in
+     its own right, so its heading carries more weight than the shared --tr-h3. */
+  .hero-form-card h2 { font-size: 27px; }
+
+  /* trust strip -> centred, hairline-divided list */
+  .trust-inner {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0;
+    justify-content: flex-start;
+    padding: 4px 24px;
+    text-align: center;
+  }
+  .trust-inner > span { white-space: normal; padding: 13px 0; border-top: 1px solid var(--tr-rule-on-green-2); }
+  .trust-inner > span:first-child { border-top: none; }
+
+  /* headings and the form's standfirst fill greedily rather than balancing
+     into short lines — on a 271px measure `pretty` was leaving whole lines
+     40px shy of the edge. */
+  .tr-h2, h2, .hero-form-card__intro { text-wrap: wrap; }
+
+  /* Why Trinity header left-aligns to match the table */
+  .why-head { text-align: left; margin-bottom: 40px; }
+  .why-head p { margin-left: 0; margin-right: 0; }
+
+  /* comparison table stays a 3-column table, compacted */
+  .compare-grid { grid-template-columns: minmax(0, 54px) minmax(0, 1fr) minmax(0, 1fr); }
+  .compare-grid .cmp-head-spacer { display: block; padding: 12px 0; }
+  .compare-grid .cmp-head-tri {
+    border-left: 1px solid var(--tr-line-gold-mid);
+    border-right: 1px solid var(--tr-line-gold-mid);
+    padding: 12px 8px;
+  }
+  .compare-grid .cmp-head-hs { padding: 12px 8px; }
+  .compare-grid .cmp-head-tri > div, .compare-grid .cmp-head-hs > div { font-size: 9px; letter-spacing: 0.06em; }
+  .compare-grid .cmp-row {
+    grid-column: auto;
+    align-self: stretch;
+    padding: 13px 6px 13px 0;
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    line-height: 1.35;
+    border-top: 1px solid var(--tr-line-soft);
+    border-bottom: none;
+  }
+  .compare-grid .cmp-row i { display: none; }
+  .compare-grid .cmp-tri {
+    background: var(--tr-gold-tint);
+    border-left: 1px solid var(--tr-line-gold-mid);
+    border-right: 1px solid var(--tr-line-gold-mid);
+    border-top: 1px solid var(--tr-line-gold-soft);
+    border-bottom: none;
+    border-radius: 0;
+    margin-top: 0;
+    padding: 13px 8px;
+    gap: 6px;
+  }
+  .compare-grid .cmp-hs { border-top: 1px solid var(--tr-line-soft); border-bottom: none; padding: 13px 8px; gap: 6px; }
+  .compare-grid .cmp-tri span, .compare-grid .cmp-hs span { font-size: 12px; line-height: 1.35; }
+  .compare-grid .cmp-tri i, .compare-grid .cmp-hs i { font-size: 15px; }
+  .compare-grid .confirm-chip { display: inline-block; margin-top: 4px; }
+}

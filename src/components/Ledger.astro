@@ -1,0 +1,19 @@
+---
+import type { LedgerRow } from '../lib/types';
+import ConfirmChip from './ConfirmChip.astro';
+
+interface Props { rows?: LedgerRow[] }
+const { rows = [] } = Astro.props;
+---
+{rows.length > 0 && (
+  <dl class="tr-ledger">
+    {rows.map((row) => (
+      <div class={`tr-ledger__row${row.total ? ' tr-ledger__row--total' : ''}`}>
+        <dt class="tr-ledger__label">{row.label}</dt>
+        <dd class={row.total ? 'tr-ledger__value tr-ledger__value--total' : 'tr-ledger__value'}>
+          {row.value}<ConfirmChip note={row.chip} />
+        </dd>
+      </div>
+    ))}
+  </dl>
+)}

@@ -1,5 +1,10 @@
-.claude/
-trinity-pawn-brokers-rebranding/
 node_modules/
+dist/
+.astro/
+.wrangler/
+.env
+.env.local
 .DS_Store
 .fontcache/
+trinity-pawn-brokers-rebranding/
+.migration-preview.json

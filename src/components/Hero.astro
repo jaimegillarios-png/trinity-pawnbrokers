@@ -1,0 +1,45 @@
+---
+import type { HeroSection } from '../lib/types';
+import { urlFor, srcSetFor, lqipFor } from '../lib/sanity/image';
+import { splitEmphasis } from '../lib/text';
+
+interface Props { hero: HeroSection; headingId?: string }
+const { hero, headingId = 'hero-title' } = Astro.props;
+const parts = splitEmphasis(hero.heading);
+const lqip = lqipFor(hero.image);
+---
+<section class="hero" aria-labelledby={headingId}>
+  <div class="hero__media">
+    <img
+      src={urlFor(hero.image).width(1600).url()}
+      srcset={srcSetFor(hero.image)}
+      sizes="100vw"
+      alt={hero.image.alt ?? ''}
+      width={hero.image.asset?.metadata?.dimensions?.width}
+      height={hero.image.asset?.metadata?.dimensions?.height}
+      style={lqip ? `background-image:url(${lqip});background-size:cover` : undefined}
+      fetchpriority="high"
+      decoding="async"
+    />
+  </div>
+  <div class="hero__scrim"></div>
+
+  <div class="hero-grid">
+    <div class="hero-copy" data-reveal-hero>
+      {hero.eyebrow && <p class="tr-eyebrow">{hero.eyebrow}</p>}
+      <h1 id={headingId} class="tr-h1">
+        {parts.map((p) => (p.emphasis ? <span>{p.text}</span> : p.text))}
+      </h1>
+      <p class="hero__intro">{hero.intro}</p>
+      <div class="hero__actions">
+        <a href={hero.ctaPrimary.href} class="tr-cta tr-cta--gold">{hero.ctaPrimary.label}</a>
+        {hero.ctaGhost && (
+          <a href={hero.ctaGhost.href} class="tr-cta tr-cta--ghost">{hero.ctaGhost.label}</a>
+        )}
+      </div>
+      {hero.reassurance && <p class="hero__reassure">{hero.reassurance}</p>}
+    </div>
+
+    <slot name="aside" />
+  </div>
+</section>

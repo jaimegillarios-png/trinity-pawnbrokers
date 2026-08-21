@@ -1,0 +1,14 @@
+---
+import type { SectionIntro } from '../lib/types';
+interface Props { intro?: SectionIntro; onGreen?: boolean }
+const { intro, onGreen = false } = Astro.props;
+---
+{intro && (
+  <>
+    {intro.eyebrow && (
+      <p class={onGreen ? 'tr-eyebrow tr-eyebrow--on-green' : 'tr-eyebrow'}>{intro.eyebrow}</p>
+    )}
+    <h2 class={onGreen ? 'tr-h2 tr-h2--on-green' : 'tr-h2'}>{intro.heading}</h2>
+    {intro.intro && <p class="tr-intro">{intro.intro}</p>}
+  </>
+)}

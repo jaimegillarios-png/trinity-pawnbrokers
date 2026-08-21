@@ -1,0 +1,155 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import TrustStrip from '../components/TrustStrip.astro';
+import ValuationForm from '../components/ValuationForm.astro';
+import SectionOpener from '../components/SectionOpener.astro';
+import CardGrid from '../components/CardGrid.astro';
+import Ledger from '../components/Ledger.astro';
+import Faqs from '../components/Faqs.astro';
+import ConfirmChip from '../components/ConfirmChip.astro';
+import { getAssetPages, getSiteSettings } from '../lib/sanity/queries';
+import { breadcrumbSchema, faqSchema, serviceSchema } from '../lib/seo';
+import type { AssetPage, SiteSettings } from '../lib/types';
+
+export async function getStaticPaths() {
+  const [pages, site] = await Promise.all([getAssetPages(), getSiteSettings()]);
+  return pages.map((page) => ({ params: { slug: page.slug }, props: { page, site } }));
+}
+
+interface Props { page: AssetPage; site: SiteSettings }
+const { page, site } = Astro.props;
+const origin = Astro.site?.origin ?? '';
+
+const schemas: Array<Record<string, unknown>> = [
+  serviceSchema(page, site, origin),
+  breadcrumbSchema([
+    { name: 'Home', url: `${origin}/` },
+    { name: page.title, url: `${origin}/${page.slug}` },
+  ]),
+];
+if (page.faqs?.items?.length) schemas.push(faqSchema(page.faqs.items));
+
+const reveal =
+  '.lend-grid > article, .how-grid > div, .value-points > div, .compare-grid .cmp-row, .faq';
+---
+
+<Base seo={page.seo} site={site} schemas={schemas} reveal={reveal}>
+  <Hero hero={page.hero}>
+    <Fragment slot="aside"><ValuationForm form={page.form} /></Fragment>
+  </Hero>
+
+  <TrustStrip items={page.trust} />
+
+  {page.lendAgainst && (
+    <section class="tr-band tr-band--white" id="index">
+      <div class="tr-inner">
+        <SectionOpener intro={page.lendAgainst.intro} />
+        <CardGrid cards={page.lendAgainst.cards} class="lend-grid" />
+      </div>
+    </section>
+  )}
+
+  {page.borrow && (
+    <section class="tr-band tr-band--grey">
+      <div class="tr-inner">
+        <SectionOpener intro={page.borrow.intro} />
+        <div class="borrow-grid">
+          <Ledger rows={page.borrow.specs} />
+          {page.borrow.example && (
+            <div class="tr-card tr-card--panel">
+              <p class="tr-microcaps">
+                {page.borrow.example.label}<ConfirmChip note={page.borrow.example.chip} />
+              </p>
+              {page.borrow.example.statement && <p class="tr-body">{page.borrow.example.statement}</p>}
+              <Ledger rows={page.borrow.example.rows} />
+              {page.borrow.example.note && <p class="tr-body-sm">{page.borrow.example.note}</p>}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {page.how && (
+    <section class="tr-band tr-band--white" id="how">
+      <div class="tr-inner">
+        <SectionOpener intro={page.how.intro} />
+        <CardGrid cards={page.how.steps} class="how-grid" />
+        {page.how.link && <a class="tr-inline-link" href={page.how.link.href}>{page.how.link.label}</a>}
+      </div>
+    </section>
+  )}
+
+  {page.valuation && (
+    <section class="tr-band tr-band--grey">
+      <div class="tr-inner">
+        <SectionOpener intro={page.valuation.intro} />
+        <CardGrid cards={page.valuation.points} class="value-points" />
+      </div>
+    </section>
+  )}
+
+  {page.why?.rows?.length && (
+    <section class="tr-band tr-band--green">
+      <div class="tr-inner">
+        <div class="why-head"><SectionOpener intro={page.why.intro} onGreen /></div>
+        <div class="compare-grid">
+          {page.why.rows.map((row) => (
+            <>
+              <div class="cmp-row">
+                {row.icon && <i class={`ph-light ${row.icon}`} aria-hidden="true"></i>}
+                {row.label}
+              </div>
+              <div class="cmp-tri">
+                <span>{row.trinity}<ConfirmChip note={row.trinityChip} /></span>
+              </div>
+              <div class="cmp-hs"><span>{row.highStreet}</span></div>
+            </>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {page.faqs && (
+    <section class="tr-band tr-band--white">
+      <div class="tr-inner faq-split">
+        <SectionOpener intro={page.faqs.intro} />
+        <Faqs items={page.faqs.items} />
+      </div>
+    </section>
+  )}
+
+  {page.repExample && (
+    <section class="tr-band tr-band--grey">
+      <div class="tr-inner tr-inner--narrow">
+        <p class="tr-microcaps">
+          {page.repExample.label}<ConfirmChip note={page.repExample.chip} />
+        </p>
+        <p class="tr-body">{page.repExample.statement}</p>
+        {page.repExample.note && <p class="tr-body-sm">{page.repExample.note}</p>}
+      </div>
+    </section>
+  )}
+
+  {page.closing && (
+    <section class="closing tr-band tr-band--green">
+      <div class="closing-inner">
+        {page.closing.eyebrow && <p class="tr-eyebrow tr-eyebrow--on-green">{page.closing.eyebrow}</p>}
+        <h2 class="tr-h2 tr-h2--on-green">{page.closing.heading}</h2>
+        {page.closing.intro && <p class="tr-intro">{page.closing.intro}</p>}
+        {page.closing.cta && (
+          <a href={page.closing.cta.href} class="tr-cta tr-cta--gold">{page.closing.cta.label}</a>
+        )}
+        {page.closing.contactPrefix && (
+          <p class="tr-body-sm">
+            {page.closing.contactPrefix}
+            <a href={`tel:${site.phoneHref}`} class="tr-inline-link">{site.phone}</a>
+            {page.closing.contactSuffix}
+          </p>
+        )}
+      </div>
+    </section>
+  )}
+</Base>

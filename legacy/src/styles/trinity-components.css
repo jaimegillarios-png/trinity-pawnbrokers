@@ -1,0 +1,629 @@
+/* ==========================================================================
+   Trinity — global components
+   The chrome and primitives shared by EVERY Trinity page: rule bar, masthead,
+   wordmark, footer, bands, type roles, buttons, links, chip, card, ledger.
+
+   Import order on any page:  trinity-tokens.css -> trinity-components.css -> <page>.css
+   Every value resolves to a token. Change a component here and it changes
+   on all pages — that is the point (docs/WORKFLOW.md).
+   ========================================================================== */
+
+:root {
+  /* ---- Derived from system tokens (tints / alphas the system doesn't name) ---- */
+  --tr-gold-tint:      color-mix(in srgb, var(--tr-gold-mid) 8%, transparent);   /* Trinity column ground */
+  --tr-line-gold-mid:  color-mix(in srgb, var(--tr-gold-mid) 40%, transparent);  /* gold column rules */
+  --tr-line-gold-soft: color-mix(in srgb, var(--tr-gold-deep) 18%, transparent); /* inner gold hairline */
+  --tr-line-gold-firm: color-mix(in srgb, var(--tr-gold-deep) 55%, transparent); /* ledger total rule */
+  --tr-focus-ring:     color-mix(in srgb, var(--tr-gold-deep) 55%, transparent);
+  --tr-dashed:         color-mix(in srgb, var(--tr-gold-deep) 50%, transparent);
+  --tr-line-ledger:    color-mix(in srgb, var(--tr-ink) 22%, transparent);       /* ledger rows */
+  --tr-line-table:     color-mix(in srgb, var(--tr-ink) 20%, transparent);       /* table head rule */
+  --tr-ghost-border:   color-mix(in srgb, var(--tr-gold-bright) 55%, transparent);
+  --tr-ghost-bg:       color-mix(in srgb, var(--tr-green-footer) 35%, transparent);
+  --tr-leaf-border:    color-mix(in srgb, var(--tr-green-leaf) 50%, transparent);
+  --tr-leaf-underline: color-mix(in srgb, var(--tr-green-leaf) 40%, transparent);
+  --tr-trust-bg:       color-mix(in srgb, var(--tr-green-footer) 72%, transparent);
+  --tr-trust-rule:     color-mix(in srgb, var(--tr-gold-bright) 35%, transparent);
+  --tr-rule-on-green:  color-mix(in srgb, var(--tr-neutral) 14%, transparent);
+  --tr-rule-on-green-2:color-mix(in srgb, var(--tr-gold-bright) 18%, transparent);
+
+  /* Hero scrim — the vault green at four depths */
+  --tr-hero-scrim: linear-gradient(100deg,
+    color-mix(in srgb, var(--tr-green-vault) 96%, transparent) 0%,
+    color-mix(in srgb, var(--tr-green-vault) 88%, transparent) 40%,
+    color-mix(in srgb, var(--tr-green-vault) 50%, transparent) 66%,
+    color-mix(in srgb, var(--tr-green-footer) 22%, transparent) 100%);
+}
+
+
+/* ========================= base ========================= */
+/* In-page links glide rather than jump — the CTAs that point at the valuation
+   form, and the nav links to #index / #how. CSS-only, so it works whether the
+   link is clicked, focused by keyboard, or opened from a pasted URL. */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--tr-neutral);
+  color: var(--tr-ink);
+  font-family: var(--tr-font-body);
+  font: var(--tr-body) var(--tr-font-body);
+}
+a { color: var(--tr-green-leaf); }
+a:hover { color: var(--tr-gold-deep); }
+h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 0; }
+
+/* ========================= band / layout ========================= */
+.tr-band { border-bottom: 1px solid var(--tr-line-soft); }
+.tr-band--white { background: var(--tr-white); }
+.tr-band--grey  { background: var(--tr-neutral); }
+.tr-band--green { background: var(--tr-green-vault); color: var(--tr-neutral); border-bottom: 0; }
+.tr-inner {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: var(--tr-section-top) var(--tr-pad-side) var(--tr-section-bottom);
+}
+.tr-inner--narrow { max-width: var(--tr-reading); }
+
+/* ========================= type roles ========================= */
+.tr-eyebrow {
+  font: 500 var(--tr-eyebrow-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-eyebrow-track);
+  text-transform: uppercase;
+  color: var(--tr-gold-deep);
+  margin-bottom: 14px;
+}
+.tr-eyebrow--on-green { color: var(--tr-gold-mid); }
+.tr-h1 {
+  font: 500 var(--tr-h1) var(--tr-font-display);
+  color: var(--tr-neutral);
+  margin: 22px 0 20px;
+  max-width: 16ch;
+  text-wrap: pretty;
+}
+.tr-h1 em { font-style: italic; color: var(--tr-gold-bright); }
+.tr-h2 {
+  font: 500 var(--tr-h2) var(--tr-font-display);
+  color: var(--tr-green-vault);
+  text-wrap: pretty;
+}
+.tr-h2--on-green { color: var(--tr-neutral); }
+.tr-h3 { font: 600 var(--tr-h3) var(--tr-font-display); color: var(--tr-green-vault); text-wrap: pretty; }
+.tr-h4 { font: 600 var(--tr-h4) var(--tr-font-display); color: var(--tr-green-vault); }
+.tr-intro { font: 400 var(--tr-body-lg) var(--tr-font-body); color: var(--tr-ink-72); max-width: 64ch; text-wrap: pretty; }
+.tr-body  { font: 400 var(--tr-body) var(--tr-font-body); color: var(--tr-ink-72); text-wrap: pretty; }
+.tr-body-sm { font: 400 var(--tr-body-sm) var(--tr-font-body); color: var(--tr-ink-68); }
+.tr-caption { font: 400 var(--tr-caption) var(--tr-font-body); color: var(--tr-ink-62); text-wrap: pretty; }
+.tr-microcaps {
+  font: 500 var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
+  text-transform: uppercase;
+  color: var(--tr-gold-deep);
+}
+.tr-stat { font: 500 var(--tr-stat) var(--tr-font-display); color: var(--tr-green-vault); }
+
+/* ========================= buttons & links ========================= */
+.tr-cta {
+  display: inline-block;
+  font: 700 13px/1 var(--tr-font-body);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  border-radius: var(--tr-radius);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.tr-cta--gold { color: var(--tr-green-vault); background: var(--tr-gold-bright); padding: 18px 34px; }
+.tr-cta--gold:hover { background: var(--tr-gold-mid); color: var(--tr-green-vault); }
+.tr-cta--ghost {
+  color: var(--tr-neutral);
+  background: var(--tr-ghost-bg);
+  border: 1px solid var(--tr-ghost-border);
+  padding: 17px 30px;
+}
+.tr-cta--ghost:hover { border-color: var(--tr-gold-bright); color: var(--tr-gold-bright); }
+.tr-cta--block { width: 100%; }
+
+.tr-phone-btn {
+  color: var(--tr-green-leaf);
+  text-decoration: none;
+  border: 1px solid var(--tr-leaf-border);
+  padding: 9px 14px;
+  border-radius: var(--tr-radius);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.tr-phone-btn:hover { background: var(--tr-green-vault); color: var(--tr-neutral); border-color: var(--tr-green-vault); }
+
+.tr-navlink { color: var(--tr-ink); text-decoration: none; transition: color 0.2s ease; }
+.tr-navlink:hover {
+  color: var(--tr-green-leaf);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 1px;
+}
+.tr-inline-link {
+  font: 400 var(--tr-body) var(--tr-font-body);
+  color: var(--tr-green-leaf);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--tr-leaf-underline);
+}
+
+/* ========================= confirm chip ========================= */
+.confirm-chip {
+  display: inline-block;
+  font: 600 10px/1 var(--tr-font-body);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--tr-gold-mid);
+  color: var(--tr-green-vault);
+  border-radius: var(--tr-radius-chip);
+  padding: 3px 6px;
+  vertical-align: middle;
+}
+[data-confirm-notes="off"] .confirm-chip { display: none !important; }
+
+/* ========================= card (non-clickable — no hover) ========================= */
+.tr-card {
+  background: var(--tr-white);
+  border: 1px solid var(--tr-line);
+  border-radius: var(--tr-radius);
+  padding: 32px 32px 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tr-card__icon { font-size: 36px; color: var(--tr-gold-deep); line-height: 1; margin-bottom: 20px; }
+.tr-card--panel { padding: 36px 38px 38px; gap: 0; }
+
+/* ========================= ledger ========================= */
+.tr-ledger { display: flex; flex-direction: column; margin-top: 26px; }
+.tr-ledger__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  padding: 15px 0;
+  border-top: 1px solid var(--tr-line-ledger);
+}
+.tr-ledger__row--last { border-bottom: 1px solid var(--tr-line-ledger); }
+.tr-ledger__row--total { border-top: 1px solid var(--tr-line-gold-firm); padding: 17px 0 0; }
+.tr-ledger__label {
+  font: 500 12.5px/1 var(--tr-font-caps);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tr-ink-62);
+}
+.tr-ledger__row--total .tr-ledger__label { color: var(--tr-gold-deep); }
+.tr-ledger__value { font: 500 24px/1 var(--tr-font-display); color: var(--tr-green-vault); }
+.tr-ledger__value--sm { font-size: 20px; }
+.tr-ledger__value--total { font: 600 30px/1 var(--tr-font-display); color: var(--tr-gold-deep); }
+
+/* ========================= rule bar ========================= */
+.rule-bar {
+  background: var(--tr-green-footer);
+  color: var(--tr-on-green);
+  font: 500 11px/1 var(--tr-font-caps);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.rule-bar-inner {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 9px var(--tr-pad-side);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.rule-bar__reg { color: var(--tr-gold-mid); }
+
+/* Desktop: the wrappers collapse away so the two spans remain flex children
+   of .rule-bar-inner and keep their space-between layout. */
+.rule-bar__track { display: contents; }
+.rule-bar__group { display: contents; }
+.rule-bar__group[aria-hidden="true"] { display: none; }
+
+/* Mobile: one line that scrolls, rather than wrapping and doubling the bar's
+   height. The group is duplicated so translating by -50% lands exactly one
+   group along — a seamless loop. Trailing padding sits inside the group so it
+   counts toward that 50%. */
+@media (max-width: 760px) {
+  .rule-bar-inner {
+    display: block;
+    overflow: hidden;
+    padding: 9px 0;
+  }
+  .rule-bar__track {
+    display: flex;
+    width: max-content;
+    animation: ruleBarScroll 30s linear infinite;
+  }
+  .rule-bar__group,
+  .rule-bar__group[aria-hidden="true"][hidden] {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 22px;
+    padding-right: 22px;
+    white-space: nowrap;
+  }
+}
+@keyframes ruleBarScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+/* Pause on interaction — WCAG 2.2.2 for auto-moving content */
+.rule-bar:hover .rule-bar__track,
+.rule-bar:focus-within .rule-bar__track { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* No motion at all: fall back to the wrapping bar rather than a clipped one */
+  .rule-bar-inner { display: flex; overflow: visible; padding: 9px var(--tr-pad-side); }
+  .rule-bar__track { display: contents; animation: none; }
+  .rule-bar__group { display: contents; }
+  .rule-bar__group[aria-hidden="true"] { display: none; }
+}
+
+/* ========================= masthead ========================= */
+.masthead { background: var(--tr-white); border-bottom: 1px solid var(--tr-line-soft); }
+.masthead-grid {
+  --tr-logo-h: 20px;        /* the burger centres on this — see the 760px block */
+  --tr-mast-pad-top: 22px;   /* phones only — the desktop padding is set below */
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 26px var(--tr-pad-side) 22px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 20px;
+}
+.masthead-grid nav {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  font: 600 12.5px/1 var(--tr-font-body);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.masthead-grid nav:last-of-type { justify-content: flex-end; }
+.nav-panel { display: contents; }
+.tr-wordmark { text-decoration: none; color: var(--tr-ink); text-align: center; display: block; }
+/* Supplied brand lockup (brand/trinity-logo.svg): inverted mark left, TRINITY
+   right. Natural size is 179x20 — its cap height matches the type-built
+   wordmark it replaced, so the masthead keeps the same optical weight. */
+.tr-logo {
+  display: block;
+  height: var(--tr-logo-h);
+  width: auto;              /* follows the 179:20 intrinsic ratio */
+  margin-inline: auto;      /* on mobile the anchor stretches full width */
+}
+@media (max-width: 400px) { .masthead-grid { --tr-logo-h: 17px; } }
+/* Three-ball mark: one above, two below. The dot rule must not also match the
+   pair wrapper, or it would out-specify its `display:flex` and stack all three. */
+.tr-mark { display: flex; flex-direction: column; align-items: center; gap: 2.26px; margin-bottom: 9px; }
+.tr-mark__pair { display: flex; gap: 4px; }
+.tr-mark > span:not(.tr-mark__pair),
+.tr-mark__pair > span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--tr-gold-deep);
+  display: block;
+}
+.tr-wordmark__name {
+  display: block;
+  font: 600 30px/1 var(--tr-font-display);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+/* ---- horizontal lockup ------------------------------------------------
+   Left-aligned variant: mark on the left, inverted (two dots above one), with
+   the name and descender stacked to its right. Use as:
+     <a class="tr-wordmark tr-wordmark--inline"> … </a>
+   Same markup as the stacked lockup — only the class changes. */
+.tr-wordmark--inline {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  column-gap: 13px;
+  align-items: center;
+  text-align: left;
+}
+/* The mark matches the VISIBLE height of the two text lines — cap-top of
+   TRINITY to the baseline of PAWNBROKERS, measured at 36.2px. Matching the line
+   boxes instead (42.9px) made the mark read noticeably too big, because line
+   boxes carry leading above and below the ink.
+   Its own gaps stay proportional to the dot (0.251 vertical, 0.444 horizontal —
+   the ratios of the stacked lockup), so scaling never distorts the triangle.
+   Total height = 2 dots + 1 vertical gap = 2.251 x dot = 36.2px. */
+.tr-wordmark--inline { --tr-mark-dot: 16.1px; }
+.tr-wordmark--inline .tr-mark {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  flex-direction: column-reverse; /* inverted: the pair sits above the single */
+  align-self: center;
+  margin-bottom: 0;
+  gap: calc(var(--tr-mark-dot) * 0.251);
+  /* Centring on the grid area lands 0.6px low, because the ink is not centred
+     within the two line boxes. Nudge it back onto the cap line. */
+  transform: translateY(-0.6px);
+}
+/* Size the DOTS only. `.tr-mark span` would also match .tr-mark__pair (it is a
+   span), sizing the wrapper and squashing the two dots inside it into ovals. */
+.tr-wordmark--inline .tr-mark > span:not(.tr-mark__pair),
+.tr-wordmark--inline .tr-mark__pair > span {
+  width: var(--tr-mark-dot);
+  height: var(--tr-mark-dot);
+  flex: none;               /* never shrink — the dots must stay circular */
+}
+.tr-wordmark--inline .tr-mark__pair {
+  width: auto;
+  height: auto;
+  gap: calc(var(--tr-mark-dot) * 0.444);
+}
+.tr-wordmark--inline .tr-wordmark__name {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  line-height: 0.86;
+}
+.tr-wordmark--inline .tr-wordmark__sub {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  text-align: left;
+  margin-top: 3px;
+}
+
+.tr-wordmark__sub {
+  display: block;
+  font: 600 9px/1.9 var(--tr-font-body);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  margin-top: 6px;
+  color: var(--tr-ink-72);
+  line-height: 14.1px;
+}
+
+/* ========================= footer ========================= */
+.tr-footer {
+  background: var(--tr-green-footer);
+  color: var(--tr-on-green-faint);
+  padding: 66px var(--tr-pad-side) 78px;
+  font: 400 13px/1.7 var(--tr-font-body);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tr-footer .tr-mark { gap: 2.19px; margin-bottom: 8px; }
+.tr-footer .tr-mark__pair { gap: 3.5px; }
+.tr-footer .tr-mark > span:not(.tr-mark__pair),
+.tr-footer .tr-mark__pair > span { width: 6.3px; height: 6.3px; background: var(--tr-gold-mid); }
+.tr-footer__name { font: 600 21px/1 var(--tr-font-display); letter-spacing: 0.2em; text-transform: uppercase; color: var(--tr-neutral); }
+.tr-footer__sub { font: 600 6.3px/1.9 var(--tr-font-body); letter-spacing: 0.42em; text-transform: uppercase; margin-top: 4.2px; color: var(--tr-on-green-faint); }
+.tr-footer__legal { max-width: var(--tr-reading); margin: 22px auto 0; }
+
+
+/* ========================= entrance animations ========================= */
+/* Driven by src/scripts/trinity-reveal.js. The hidden state is applied by JS,
+   so with JS off nothing is ever stuck invisible. */
+.rv {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.9s cubic-bezier(0.22, 0.61, 0.36, 1),
+              transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: var(--rd, 0s);
+}
+.rv.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .rv { transition: none !important; opacity: 1 !important; transform: none !important; }
+}
+
+/* ---- chrome, on load ---------------------------------------------------
+   The rule bar and masthead used to appear fully formed while the hero
+   staggered in beneath them. They now settle down into place first, so the
+   page arrives as one movement. Tagged by trinity-reveal.js rather than the
+   stylesheet, so a script failure leaves the chrome plainly visible. */
+.rv-chrome {
+  opacity: 0;
+  transform: translateY(-14px);
+  transition: opacity 0.5s cubic-bezier(0.22, 0.61, 0.36, 1),
+              transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: var(--rd, 0s);
+}
+.rv-chrome.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .rv-chrome { transition: none !important; opacity: 1 !important; transform: none !important; }
+}
+
+/* ---- sticky nav --------------------------------------------------------
+   The masthead follows you down the page: it slides out of the way while you
+   scroll down and returns the moment you scroll up. Sticky rather than fixed,
+   so it still occupies its space in the flow and nothing jumps on load.
+   Must sit after .rv-chrome above — both selectors weigh the same, so source
+   order is what stops the load animation's `transform: none` winning here. */
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  transition: transform 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+[data-mast="hidden"] .masthead { transform: translateY(-100%); }
+@media (prefers-reduced-motion: reduce) { .masthead { transition: none; } }
+
+/* Anchor targets clear the nav when it is showing. --tr-mast-h is measured and
+   kept current by trinity-nav.js; the fallback keeps this sane without JS. */
+section[id], [id].hero-form-card { scroll-margin-top: calc(var(--tr-mast-h, 0px) + 24px); }
+
+/* ---- between pages -----------------------------------------------------
+   Navigating asset page -> asset page cross-fades instead of hard-cutting.
+   Entirely declarative: browsers without the View Transitions API navigate
+   exactly as before, and nothing is ever hidden waiting on script. Both the
+   outgoing and incoming document need this rule, which is why it lives in
+   the stylesheet every page loads. */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: trPageOut 0.2s ease both; }
+::view-transition-new(root) { animation: trPageIn 0.36s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+@keyframes trPageOut { to { opacity: 0; } }
+@keyframes trPageIn { from { opacity: 0; transform: translateY(8px); } }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
+
+/* ========================= mobile navigation ========================= */
+/* The burger is revealed by src/scripts/trinity-nav.js; with JS off it stays
+   hidden and the nav below simply stacks, so every link is still reachable. */
+/* Mobile call button — mirrors the burger on the opposite side of the logo.
+   Hidden above the burger breakpoint, where the nav carries .tr-phone-btn. */
+.tr-call {
+  display: none;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  color: var(--tr-ink);
+  transition: color 0.2s ease;
+}
+.tr-call svg {
+  width: 22px;    /* same as the burger's bars, so both sides sit flush */
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tr-call:hover { color: var(--tr-green-leaf); }
+
+.tr-burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;              /* 44px touch target */
+  height: 44px;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.tr-burger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  margin: 0 auto;
+  background: var(--tr-ink);
+  transition: transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.18s ease;
+}
+/* bars fold into a cross when open */
+[data-nav="open"] .tr-burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+[data-nav="open"] .tr-burger span:nth-child(2) { opacity: 0; }
+[data-nav="open"] .tr-burger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+@media (prefers-reduced-motion: reduce) { .tr-burger span { transition: none; } }
+
+/* Tablets get the mobile masthead too: at 1024px the two nav groups, the
+   logo and the phone button are technically still side by side, but with
+   no breathing room. 1024 covers iPad Pro portrait; the rule bar keeps its
+   own 760px breakpoint, which is about line length, not the nav. */
+@media (max-width: 1024px) {
+  /* wordmark stays centred — it is the identity; the burger sits to its right */
+  /* Flex column with explicit order: the wordmark stays on top when the menu
+     opens, rather than sitting between the two nav groups as DOM order gives. */
+  .masthead-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    position: relative;
+    text-align: center;
+    gap: 0;
+    padding: var(--tr-mast-pad-top) var(--tr-pad-side) 20px;
+  }
+  .masthead-grid > .tr-wordmark { order: 1; }
+  .masthead-grid > nav:first-of-type { order: 2; }
+  .masthead-grid > nav:last-of-type { order: 3; }
+  .tr-burger {
+    display: flex;
+    position: absolute;
+    /* Centre the icon on the logo's centre line rather than guessing a top
+       offset — the old 14px was tuned to the 75px stacked lockup and left the
+       burger 9.5px low once the 20px logo replaced it. */
+    top: calc(var(--tr-mast-pad-top) + var(--tr-logo-h) / 2);
+    transform: translateY(-50%);
+    /* The 44px tap target is wider than its 22px bars, so pull it out by half
+       the difference to sit the bars flush with the content padding. */
+    right: calc(var(--tr-pad-side) - 11px);
+  }
+  .tr-call {
+    display: flex;
+    position: absolute;
+    top: calc(var(--tr-mast-pad-top) + var(--tr-logo-h) / 2);
+    transform: translateY(-50%);
+    left: calc(var(--tr-pad-side) - 11px);
+  }
+  .masthead-grid > nav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0;
+  }
+  .nav-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 0;      /* without this the 0fr row cannot collapse */
+    overflow: hidden;
+  }
+  /* Spacing hangs off the first link, not the nav or the panel. Padding on
+     the panel sits outside the height the grid row imposes, so it would leave
+     18px of dead masthead while collapsed; a child margin is clipped with the
+     rest of the content. */
+  .masthead-grid > nav:first-of-type .nav-panel > *:first-child { margin-top: 18px; }
+  .masthead-grid > nav .tr-navlink {
+    padding: 15px 0;
+    border-top: 1px solid var(--tr-line-soft);
+  }
+  .masthead-grid > nav .tr-navlink:hover { text-decoration: none; color: var(--tr-green-leaf); }
+  .masthead-grid > nav .tr-phone-btn {
+    margin-top: 16px;
+    padding: 15px;
+    text-align: center;
+  }
+  /* ---- open/close animation ----------------------------------------
+     0fr -> 1fr animates to the content's OWN height, which a max-height
+     guess cannot do: too small clips the menu, too large makes the easing
+     finish early and the panel appear to stall.
+     Everything below is gated on [data-nav], which only exists once the
+     script runs — with no JS the menu stays open and fully visible. */
+  [data-nav] .masthead-grid > nav {
+    display: grid;
+    /* Full-width column. An auto column would size to its content, and the
+       desktop `justify-content: flex-end` on the second nav would then shunt
+       the whole panel to the right. */
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.42s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  [data-nav="open"] .masthead-grid > nav { grid-template-rows: 1fr; }
+
+  /* Links rise and fade in behind the opening panel. */
+  [data-nav] .nav-panel > * {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.28s ease, transform 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  [data-nav="open"] .nav-panel > * { opacity: 1; transform: none; }
+
+  /* Staggered on the way in; on the way out the delays drop to 0 so the
+     menu clears immediately rather than trailing behind the panel. */
+  [data-nav="open"] .masthead-grid > nav:first-of-type .nav-panel > *:nth-child(1) { transition-delay: 0.10s; }
+  [data-nav="open"] .masthead-grid > nav:first-of-type .nav-panel > *:nth-child(2) { transition-delay: 0.16s; }
+  [data-nav="open"] .masthead-grid > nav:last-of-type  .nav-panel > *:nth-child(1) { transition-delay: 0.22s; }
+  [data-nav="open"] .masthead-grid > nav:last-of-type  .nav-panel > *:nth-child(2) { transition-delay: 0.28s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-nav] .masthead-grid > nav,
+    [data-nav] .nav-panel > * { transition: none; }
+    [data-nav="open"] .nav-panel > * { transition-delay: 0s; }
+  }
+}

@@ -1,0 +1,106 @@
+---
+import type { ValuationForm } from '../lib/types';
+
+interface Props { form: ValuationForm }
+const { form } = Astro.props;
+const stepLabels = { 1: form.stepOneLabel ?? 'Step 1 of 2', 2: form.stepTwoLabel ?? 'Step 2 of 2' };
+---
+<div
+  id="value-form"
+  class="hero-form-card"
+  data-valuation-form
+  data-reveal-skip
+  data-step-labels={JSON.stringify(stepLabels)}
+>
+  <h2>{form.heading}</h2>
+  {form.intro && <p class="hero-form-card__intro">{form.intro}</p>}
+
+  <p class="step-divider"><span data-step-label>{stepLabels[1]}</span></p>
+
+  <form method="post" action="/api/valuation" novalidate>
+    <div class="step-pane" data-step="1">
+      {form.stepOneRows.map((row) => (
+        <div class={row.fields.length > 1 ? 'field-row' : undefined}>
+          {row.fields.map((f) => (
+            <div>
+              <span class={`tr-field${f.type === 'select' ? ' tr-field--select' : ''}`}>
+                <label class="tr-field__label" for={f.id}>
+                  {f.label}
+                  {f.optional && <span class="tr-label__opt">(optional)</span>}
+                </label>
+                {f.type === 'select' ? (
+                  <select id={f.id} name={f.id}>
+                    {(f.options ?? []).map((o) => <option>{o}</option>)}
+                  </select>
+                ) : (
+                  <input
+                    id={f.id}
+                    name={f.id}
+                    type={f.type}
+                    placeholder={f.placeholder}
+                    autocomplete={f.autocomplete}
+                    required={!f.optional}
+                  />
+                )}
+              </span>
+            </div>
+          ))}
+        </div>
+      ))}
+
+      {form.photosLabel && (
+        <div class="tr-photos">
+          <span class="tr-photos__label">{form.photosLabel}</span>
+          <label class="tr-photos__drop" for="wf-photos">
+            {form.photosHint}
+            <input id="wf-photos" name="photos" type="file" accept="image/*" multiple hidden />
+          </label>
+        </div>
+      )}
+
+      <button type="button" class="tr-cta tr-cta--gold tr-cta--block" data-step-next>
+        {form.continueLabel ?? 'Continue'}
+      </button>
+      {form.noteStep1 && <p class="tr-form-note">{form.noteStep1}</p>}
+    </div>
+
+    {form.stepTwoRows && form.stepTwoRows.length > 0 && (
+      <div class="step-pane" data-step="2" hidden>
+        {form.stepTwoRows.map((row) => (
+          <div class={row.fields.length > 1 ? 'field-row' : undefined}>
+            {row.fields.map((f) => (
+              <div>
+                <span class={`tr-field${f.type === 'select' ? ' tr-field--select' : ''}`}>
+                  <label class="tr-field__label" for={f.id}>
+                    {f.label}
+                    {f.optional && <span class="tr-label__opt">(optional)</span>}
+                  </label>
+                  {f.type === 'select' ? (
+                    <select id={f.id} name={f.id}>
+                      {(f.options ?? []).map((o) => <option>{o}</option>)}
+                    </select>
+                  ) : (
+                    <input
+                      id={f.id}
+                      name={f.id}
+                      type={f.type}
+                      placeholder={f.placeholder}
+                      autocomplete={f.autocomplete}
+                      required={!f.optional}
+                    />
+                  )}
+                </span>
+              </div>
+            ))}
+          </div>
+        ))}
+
+        <button type="submit" class="tr-cta tr-cta--gold tr-cta--block">
+          {form.submitLabel ?? 'Get my valuation'}
+        </button>
+        <button type="button" class="tr-link-back" data-step-back>{form.backLabel ?? 'Back'}</button>
+        {form.noteStep2 && <p class="tr-form-note">{form.noteStep2}</p>}
+      </div>
+    )}
+  </form>
+</div>

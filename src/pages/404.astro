@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import { getSiteSettings } from '../lib/sanity/queries';
+
+const site = await getSiteSettings();
+const seo = {
+  title: 'Page not found',
+  description: 'That page does not exist. Find what we lend against, or call us.',
+  noIndex: true,
+};
+---
+<Base seo={seo} site={site}>
+  <section class="tr-band tr-band--white">
+    <div class="tr-inner tr-inner--narrow">
+      <p class="tr-eyebrow">404</p>
+      <h1 class="tr-h2">That page doesn’t exist.</h1>
+      <p class="tr-intro">
+        It may have moved. Start from the <a class="tr-inline-link" href="/">homepage</a>, or call us
+        on <a class="tr-inline-link" href={`tel:${site.phoneHref}`}>{site.phone}</a>.
+      </p>
+    </div>
+  </section>
+</Base>

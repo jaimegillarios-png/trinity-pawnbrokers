@@ -1,0 +1,21 @@
+---
+import type { SiteSettings } from '../lib/types';
+interface Props { site: SiteSettings }
+const { site } = Astro.props;
+---
+<div class="rule-bar">
+  <div class="rule-bar-inner">
+    <div class="rule-bar__track">
+      <div class="rule-bar__group">
+        <span>{site.ruleBarLeft}</span>
+        <span class="rule-bar__reg">{site.ruleBarRight}</span>
+      </div>
+      {/* Duplicated for the seamless mobile marquee. Carries `hidden` so a
+          stale stylesheet degrades to a single copy rather than showing two. */}
+      <div class="rule-bar__group" aria-hidden="true" hidden>
+        <span>{site.ruleBarLeft}</span>
+        <span class="rule-bar__reg">{site.ruleBarRight}</span>
+      </div>
+    </div>
+  </div>
+</div>

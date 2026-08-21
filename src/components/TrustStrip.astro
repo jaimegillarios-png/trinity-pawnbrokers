@@ -1,0 +1,16 @@
+---
+import type { TrustItem } from '../lib/types';
+import ConfirmChip from './ConfirmChip.astro';
+
+interface Props { items?: TrustItem[] }
+const { items = [] } = Astro.props;
+---
+{items.length > 0 && (
+  <div class="trust">
+    <div class="trust-inner">
+      {items.map((item) => (
+        <span>{item.text}<ConfirmChip note={item.chip} /></span>
+      ))}
+    </div>
+  </div>
+)}
