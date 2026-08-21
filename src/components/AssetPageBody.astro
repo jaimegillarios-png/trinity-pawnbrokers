@@ -61,10 +61,10 @@ const whyHeading = page.why?.intro?.heading ? splitEmphasis(page.why.intro.headi
         <div>
           {page.borrow.intro?.eyebrow && <p class="tr-eyebrow">{page.borrow.intro.eyebrow}</p>}
           {page.borrow.intro?.heading && (
-            <h2 class="tr-h2" style="margin-bottom:16px">{page.borrow.intro.heading}</h2>
+            <h2 class="tr-h2 section-h2--tight">{page.borrow.intro.heading}</h2>
           )}
           {page.borrow.intro?.intro && (
-            <p class="tr-body" style="margin:0 0 24px">{page.borrow.intro.intro}</p>
+            <p class="tr-body borrow-intro">{page.borrow.intro.intro}</p>
           )}
 
           <div class="tr-specs">
@@ -79,17 +79,17 @@ const whyHeading = page.why?.intro?.heading ? splitEmphasis(page.why.intro.headi
 
         {page.borrow.example && (
           <div class="tr-card tr-card--panel example-panel">
-            <div class="tr-spec__label" style="margin-bottom:16px">
+            <div class="tr-spec__label panel-label">
               {page.borrow.example.label}<ConfirmChip note={page.borrow.example.chip} />
             </div>
             {page.borrow.example.statement && (
-              <p class="rep-card__statement" style="font-size:26px;line-height:1.3;text-align:left">
+              <p class="rep-card__statement example-panel__statement">
                 {page.borrow.example.statement}
               </p>
             )}
             <Ledger rows={page.borrow.example.rows} />
             {page.borrow.example.note && (
-              <p class="tr-body-sm" style="margin:24px 0 0">{page.borrow.example.note}</p>
+              <p class="tr-body-sm example-panel__note">{page.borrow.example.note}</p>
             )}
           </div>
         )}
@@ -126,7 +126,7 @@ const whyHeading = page.why?.intro?.heading ? splitEmphasis(page.why.intro.headi
       </div>
 
       {page.how.link && (
-        <p style="text-align:center;margin-top:44px">
+        <p class="how-link">
           <a href={page.how.link.href} class="tr-inline-link">{page.how.link.label}</a>
         </p>
       )}
@@ -141,10 +141,10 @@ const whyHeading = page.why?.intro?.heading ? splitEmphasis(page.why.intro.headi
         <div class="tr-sticky">
           {page.valuation.intro?.eyebrow && <p class="tr-eyebrow">{page.valuation.intro.eyebrow}</p>}
           {page.valuation.intro?.heading && (
-            <h2 class="tr-h2" style="margin-bottom:16px">{page.valuation.intro.heading}</h2>
+            <h2 class="tr-h2 section-h2--tight">{page.valuation.intro.heading}</h2>
           )}
           {page.valuation.intro?.intro && (
-            <p class="tr-body" style="margin:0">{page.valuation.intro.intro}</p>
+            <p class="tr-body value-intro">{page.valuation.intro.intro}</p>
           )}
         </div>
         <div class="value-points">
@@ -157,12 +157,12 @@ const whyHeading = page.why?.intro?.heading ? splitEmphasis(page.why.intro.headi
 
 {page.why && (
   <section class="tr-band tr-band--white">
-    <div class="tr-inner" style="padding-top:110px;padding-bottom:110px">
+    <div class="tr-inner why-inner">
       <div class="why-head">
         {page.why.intro?.eyebrow && <p class="tr-eyebrow">{page.why.intro.eyebrow}</p>}
         <h2 class="tr-h2">
           {whyHeading.map((part) =>
-            part.emphasis ? <span style="color:var(--tr-gold-deep)">{part.text}</span> : part.text,
+            part.emphasis ? <span class="why-head__accent">{part.text}</span> : part.text,
           )}
         </h2>
         {page.why.intro?.intro && <p class="tr-intro">{page.why.intro.intro}</p>}
@@ -195,29 +195,29 @@ const whyHeading = page.why?.intro?.heading ? splitEmphasis(page.why.intro.headi
       <div>
         <div
           id="badge-200"
-          style="width:200px;margin-bottom:20px"
+          class="reviews-badge"
           data-reviews-badge
           data-store={site.reviewsStore}
           data-colour-token="--tr-gold-deep"
         ></div>
         {page.proof.reviewsNote && (
-          <p class="tr-body" style="margin:0;max-width:44ch">{page.proof.reviewsNote}</p>
+          <p class="tr-body reviews-note">{page.proof.reviewsNote}</p>
         )}
       </div>
 
       {page.proof.caseStudy && (
         <div class="tr-card tr-card--panel">
-          <p class="tr-spec__label" style="margin-bottom:16px">
+          <p class="tr-spec__label panel-label">
             {page.proof.caseStudy.label}<ConfirmChip note={page.proof.caseStudy.chip} />
           </p>
           {page.proof.caseStudy.statement && (
-            <p style="font:500 var(--tr-h3) var(--tr-font-display);line-height:1.45;margin:0;color:var(--tr-green-vault);text-wrap:pretty">
+            <p class="case-statement">
               {page.proof.caseStudy.statement}
             </p>
           )}
           <Ledger rows={page.proof.caseStudy.rows} small />
           {page.proof.caseStudy.note && (
-            <p class="tr-caption" style="margin:22px 0 0">{page.proof.caseStudy.note}</p>
+            <p class="tr-caption case-note">{page.proof.caseStudy.note}</p>
           )}
         </div>
       )}
@@ -242,16 +242,15 @@ const whyHeading = page.why?.intro?.heading ? splitEmphasis(page.why.intro.headi
 {page.repExample && (
   <section class="tr-band tr-band--grey">
     <div
-      class="tr-inner tr-inner--narrow"
-      style="max-width:760px;padding:90px var(--tr-pad-side);display:flex;flex-direction:column;align-items:center"
+      class="tr-inner tr-inner--narrow rep-inner"
     >
       <div class="rep-card">
-        <p class="tr-spec__label" style="justify-content:center;margin-bottom:18px">
+        <p class="tr-spec__label rep-card__label">
           {page.repExample.label}<ConfirmChip note={page.repExample.chip} />
         </p>
         <p class="rep-card__statement">{page.repExample.statement}</p>
         {page.repExample.note && (
-          <p class="tr-body-sm" style="margin:20px 0 0;color:var(--tr-ink-62);text-wrap:pretty">
+          <p class="tr-body-sm rep-card__note">
             {page.repExample.note}
           </p>
         )}
@@ -264,7 +263,7 @@ const whyHeading = page.why?.intro?.heading ? splitEmphasis(page.why.intro.headi
   <section class="closing">
     <div class="closing-inner">
       {page.closing.eyebrow && (
-        <p class="tr-eyebrow tr-eyebrow--on-green" style="margin-bottom:18px">{page.closing.eyebrow}</p>
+        <p class="tr-eyebrow tr-eyebrow--on-green closing__eyebrow">{page.closing.eyebrow}</p>
       )}
       <h2>{page.closing.heading}</h2>
       {page.closing.intro && <p class="closing__intro">{page.closing.intro}</p>}

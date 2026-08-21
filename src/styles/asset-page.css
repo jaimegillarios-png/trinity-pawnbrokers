@@ -555,3 +555,47 @@
   .compare-grid .cmp-tri i, .compare-grid .cmp-hs i { font-size: 15px; }
   .compare-grid .confirm-chip { display: inline-block; margin-top: 4px; }
 }
+
+/* ==========================================================================
+   Extracted from inline styles
+
+   These were written inline in the original template. Same declarations,
+   given names — so a change happens in one place and the markup says what a
+   thing is rather than how it looks.
+   ========================================================================== */
+.section-h2--tight { margin-bottom: 16px; }
+.panel-label { margin-bottom: 16px; }
+
+.borrow-intro { margin: 0 0 24px; }
+.example-panel__statement { font-size: 26px; line-height: 1.3; text-align: left; }
+.example-panel__note { margin: 24px 0 0; }
+
+.how-link { text-align: center; margin-top: 44px; }
+
+.value-intro { margin: 0; }
+
+.why-inner { padding-top: 110px; padding-bottom: 110px; }
+.why-head__accent { color: var(--tr-gold-deep); }
+
+.reviews-badge { width: 200px; margin-bottom: 20px; }
+.reviews-note { margin: 0; max-width: 44ch; }
+.case-statement {
+  font: 500 var(--tr-h3) var(--tr-font-display);
+  line-height: 1.45;
+  margin: 0;
+  color: var(--tr-green-vault);
+  text-wrap: pretty;
+}
+.case-note { margin: 22px 0 0; }
+
+.rep-inner {
+  max-width: 760px;
+  padding: 90px var(--tr-pad-side);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.rep-card__label { justify-content: center; margin-bottom: 18px; }
+.rep-card__note { margin: 20px 0 0; color: var(--tr-ink-62); text-wrap: pretty; }
+
+.closing__eyebrow { margin-bottom: 18px; }
