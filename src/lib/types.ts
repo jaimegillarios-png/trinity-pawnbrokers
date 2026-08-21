@@ -176,3 +176,23 @@ export interface SiteSettings {
   defaultSeo?: Seo;
   organisationLogo?: SanityImage;
 }
+
+/* ---------- blog ---------- */
+
+export interface Post {
+  title: string;
+  slug: string;
+  publishedAt: string;
+  excerpt: string;
+  coverImage: SanityImage;
+  relatedAssets?: Array<{ title: string; slug: string; nounPlural: string }>;
+  body: unknown[];
+  seo?: Seo;
+}
+
+export interface BlogIndex {
+  eyebrow?: string;
+  title: string;
+  standfirst?: string;
+  seo: Seo;
+}

@@ -1,5 +1,5 @@
 import { query } from './client';
-import type { AssetPage, HomePage, LegalPage, SiteSettings, AssetPageCard } from '../types';
+import type { AssetPage, HomePage, LegalPage, SiteSettings, AssetPageCard, Post, BlogIndex } from '../types';
 
 /** Images always carry their metadata so we can emit dimensions and an LQIP. */
 const IMAGE = `{ ..., alt, asset->{ _id, url, metadata { lqip, dimensions } } }`;
@@ -112,3 +112,29 @@ export const getLegalPage = (slug: string) =>
     }`,
     { slug },
   );
+
+/* ---------- blog ---------- */
+
+const POST = `{
+  title,
+  "slug": slug.current,
+  publishedAt,
+  excerpt,
+  coverImage ${IMAGE},
+  relatedAssets[]->{ title, "slug": slug.current, nounPlural },
+  body[]{ ..., _type == "image" => ${IMAGE} },
+  ${SEO}
+}`;
+
+/**
+ * Published articles only. A future date keeps a piece off the site until
+ * the next build after it, which is what an editor expects from a date field.
+ */
+export const getPosts = () =>
+  query<Post[]>(
+    `*[_type == "post" && defined(publishedAt) && publishedAt <= now()]
+      | order(publishedAt desc) ${POST}`,
+  );
+
+export const getBlogIndex = () =>
+  query<BlogIndex | null>(`*[_type == "blogIndex"][0]{ eyebrow, title, standfirst, ${SEO} }`);

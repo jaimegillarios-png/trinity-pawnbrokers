@@ -1,0 +1,90 @@
+---
+import '../../styles/blog.css';
+import '../../styles/prose.css';
+import { PortableText } from 'astro-portabletext';
+import Base from '../../layouts/Base.astro';
+import { getPosts, getSiteSettings } from '../../lib/sanity/queries';
+import { breadcrumbSchema } from '../../lib/seo';
+import { urlFor } from '../../lib/sanity/image';
+
+export async function getStaticPaths() {
+  const [posts, site] = await Promise.all([getPosts(), getSiteSettings()]);
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post, site } }));
+}
+
+const { post, site } = Astro.props;
+const origin = Astro.site?.origin ?? '';
+
+const dateOf = (iso: string) =>
+  new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const cover = urlFor(post.coverImage).width(1200).height(800).fit('crop').url();
+
+// The excerpt is the fallback description, so an editor cannot publish an
+// article with no search summary at all.
+const seo = post.seo?.title
+  ? post.seo
+  : { title: post.title, description: post.excerpt, ogImage: post.coverImage };
+
+/**
+ * Article markup so the piece can be attributed and dated in search results.
+ * Author and publisher point at the organisation the layout already emits,
+ * rather than describing the business a second time.
+ */
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.title,
+  description: post.excerpt,
+  datePublished: post.publishedAt,
+  image: cover,
+  author: { '@id': `${origin}/#organisation` },
+  publisher: { '@id': `${origin}/#organisation` },
+  mainEntityOfPage: `${origin}/blog/${post.slug}`,
+};
+
+const schemas = [
+  articleSchema,
+  breadcrumbSchema([
+    { name: 'Home', url: `${origin}/` },
+    { name: 'Blog', url: `${origin}/blog` },
+    { name: post.title, url: `${origin}/blog/${post.slug}` },
+  ]),
+];
+---
+<Base seo={seo} site={site} schemas={schemas}>
+  <article class="article">
+    <div class="article__inner">
+      <a class="article__back" href="/blog">← All articles</a>
+
+      <time class="article__date" datetime={post.publishedAt}>{dateOf(post.publishedAt)}</time>
+      <h1>{post.title}</h1>
+      <p class="article__standfirst">{post.excerpt}</p>
+
+      <img
+        class="article__cover"
+        src={cover}
+        alt={post.coverImage.alt ?? ''}
+        width="1200"
+        height="800"
+        fetchpriority="high"
+        decoding="async"
+      />
+
+      <div class="tr-prose"><PortableText value={post.body as any} /></div>
+
+      {post.relatedAssets && post.relatedAssets.length > 0 && (
+        <aside class="article__related">
+          <p class="article__related-label">Related</p>
+          <ul>
+            {post.relatedAssets.map((asset) => (
+              <li>
+                <a href={`/${asset.slug}`}>Pawn loans against {asset.nounPlural}</a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )}
+    </div>
+  </article>
+</Base>

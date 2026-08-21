@@ -1,0 +1,62 @@
+---
+import '../../styles/blog.css';
+import Base from '../../layouts/Base.astro';
+import { getBlogIndex, getPosts, getSiteSettings } from '../../lib/sanity/queries';
+import { breadcrumbSchema } from '../../lib/seo';
+import { urlFor } from '../../lib/sanity/image';
+
+const [index, posts, site] = await Promise.all([getBlogIndex(), getPosts(), getSiteSettings()]);
+const origin = Astro.site?.origin ?? '';
+
+const seo = index?.seo ?? {
+  title: 'Blog',
+  description: 'Notes on pawnbroking, valuation, and looking after what you own.',
+};
+
+const schemas = [
+  breadcrumbSchema([
+    { name: 'Home', url: `${origin}/` },
+    { name: index?.title ?? 'Blog', url: `${origin}/blog` },
+  ]),
+];
+
+const dateOf = (iso: string) =>
+  new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base seo={seo} site={site} schemas={schemas} reveal=".blog-card">
+  <section class="blog-head">
+    <div class="blog-head__inner">
+      {index?.eyebrow && <p class="tr-eyebrow">{index.eyebrow}</p>}
+      <h1>{index?.title ?? 'Blog'}</h1>
+      {index?.standfirst && <p class="blog-head__standfirst">{index.standfirst}</p>}
+    </div>
+  </section>
+
+  <section class="blog-list">
+    {posts.length === 0 ? (
+      <p class="blog-empty">No articles yet.</p>
+    ) : (
+      <div class="blog-grid">
+        {posts.map((post) => (
+          <article class="blog-card">
+            <a href={`/blog/${post.slug}`}>
+              <span class="blog-card__media">
+                <img
+                  src={urlFor(post.coverImage).width(720).height(480).fit('crop').url()}
+                  alt={post.coverImage.alt ?? ''}
+                  width="720"
+                  height="480"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+              <time class="blog-card__date" datetime={post.publishedAt}>{dateOf(post.publishedAt)}</time>
+              <h2 class="blog-card__title">{post.title}</h2>
+              <p class="blog-card__excerpt">{post.excerpt}</p>
+            </a>
+          </article>
+        ))}
+      </div>
+    )}
+  </section>
+</Base>

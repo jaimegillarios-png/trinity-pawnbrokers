@@ -1,0 +1,73 @@
+/* ==========================================================================
+   Trinity — long-form copy
+
+   Used by the blog and the legal pages: anywhere an editor writes flowing
+   text rather than filling in fields. Every value comes from the tokens, so
+   this reads as the same publication as the rest of the site.
+   ========================================================================== */
+
+.tr-prose {
+  /* A comfortable measure. The rest of the site sets 64ch for intros; running
+     body copy wants slightly less. */
+  max-width: 62ch;
+}
+.tr-prose > * + * { margin-top: 20px; }
+
+.tr-prose p,
+.tr-prose li {
+  font: 400 var(--tr-body) var(--tr-font-body);
+  color: var(--tr-ink-72);
+  text-wrap: pretty;
+}
+
+.tr-prose h2 {
+  font: 500 var(--tr-h3) var(--tr-font-display);
+  color: var(--tr-green-vault);
+  margin-top: 48px;
+  text-wrap: balance;
+}
+.tr-prose h3 {
+  font: 600 var(--tr-h4) var(--tr-font-display);
+  color: var(--tr-green-vault);
+  margin-top: 36px;
+  text-wrap: balance;
+}
+.tr-prose h2 + *,
+.tr-prose h3 + * { margin-top: 12px; }
+
+.tr-prose a {
+  color: var(--tr-green-leaf);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--tr-leaf-underline);
+}
+.tr-prose a:hover { color: var(--tr-gold-deep); }
+
+.tr-prose ul,
+.tr-prose ol { padding-left: 22px; margin-block: 0; }
+.tr-prose li + li { margin-top: 8px; }
+.tr-prose li::marker { color: var(--tr-gold-deep); }
+
+.tr-prose blockquote {
+  margin-inline: 0;
+  padding-left: 22px;
+  border-left: 2px solid var(--tr-line-gold-mid);
+  font: italic 500 var(--tr-body-lg) var(--tr-font-display);
+  color: var(--tr-green-vault);
+}
+.tr-prose blockquote p { font: inherit; color: inherit; }
+
+.tr-prose figure { margin: 32px 0; }
+.tr-prose img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--tr-radius);
+}
+.tr-prose figcaption {
+  font: 400 var(--tr-caption) var(--tr-font-body);
+  color: var(--tr-ink-62);
+  margin-top: 10px;
+}
+
+.tr-prose hr { border: 0; border-top: 1px solid var(--tr-line); margin: 40px 0; }

@@ -23,11 +23,11 @@ export default defineConfig({
     types: schemaTypes,
     // Singletons should not be creatable or deletable from the global menus.
     templates: (prev) =>
-      prev.filter((t) => !['siteSettings', 'homePage'].includes(t.schemaType)),
+      prev.filter((t) => !['siteSettings', 'homePage', 'blogIndex'].includes(t.schemaType)),
   },
   document: {
     actions: (prev, { schemaType }) =>
-      ['siteSettings', 'homePage'].includes(schemaType)
+      ['siteSettings', 'homePage', 'blogIndex'].includes(schemaType)
         ? prev.filter(({ action }) => action !== 'duplicate' && action !== 'delete')
         : prev,
   },

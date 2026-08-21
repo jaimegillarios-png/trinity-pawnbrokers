@@ -565,6 +565,64 @@ async function buildHomePage() {
   };
 }
 
+/**
+ * The blog has no content yet and no equivalent on the old site, so this seeds
+ * the index heading and one placeholder article. The article is marked
+ * noindex and says plainly what it is — it exists so the layout can be
+ * reviewed, and it should be deleted once real writing replaces it.
+ */
+async function blogSeed() {
+  const cover = await uploadImage('images/cards/watches.jpeg', 'A luxury watch dial and bezel in low light');
+  const para = (key, text) => ({
+    _key: key,
+    _type: 'block',
+    style: 'normal',
+    markDefs: [],
+    children: [{ _key: key + 's', _type: 'span', marks: [], text }],
+  });
+  const heading = (key, text) => ({ ...para(key, text), style: 'h2' });
+
+  return [
+    {
+      _id: 'blogIndex',
+      _type: 'blogIndex',
+      eyebrow: 'The blog',
+      title: 'Notes on lending against fine things',
+      standfirst:
+        'What we look for, what determines a valuation, and how to look after the things you own.',
+      seo: {
+        _type: 'seo',
+        title: 'Blog — Trinity Pawnbrokers',
+        description:
+          'Notes on pawnbroking, valuation and looking after what you own, from the specialists at Trinity Pawnbrokers.',
+      },
+    },
+    {
+      _id: 'post-placeholder',
+      _type: 'post',
+      title: 'What a watch specialist actually looks at',
+      slug: { _type: 'slug', current: 'what-a-watch-specialist-looks-at' },
+      publishedAt: '2026-08-01T09:00:00.000Z',
+      excerpt:
+        'Placeholder article. Written to show the layout, not to be published — replace or delete it before launch.',
+      coverImage: cover,
+      relatedAssets: [{ _key: 'rel0', _type: 'reference', _ref: 'assetPage-watches' }],
+      body: [
+        para('p1', 'This is placeholder copy so the article layout can be reviewed. Replace it with real writing, or delete this article, before the site goes live.'),
+        heading('h1', 'A sub-heading looks like this'),
+        para('p2', 'Body copy sits at a comfortable measure, with the same type and colour as the rest of the site. Links, lists, quotes and images are all available to whoever is writing.'),
+        para('p3', 'Related item pages appear at the end, which is how the blog earns its keep for search: articles answer the questions people ask before they pawn something, and point at the page that serves them.'),
+      ],
+      seo: {
+        _type: 'seo',
+        title: 'What a watch specialist actually looks at',
+        description: 'Placeholder article used to review the blog layout.',
+        noIndex: true,
+      },
+    },
+  ];
+}
+
 /* ---------- run ------------------------------------------------------- */
 
 const dir = resolve(root, 'legacy/src/content');
@@ -580,7 +638,7 @@ const ordered = files.sort((a, b) => {
 
 console.log(`\n  ${DRY ? 'Dry run' : 'Importing'} → project ${projectId}, dataset ${dataset}\n`);
 
-const docs = [await buildSiteSettings(), await buildHomePage(), ...legalStubs()];
+const docs = [await buildSiteSettings(), await buildHomePage(), ...(await blogSeed()), ...legalStubs()];
 for (const [i, file] of ordered.entries()) {
   const mod = await import(pathToFileURL(resolve(dir, file)).href);
   docs.push(await buildAssetPage(mod.default, i));

@@ -25,6 +25,26 @@ export const structure: StructureResolver = (S) =>
         .title('Legal pages')
         .schemaType('legalPage')
         .child(S.documentTypeList('legalPage').title('Legal pages')),
+      S.listItem()
+        .title('Blog')
+        .child(
+          S.list()
+            .title('Blog')
+            .items([
+              S.listItem()
+                .title('Index settings')
+                .id('blogIndex')
+                .child(S.document().schemaType('blogIndex').documentId('blogIndex')),
+              S.listItem()
+                .title('Articles')
+                .schemaType('post')
+                .child(
+                  S.documentTypeList('post')
+                    .title('Articles')
+                    .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }]),
+                ),
+            ]),
+        ),
       S.divider(),
       S.listItem()
         .title('Site settings')

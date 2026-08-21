@@ -20,12 +20,16 @@ import { siteSettings } from './documents/siteSettings';
 import { assetPage } from './documents/assetPage';
 import { homePage } from './documents/homePage';
 import { legalPage } from './documents/legalPage';
+import { post } from './documents/post';
+import { blogIndex } from './documents/blogIndex';
 
 export const schemaTypes = [
   // documents
   siteSettings,
   homePage,
   assetPage,
+  post,
+  blogIndex,
   legalPage,
   // objects
   seo,

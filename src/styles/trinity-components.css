@@ -627,3 +627,17 @@ section[id], [id].hero-form-card { scroll-margin-top: calc(var(--tr-mast-h, 0px)
     [data-nav="open"] .nav-panel > * { transition-delay: 0s; }
   }
 }
+
+/* Footer navigation — added with the blog, which needs a way in. */
+.tr-footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 22px;
+  margin: 20px 0 18px;
+  font: 500 12px/1 var(--tr-font-body);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.tr-footer__nav a { color: var(--tr-on-green); text-decoration: none; }
+.tr-footer__nav a:hover { color: var(--tr-gold-mid); text-decoration: underline; text-underline-offset: 4px; }
