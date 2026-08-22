@@ -16,7 +16,7 @@
   margin: 0 auto;
   padding: 84px var(--tr-pad-side) 88px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 430px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--tr-gap-col);
   align-items: center;
 }
@@ -43,26 +43,20 @@
   font: 400 var(--tr-body-lg) var(--tr-font-body);
   color: var(--tr-ink-72);
   max-width: 46ch;
-  margin: 26px 0 32px;
+  margin: 26px 0 0;
 }
-.about-masthead__actions { display: flex; gap: 12px; flex-wrap: wrap; }
-/* The shared ghost CTA is drawn for green grounds; on paper it needs ink. */
-.about-masthead__ghost {
-  color: var(--tr-ink);
-  background: transparent;
-  border: 1px solid var(--tr-line-strong);
-  padding: 17px 30px;
-}
-.about-masthead__ghost:hover { border-color: var(--tr-green-vault); background: var(--tr-green-vault); color: var(--tr-neutral); }
 
-/* Stretch beats the grid's centre alignment for this one item, so the plate
-   runs the full height of the copy beside it rather than floating. */
-.about-masthead__figure { margin: 0; align-self: stretch; overflow: hidden; }
+/* A square plate. The source is a 1400px square, so nothing is cropped away
+   that the photographer did not already crop. */
+.about-masthead__figure { margin: 0; overflow: hidden; }
 .about-masthead__figure img {
   display: block;
   width: 100%;
-  height: 100%;
-  min-height: 440px;
+  /* height:auto is load-bearing, not tidiness. The img carries width/height
+     attributes, which give it a used height that aspect-ratio does not
+     override on its own — without this it renders at its intrinsic 1400px. */
+  height: auto;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   animation: aboutFigure 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
@@ -75,8 +69,10 @@
 .about-record {
   display: flex;
   flex-wrap: wrap;
-  margin: 46px 0 0;
-  border-top: 2px solid var(--tr-gold-deep);
+  margin: 40px 0 0;
+  /* A hairline, not a bar. At 2px in deep gold it read as a heavier divider
+     than anything else on the page and cut the copy in half. */
+  border-top: 1px solid var(--tr-line-gold);
 }
 .about-record__cell {
   padding: 16px 22px 0 0;
@@ -223,7 +219,8 @@
     gap: 40px;
     padding: 72px var(--tr-pad-side) 76px;
   }
-  .about-masthead__figure img { height: clamp(240px, 42vw, 340px); min-height: 0; }
+  /* Stacked, a full-width square is most of a screen — let it flatten. */
+  .about-masthead__figure img { aspect-ratio: 16 / 10; }
   .about-why { grid-template-columns: 1fr; gap: 30px; }
   .about-why__head { position: static; }
   .bench-grid { grid-template-columns: repeat(2, 1fr); }
@@ -233,8 +230,7 @@
   .principle-grid { grid-template-columns: 1fr; margin-top: 34px; }
   .about-masthead__inner { padding: 56px var(--tr-pad-side) 60px; }
   .about-masthead__title { max-width: none; }
-  .about-masthead__intro { margin: 22px 0 26px; }
-  .about-masthead__actions .tr-cta { flex: 1 1 100%; text-align: center; }
+  .about-masthead__intro { margin: 22px 0 0; }
   /* Two cells a row rather than four in a scrolling line. */
   .about-record__cell { flex: 1 1 44%; border-right: 0; padding-right: 0; margin-right: 0; }
   .about-firm__inner { padding: 76px var(--tr-pad-side) 80px; }

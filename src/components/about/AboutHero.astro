@@ -23,13 +23,10 @@ const lqip = lqipFor(hero.image);
       </h1>
       <p class="about-masthead__intro">{hero.intro}</p>
 
-      <div class="about-masthead__actions">
-        <a href={hero.ctaPrimary.href} class="tr-cta tr-cta--gold">{hero.ctaPrimary.label}</a>
-        {hero.ctaGhost && (
-          <a href={hero.ctaGhost.href} class="tr-cta about-masthead__ghost">{hero.ctaGhost.label}</a>
-        )}
-      </div>
-
+      {/* No buttons here. This page is read before it is acted on, and the
+          closing band carries the same call at the point someone is ready
+          for it. The hero's CTA fields stay in the CMS because heroSection
+          is shared with the item pages, which do use them. */}
       {record.length > 0 && (
         <dl class="about-record" aria-label="The record">
           {record.map((row) => (
