@@ -106,7 +106,6 @@ export const getAboutPage = async (): Promise<AboutPage> => {
   const about = await query<AboutPage | null>(`*[_type == "aboutPage"][0]{
     hero { ..., image ${IMAGE} },
     record[],
-    trust[],
     why { intro ${SECTION_INTRO}, paragraphs },
     oneFirm,
     bench { intro ${SECTION_INTRO}, disciplines[] },

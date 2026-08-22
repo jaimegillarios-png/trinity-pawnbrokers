@@ -1,30 +1,24 @@
 /* ============================================================
    About page
    Scoped to /about. Everything shared — bands, cards, type roles,
-   the trust strip — comes from trinity-components.css; this file
+   the cards — comes from trinity-components.css; this file
    only holds what is particular to this page.
    ============================================================ */
 
 /* ---------- masthead ----------
-   Split, not layered. The statement sits on paper aligned to the container's
-   left edge; the photograph takes the right and bleeds off the viewport. The
-   other pages layer type over a scrimmed image — doing it a ninth time makes
-   this page read as one more item page. */
-.about-masthead {
-  background: var(--tr-warm-panel);
+   Split, not layered: the statement in the first column, the photograph in
+   the second, both inside the container. The other pages layer type over a
+   scrimmed image — doing it a ninth time makes this page read as one more
+   item page. */
+.about-masthead { background: var(--tr-warm-panel); }
+.about-masthead__inner {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 84px var(--tr-pad-side) 88px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 43%);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 430px);
+  gap: var(--tr-gap-col);
   align-items: center;
-  min-height: clamp(520px, 64vh, 700px);
-}
-/* Left padding tracks the container so the eyebrow lines up with the masthead
-   logo and every section heading below it. */
-.about-masthead__copy {
-  padding:
-    84px
-    clamp(40px, 5vw, 72px)
-    84px
-    max(var(--tr-pad-side), calc((100vw - var(--tr-container)) / 2 + var(--tr-pad-side)));
 }
 
 /* margin-top: 0 — .tr-eyebrow is a <p>, so the UA's 1em top margin would push
@@ -61,11 +55,14 @@
 }
 .about-masthead__ghost:hover { border-color: var(--tr-green-vault); background: var(--tr-green-vault); color: var(--tr-neutral); }
 
-.about-masthead__figure { margin: 0; align-self: stretch; }
+/* Stretch beats the grid's centre alignment for this one item, so the plate
+   runs the full height of the copy beside it rather than floating. */
+.about-masthead__figure { margin: 0; align-self: stretch; overflow: hidden; }
 .about-masthead__figure img {
   display: block;
   width: 100%;
   height: 100%;
+  min-height: 440px;
   object-fit: cover;
   animation: aboutFigure 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
@@ -101,11 +98,6 @@
   margin: 0;
   white-space: nowrap;
 }
-
-/* ---------- trust strip ----------
-   Solid ground: the strip's own background is translucent, drawn to sit over
-   a hero image, and there is no image under it here. */
-.about-trust { background: var(--tr-green-vault); }
 
 /* ---------- why ----------
    Heading left, argument right. Centred in one narrow column it read as a
@@ -226,9 +218,12 @@
 @media (max-width: 900px) {
   /* Type first, photograph after — the split stops working once the columns
      are narrower than the statement's measure. */
-  .about-masthead { grid-template-columns: 1fr; min-height: 0; }
-  .about-masthead__copy { padding: 72px var(--tr-pad-side) 68px; }
-  .about-masthead__figure img { height: clamp(240px, 42vw, 340px); }
+  .about-masthead__inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 72px var(--tr-pad-side) 76px;
+  }
+  .about-masthead__figure img { height: clamp(240px, 42vw, 340px); min-height: 0; }
   .about-why { grid-template-columns: 1fr; gap: 30px; }
   .about-why__head { position: static; }
   .bench-grid { grid-template-columns: repeat(2, 1fr); }
@@ -236,7 +231,7 @@
 @media (max-width: 620px) {
   .bench-grid,
   .principle-grid { grid-template-columns: 1fr; margin-top: 34px; }
-  .about-masthead__copy { padding: 56px var(--tr-pad-side) 56px; }
+  .about-masthead__inner { padding: 56px var(--tr-pad-side) 60px; }
   .about-masthead__title { max-width: none; }
   .about-masthead__intro { margin: 22px 0 26px; }
   .about-masthead__actions .tr-cta { flex: 1 1 100%; text-align: center; }

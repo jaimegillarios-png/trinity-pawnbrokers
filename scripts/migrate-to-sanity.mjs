@@ -407,16 +407,6 @@ async function buildAboutPage() {
       'record',
     ),
 
-    trust: keyed(
-      [
-        { _type: 'trustItem', text: 'Lending since 2013' },
-        { _type: 'trustItem', text: '£10m+ pledged & redeemed' },
-        { _type: 'trustItem', text: 'FCA-regulated · Ref 741896' },
-        { _type: 'trustItem', text: '400+ five-star reviews', highlight: true },
-      ],
-      'atrust',
-    ),
-
     why: {
       intro: {
         eyebrow: 'Why Trinity exists',

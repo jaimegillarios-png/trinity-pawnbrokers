@@ -26,14 +26,6 @@ export const aboutPage = defineType({
       validation: (r) => r.max(5).warning('The plaque is drawn for up to five rows.'),
     }),
     defineField({
-      name: 'trust',
-      title: 'Trust strip',
-      type: 'array',
-      of: [defineArrayMember({ type: 'trustItem' })],
-      group: 'hero',
-    }),
-
-    defineField({
       name: 'why',
       title: 'Why Trinity exists',
       type: 'object',

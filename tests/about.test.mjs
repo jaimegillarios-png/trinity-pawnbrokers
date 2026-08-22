@@ -12,7 +12,6 @@ test('the about page builds with every section', () => {
     ['masthead', 'class="about-masthead"'],
     ['masthead figure', 'class="about-masthead__figure"'],
     ['record', 'class="about-record"'],
-    ['trust strip', 'class="trust"'],
     ['why', 'class="about-why'],
     ['Trinity & Unbolted', 'class="about-firm"'],
     ['the bench', 'class="bench-grid"'],
@@ -90,4 +89,10 @@ test('the about page does not reuse the item-page hero', () => {
     html.indexOf('about-masthead__copy') < html.indexOf('about-masthead__figure'),
     'the figure should follow the copy in the source order',
   );
+});
+
+test('the about page does not carry the trust strip', () => {
+  // Removed by design: the strip is the item-page device, and the record in
+  // the masthead already states the same facts.
+  assert.ok(!about().includes('class="trust"'), 'the trust strip is back on the about page');
 });

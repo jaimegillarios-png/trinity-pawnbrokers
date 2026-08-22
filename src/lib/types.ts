@@ -149,7 +149,6 @@ export interface HomePage {
 export interface AboutPage {
   hero: HeroSection;
   record?: SpecRow[];
-  trust?: TrustItem[];
   why?: { intro?: SectionIntro; paragraphs?: string[] };
   oneFirm?: { eyebrow?: string; statement?: string; note?: string; cta?: Cta };
   bench?: { intro?: SectionIntro; disciplines?: IconCard[] };
