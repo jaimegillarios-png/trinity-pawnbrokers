@@ -10,8 +10,8 @@ test('the about page builds with every section', () => {
   const html = about();
   for (const [name, selector] of [
     ['masthead', 'class="about-masthead"'],
-    ['record plaque', 'class="about-plaque"'],
-    ['photographic plate', 'class="about-plate"'],
+    ['masthead figure', 'class="about-masthead__figure"'],
+    ['record', 'class="about-record"'],
     ['trust strip', 'class="trust"'],
     ['why', 'class="about-why'],
     ['Trinity & Unbolted', 'class="about-firm"'],
@@ -70,12 +70,12 @@ test('every about-page link points somewhere that exists', () => {
   }
 });
 
-test('the record plaque carries the establishment facts', () => {
+test('the record carries the establishment facts', () => {
   const html = about();
-  const plaque = html.slice(html.indexOf('about-plaque'), html.indexOf('about-plate'));
-  assert.equal(count(plaque, /<dt>/g), 4, 'expected four rows on the plaque');
+  const record = html.slice(html.indexOf('about-record'), html.indexOf('</dl>'));
+  assert.equal(count(record, /<dt>/g), 4, 'expected four cells in the record');
   for (const fact of ['2013', '741896', 'Unbolted', 'City of London']) {
-    assert.ok(plaque.includes(fact), `the plaque does not carry ${fact}`);
+    assert.ok(record.includes(fact), `the record does not carry ${fact}`);
   }
 });
 
@@ -85,9 +85,9 @@ test('the about page does not reuse the item-page hero', () => {
   const html = about();
   assert.ok(!html.includes('class="hero"'), 'the item-page hero came back');
   assert.ok(!html.includes('hero__scrim'), 'the about page is using a scrimmed hero');
-  // The trust strip belongs to the plate, and the plate follows the type.
+  // Split, not layered: the photograph is a sibling of the copy, never behind it.
   assert.ok(
-    html.indexOf('about-masthead') < html.indexOf('about-plate'),
-    'the plate should follow the masthead, not precede it',
+    html.indexOf('about-masthead__copy') < html.indexOf('about-masthead__figure'),
+    'the figure should follow the copy in the source order',
   );
 });

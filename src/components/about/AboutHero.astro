@@ -10,60 +10,55 @@ const parts = splitEmphasis(hero.heading);
 const lqip = lqipFor(hero.image);
 ---
 {/*
-  Every other page opens the same way: a photograph, a scrim, and the headline
-  laid over it. Doing that a ninth time makes the About page read as one more
-  item page. So it is inverted here — the statement comes first on paper, with
-  the establishment record pinned beside it like a plaque, and the photograph
-  follows as its own band with the trust strip along the bottom edge.
+  Every other page opens with a photograph, a scrim, and the headline laid on
+  top. This one splits instead: the statement on paper at the container's left
+  edge, the photograph bleeding off the right. The record runs along the foot
+  of the copy like the address line on a letterhead.
 */}
 <section class="about-masthead" aria-labelledby="about-title">
-  <div class="about-masthead__inner">
-    <div class="about-masthead__copy">
-      {hero.eyebrow && <p class="tr-eyebrow about-masthead__eyebrow">{hero.eyebrow}</p>}
-      <h1 id="about-title" class="about-masthead__title">
-        {parts.map((p) => (p.emphasis ? <em>{p.text}</em> : p.text))}
-      </h1>
-      <p class="about-masthead__intro">{hero.intro}</p>
-      <div class="about-masthead__actions">
-        <a href={hero.ctaPrimary.href} class="tr-cta tr-cta--gold">{hero.ctaPrimary.label}</a>
-        {hero.ctaGhost && (
-          <a href={hero.ctaGhost.href} class="tr-cta about-masthead__ghost">{hero.ctaGhost.label}</a>
-        )}
-      </div>
+  <div class="about-masthead__copy">
+    {hero.eyebrow && <p class="tr-eyebrow about-masthead__eyebrow">{hero.eyebrow}</p>}
+    <h1 id="about-title" class="about-masthead__title">
+      {parts.map((p) => (p.emphasis ? <em>{p.text}</em> : p.text))}
+    </h1>
+    <p class="about-masthead__intro">{hero.intro}</p>
+
+    <div class="about-masthead__actions">
+      <a href={hero.ctaPrimary.href} class="tr-cta tr-cta--gold">{hero.ctaPrimary.label}</a>
+      {hero.ctaGhost && (
+        <a href={hero.ctaGhost.href} class="tr-cta about-masthead__ghost">{hero.ctaGhost.label}</a>
+      )}
     </div>
 
     {record.length > 0 && (
-      <aside class="about-plaque" aria-label="The record">
-        <span class="tr-mark about-plaque__mark" aria-hidden="true">
-          <span></span>
-          <span class="tr-mark__pair"><span></span><span></span></span>
-        </span>
-        <dl class="about-plaque__rows">
-          {record.map((row) => (
-            <div class="about-plaque__row">
-              <dt>{row.label}</dt>
-              <dd>{row.value}</dd>
-            </div>
-          ))}
-        </dl>
-      </aside>
+      <dl class="about-record" aria-label="The record">
+        {record.map((row) => (
+          <div class="about-record__cell">
+            <dt>{row.label}</dt>
+            <dd>{row.value}</dd>
+          </div>
+        ))}
+      </dl>
     )}
   </div>
+
+  <figure class="about-masthead__figure">
+    <img
+      src={urlFor(hero.image).width(1100).url()}
+      srcset={srcSetFor(hero.image)}
+      sizes="(max-width: 900px) 100vw, 45vw"
+      alt={hero.image.alt ?? ''}
+      width={hero.image.asset?.metadata?.dimensions?.width}
+      height={hero.image.asset?.metadata?.dimensions?.height}
+      style={lqip ? `background-image:url(${lqip});background-size:cover` : undefined}
+      fetchpriority="high"
+      decoding="async"
+    />
+  </figure>
 </section>
 
-<div class="about-plate">
-  <img
-    src={urlFor(hero.image).width(1800).url()}
-    srcset={srcSetFor(hero.image)}
-    sizes="100vw"
-    alt={hero.image.alt ?? ''}
-    width={hero.image.asset?.metadata?.dimensions?.width}
-    height={hero.image.asset?.metadata?.dimensions?.height}
-    style={lqip ? `background-image:url(${lqip});background-size:cover` : undefined}
-    fetchpriority="high"
-    decoding="async"
-  />
-  {/* The strip's ground is translucent green — it only reads over the plate,
-      so it sits inside it rather than after it. */}
+{/* On the item pages this rides the bottom of the hero image; with the image
+    off to one side it needs a solid ground of its own. */}
+<div class="about-trust">
   <TrustStrip items={trust} />
 </div>
