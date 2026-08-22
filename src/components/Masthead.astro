@@ -3,15 +3,11 @@ import type { SiteSettings } from '../lib/types';
 interface Props { site: SiteSettings }
 const { site } = Astro.props;
 ---
+{/* Wordmark first in the DOM as well as on screen: the mobile menu orders
+    these three with `order`, and matching the source order keeps the reading
+    and tab order the same as the visual one. */}
 <header class="masthead">
   <div class="masthead-grid">
-    <nav aria-label="What we lend against">
-      <div class="nav-panel">
-        <a href="/#index" class="tr-navlink">What we lend against</a>
-        <a href="/#how" class="tr-navlink">How it works</a>
-      </div>
-    </nav>
-
     <a href="/" class="tr-wordmark" aria-label={`${site.name} — home`}>
       <img
         class="tr-logo"
@@ -22,6 +18,15 @@ const { site } = Astro.props;
         decoding="async"
       />
     </a>
+
+    <nav aria-label="What we lend against">
+      <div class="nav-panel">
+        <a href="/#index" class="tr-navlink">What we lend against</a>
+        <a href="/#how" class="tr-navlink">How it works</a>
+        <a href="/about" class="tr-navlink">About</a>
+        <a href="/blog" class="tr-navlink">Blog</a>
+      </div>
+    </nav>
 
     <nav aria-label="Trust and contact">
       <div class="nav-panel">
