@@ -3,7 +3,7 @@ import '../styles/faq.css';
 import Base from '../layouts/Base.astro';
 import SectionOpener from '../components/SectionOpener.astro';
 import Faqs from '../components/Faqs.astro';
-import Closing from '../components/about/Closing.astro';
+import ClosingBand from '../components/ClosingBand.astro';
 import { getFaqPage, getSiteSettings } from '../lib/sanity/queries';
 import { breadcrumbSchema, faqSchema } from '../lib/seo';
 
@@ -14,6 +14,8 @@ const origin = Astro.site?.origin ?? '';
    page as a single entity and duplicate blocks compete with each other. */
 const allItems = faq.groups.flatMap((group) => group.items);
 
+const reveal = '.faq-group, .closing-band__inner > *';
+
 const schemas = [
   faqSchema(allItems),
   breadcrumbSchema([
@@ -22,7 +24,7 @@ const schemas = [
   ]),
 ];
 ---
-<Base seo={faq.seo} site={site} schemas={schemas}>
+<Base seo={faq.seo} site={site} schemas={schemas} reveal={reveal}>
   <section class="tr-band tr-band--white">
     <div class="faq-page">
       <header class="faq-page__head">
@@ -40,7 +42,7 @@ const schemas = [
     </div>
   </section>
 
-  <Closing closing={faq.closing} site={site} />
+  <ClosingBand closing={faq.closing} site={site} />
 
   <script>
     import '../scripts/faqs.js';

@@ -56,3 +56,25 @@ test('trust and security is empty on purpose and says so', () => {
   // It has to point somewhere useful — the masthead links to it.
   assert.match(html, /href="\/faq"/, 'no route out of the empty page');
 });
+
+test('the closing band is styled on every page that uses it', () => {
+  // ClosingBand.astro is shared by /about and /faq, but its CSS lived in
+  // about.css — which /faq does not import, so the band rendered as unstyled
+  // text on a white page. The styles are in trinity-components.css now, which
+  // every page loads.
+  for (const slug of ['about', 'faq']) {
+    const html = page(slug);
+    assert.ok(html.includes('class="closing-band"'), `${slug}: no closing band`);
+    assert.ok(!html.includes('about-closing'), `${slug}: still on the page-scoped class`);
+  }
+});
+
+test('the accordion can animate', () => {
+  const html = page('faq');
+  // A hidden attribute cannot be transitioned. Open state is an attribute on
+  // the item and the panel animates its grid row, so both have to be present.
+  assert.ok(!/class="faq-a"[^>]*hidden/.test(html), 'the answer is still hidden-attribute driven');
+  assert.equal(count(html, /class="faq-panel"/g), 24, 'every answer needs its animated panel');
+  // The toggle is drawn in CSS; a typed +/- cannot be transitioned.
+  assert.ok(!/class="faq-toggle"[^>]*>[+\u2212]/.test(html), 'the toggle is still a typed character');
+});

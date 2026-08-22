@@ -27,8 +27,8 @@
 /* On a page that is nothing but questions, the item-page heading size is too
    loud for twenty-four of them in a row. */
 .faq-page .faq-q > span:first-child { font: 600 var(--tr-h4) var(--tr-font-display); }
-.faq-page .faq-toggle { font-size: 26px; }
-.faq-page .faq-q { padding: 18px 4px; }
+.faq-page .faq-q { padding: 18px 8px; }
+.faq-page .faq-toggle { width: 14px; height: 14px; }
 .faq-page .faq-a { padding-bottom: 20px; }
 
 @media (max-width: 620px) {

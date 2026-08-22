@@ -1,18 +1,21 @@
 ---
-import type { ClosingSection, SiteSettings } from '../../lib/types';
+import type { ClosingSection, SiteSettings } from '../lib/types';
 
 interface Props { closing?: ClosingSection; site: SiteSettings }
 const { closing, site } = Astro.props;
 ---
+{/* Shared by /about and /faq, so its styles live in trinity-components.css.
+    They were in about.css, which /faq does not load — the band rendered as
+    unstyled text on a white page. */}
 {closing && (
-  <section class="about-closing">
-    <div class="about-closing__inner">
+  <section class="closing-band">
+    <div class="closing-band__inner">
       {closing.eyebrow && <p class="tr-eyebrow tr-eyebrow--on-green">{closing.eyebrow}</p>}
       <h2 class="tr-h2 tr-h2--on-green">{closing.heading}</h2>
-      {closing.intro && <p class="about-closing__intro">{closing.intro}</p>}
+      {closing.intro && <p class="closing-band__intro">{closing.intro}</p>}
       {closing.cta && <a href={closing.cta.href} class="tr-cta tr-cta--gold">{closing.cta.label}</a>}
       {closing.contactPrefix && (
-        <p class="about-closing__contact">
+        <p class="closing-band__contact">
           {closing.contactPrefix}{' '}
           <a href={`tel:${site.phoneHref}`}>{site.phone}</a>
           {closing.contactSuffix ? ` — ${closing.contactSuffix}` : ''}

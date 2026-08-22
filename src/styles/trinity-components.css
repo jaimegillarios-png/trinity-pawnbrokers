@@ -384,8 +384,8 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
   line-height: 14.1px;
 }
 
-/* ========================= FAQs ========================= */
-/* Faqs.astro is shared between the item pages and /faq, so its styles live
+/* ========================= FAQs =========================
+   Faqs.astro is shared between the item pages and /faq, so its styles live
    with the shared components rather than in one page's stylesheet. */
 .faq-list { display: flex; flex-direction: column; border-top: 1px solid var(--tr-line-table); }
 .faq-item { border-bottom: 1px solid var(--tr-line); }
@@ -394,17 +394,94 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
   justify-content: space-between;
   align-items: center;
   gap: 20px;
-  width: 100%;
   background: none;
   border: none;
-  padding: 22px 4px;
   cursor: pointer;
   text-align: left;
+  /* The hover state is the whole row, so the button is pulled out past the
+     text column and given the width back — the tint reaches past the edges of
+     the list rather than stopping at the first and last character. The 8/-8
+     pair puts the question text back on the list's own left edge, level with
+     the group title above it and the answer below. */
+  padding: 22px 8px;
+  margin-inline: -8px;
+  width: calc(100% + 16px);
+  border-radius: var(--tr-radius);
+  transition: background 0.2s ease;
 }
-.faq-q > span:first-child { font: 600 var(--tr-h3) var(--tr-font-display); color: var(--tr-green-vault); text-wrap: pretty; }
-.faq-toggle { font: 400 32px/1 var(--tr-font-display); color: var(--tr-gold-deep); flex-shrink: 0; }
-.faq-a { font: 400 var(--tr-body) var(--tr-font-body); color: var(--tr-ink-72); margin: 0; padding: 0 4px 24px; max-width: 64ch; }
-.faq-a[hidden] { display: none; }
+.faq-q:hover,
+.faq-q:focus-visible { background: var(--tr-neutral); }
+.faq-q > span:first-child {
+  font: 600 var(--tr-h3) var(--tr-font-display);
+  color: var(--tr-green-vault);
+  text-wrap: pretty;
+  transition: color 0.2s ease;
+}
+.faq-q:hover > span:first-child,
+.faq-q:focus-visible > span:first-child { color: var(--tr-gold-deep); }
+.faq-item[data-open] .faq-q > span:first-child { color: var(--tr-green-vault); }
+
+/* ---- the toggle ----
+   Two bars rather than a typed +/−: a character swap cannot be transitioned,
+   and the vertical bar rotating flat is the whole animation. */
+.faq-toggle {
+  position: relative;
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+.faq-toggle::before,
+.faq-toggle::after {
+  content: '';
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1.5px;
+  background: var(--tr-gold-deep);
+  transform: translateY(-50%);
+  transition: transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1), background 0.2s ease;
+}
+.faq-toggle::after { transform: translateY(-50%) rotate(90deg); }
+.faq-item[data-open] .faq-toggle::after { transform: translateY(-50%) rotate(0deg); }
+.faq-q:hover .faq-toggle::before,
+.faq-q:hover .faq-toggle::after { background: var(--tr-green-leaf); }
+
+/* ---- the panel ----
+   height cannot be transitioned from auto, so the grid row is: 0fr to 1fr.
+   The child carries overflow:hidden, which is what actually does the
+   clipping, and visibility takes a closed answer out of the accessibility
+   tree the way the hidden attribute used to — but only once it has finished
+   animating out. */
+.faq-panel {
+  display: grid;
+  /* minmax(0, …), not a bare 0fr: an fr track carries an automatic minimum of
+     its content's min-content size, so a bare 0fr left every closed answer
+     20px tall. */
+  grid-template-rows: minmax(0, 0fr);
+  transition: grid-template-rows 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.faq-item[data-open] .faq-panel { grid-template-rows: minmax(0, 1fr); }
+.faq-panel > * {
+  overflow: hidden;
+  /* Without this the 0fr row still resolves to the paragraph's min-content
+     height and a closed answer leaves a 20px gap under every question. */
+  min-height: 0;
+  visibility: hidden;
+  transition: visibility 0s linear 0.32s, opacity 0.2s ease;
+  opacity: 0;
+}
+.faq-item[data-open] .faq-panel > * {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s linear 0s, opacity 0.28s ease 0.08s;
+}
+.faq-a { font: 400 var(--tr-body) var(--tr-font-body); color: var(--tr-ink-72); margin: 0; padding: 0 0 24px; max-width: 64ch; }
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-panel,
+  .faq-panel > *,
+  .faq-toggle::before,
+  .faq-toggle::after { transition: none; }
+}
 
 
 /* ========================= trust strip ========================= */
@@ -450,6 +527,37 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
   }
   .trust-inner > span { white-space: normal; padding: 13px 0; border-top: 1px solid var(--tr-rule-on-green-2); }
   .trust-inner > span:first-child { border-top: none; }
+}
+
+
+/* ========================= closing band =========================
+   ClosingBand.astro is shared by /about and /faq, so its styles live here
+   rather than in one page's stylesheet. */
+.closing-band { background: var(--tr-green-vault); color: var(--tr-neutral); }
+.closing-band__inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 96px var(--tr-pad-side) 104px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.closing-band__inner .tr-eyebrow { margin-top: 0; }
+.closing-band__intro {
+  color: var(--tr-on-green-strong);
+  max-width: 52ch;
+  margin: 18px 0 34px;
+}
+.closing-band__contact {
+  font: 400 var(--tr-body-sm) var(--tr-font-body);
+  color: var(--tr-on-green);
+  margin: 26px 0 0;
+}
+.closing-band__contact a { color: var(--tr-gold-bright); text-decoration: underline; text-underline-offset: 4px; }
+
+@media (max-width: 620px) {
+  .closing-band__inner { padding: 72px var(--tr-pad-side) 78px; }
 }
 
 

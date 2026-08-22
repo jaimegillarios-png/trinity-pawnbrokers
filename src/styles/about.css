@@ -210,30 +210,6 @@
    border does the separating, as it does in the item-page grids. */
 .about-bench .tr-card { border-color: var(--tr-line-card); }
 
-/* ---------- closing ---------- */
-.about-closing { background: var(--tr-green-vault); color: var(--tr-neutral); }
-.about-closing__inner {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 96px var(--tr-pad-side) 104px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-.about-closing__inner .tr-eyebrow { margin-top: 0; }
-.about-closing__intro {
-  color: var(--tr-on-green-strong);
-  max-width: 52ch;
-  margin: 18px 0 34px;
-}
-.about-closing__contact {
-  font: 400 var(--tr-body-sm) var(--tr-font-body);
-  color: var(--tr-on-green);
-  margin: 26px 0 0;
-}
-.about-closing__contact a { color: var(--tr-gold-bright); text-decoration: underline; text-underline-offset: 4px; }
-
 /* ---------- responsive ---------- */
 @media (max-width: 900px) {
   /* Type first, photograph after — the split stops working once the columns
@@ -260,5 +236,4 @@
   .about-firm__inner { padding: 76px var(--tr-pad-side) 80px; }
   .about-firm__statement,
   .about-firm__note { max-width: none; }
-  .about-closing__inner { padding: 72px var(--tr-pad-side) 78px; }
 }

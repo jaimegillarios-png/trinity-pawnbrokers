@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import AboutHero from '../components/about/AboutHero.astro';
 import Why from '../components/about/Why.astro';
 import OneFirm from '../components/about/OneFirm.astro';
-import Closing from '../components/about/Closing.astro';
+import ClosingBand from '../components/ClosingBand.astro';
 import SectionOpener from '../components/SectionOpener.astro';
 import CardGrid from '../components/CardGrid.astro';
 import { getAboutPage, getSiteSettings } from '../lib/sanity/queries';
@@ -37,7 +37,7 @@ const schemas = [
 ];
 
 const reveal =
-  '.about-why__p, .bench-grid > *, .principle-grid > *, .about-firm__inner > *, .about-closing__inner > *';
+  '.about-why__p, .bench-grid > *, .principle-grid > *, .about-firm__inner > *, .closing-band__inner > *';
 ---
 <Base seo={about.seo} site={site} schemas={schemas} reveal={reveal}>
   <AboutHero hero={about.hero} record={about.record} />
@@ -66,5 +66,5 @@ const reveal =
     </div>
   </section>
 
-  <Closing closing={about.closing} site={site} />
+  <ClosingBand closing={about.closing} site={site} />
 </Base>

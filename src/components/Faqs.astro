@@ -6,14 +6,20 @@ interface Props { items?: FaqItem[]; startClosed?: boolean }
 const { items = [], startClosed = false } = Astro.props;
 ---
 {items.length > 0 && (
-  <div class="faq-list" data-faq-start-closed={startClosed ? "" : undefined}>
-    {items.map((item, i) => (
+  <div class="faq-list" data-faq-start-closed={startClosed ? '' : undefined}>
+    {items.map((item) => (
       <div class="faq-item">
-        <button type="button" class="faq-q" aria-expanded={i === 0 ? 'true' : 'false'}>
+        <button type="button" class="faq-q" aria-expanded="false">
           <span>{item.q}</span>
-          <span class="faq-toggle" aria-hidden="true">{i === 0 ? '−' : '+'}</span>
+          {/* Drawn in CSS, not typed as +/−: two bars can rotate into each
+              other, a swapped character cannot be transitioned. */}
+          <span class="faq-toggle" aria-hidden="true"></span>
         </button>
-        <p class="faq-a">{item.a}<ConfirmChip note={item.chip} /></p>
+        {/* The panel is the animated box; .faq-a is what gets clipped inside
+            it. Height cannot be transitioned from auto, so the grid row is. */}
+        <div class="faq-panel">
+          <p class="faq-a">{item.a}<ConfirmChip note={item.chip} /></p>
+        </div>
       </div>
     ))}
   </div>

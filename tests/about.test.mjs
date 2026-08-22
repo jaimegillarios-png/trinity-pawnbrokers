@@ -16,7 +16,7 @@ test('the about page builds with every section', () => {
     ['Trinity & Unbolted', 'class="about-firm"'],
     ['the bench', 'class="bench-grid"'],
     ['principles', 'class="principle-grid"'],
-    ['closing', 'class="about-closing"'],
+    ['closing band', 'class="closing-band"'],
   ]) {
     assert.ok(html.includes(selector), `no ${name} section`);
   }
