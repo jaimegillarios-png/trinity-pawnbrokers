@@ -21,7 +21,7 @@
 .faq-page__head .tr-h2 { margin-bottom: 18px; }
 .faq-page__head .tr-intro { max-width: 34ch; }
 
-.faq-group + .faq-group { margin-top: 52px; }
+.faq-group + .faq-group { margin-top: 76px; }
 /* Micro-caps rather than another heading at section size: these label four
    short runs inside one page, and at --tr-h2 each would read as a new page. */
 .faq-group__title {
@@ -39,5 +39,5 @@
 }
 @media (max-width: 620px) {
   .faq-page { padding-top: 64px; padding-bottom: 72px; gap: 34px; }
-  .faq-group + .faq-group { margin-top: 44px; }
+  .faq-group + .faq-group { margin-top: 56px; }
 }
