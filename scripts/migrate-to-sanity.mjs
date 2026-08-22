@@ -569,7 +569,7 @@ function buildFaqPage() {
     _id: 'faqPage',
     _type: 'faqPage',
     intro: {
-      eyebrow: 'Frequently asked questions',
+      eyebrow: 'FAQs',
       heading: 'Everything people ask before they send us something',
       intro:
         'Grouped by where you are in the process. If your question is not here, call us — the answer is quicker than the form.',
