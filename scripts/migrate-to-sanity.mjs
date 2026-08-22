@@ -426,7 +426,10 @@ async function buildAboutPage() {
       note:
         'One firm stands behind both: Open Access Finance Ltd, authorised and regulated by the Financial Conduct Authority under reference 741896. Trinity is the counter and the strongroom; Unbolted is the capital and the permission to lend. You deal with Trinity from the valuation to the moment your item comes home.',
       cta: { _type: 'cta', label: 'How your item is protected →', href: '/trust-and-security' },
-      image: await uploadImage('images/v2/gold.jpg', ''),
+      // Not a category shot, and not one used anywhere else: a spotlit gilt
+      // frame on a dark gallery wall. Under the wash it reads as a lit room
+      // holding valuable things, which is what this band is about.
+      image: await uploadImage('images/v4/beat-art.jpg', ''),
     },
 
     bench: {
