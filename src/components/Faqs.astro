@@ -2,11 +2,11 @@
 import type { FaqItem } from '../lib/types';
 import ConfirmChip from './ConfirmChip.astro';
 
-interface Props { items?: FaqItem[] }
-const { items = [] } = Astro.props;
+interface Props { items?: FaqItem[]; startClosed?: boolean }
+const { items = [], startClosed = false } = Astro.props;
 ---
 {items.length > 0 && (
-  <div class="faq-list">
+  <div class="faq-list" data-faq-start-closed={startClosed ? "" : undefined}>
     {items.map((item, i) => (
       <div class="faq-item">
         <button type="button" class="faq-q" aria-expanded={i === 0 ? 'true' : 'false'}>

@@ -1,6 +1,6 @@
 import { query } from './client';
 import type {
-  AssetPage, HomePage, AboutPage, LegalPage, SiteSettings, AssetPageCard, Post, BlogIndex,
+  AssetPage, HomePage, AboutPage, FaqPage, LegalPage, SiteSettings, AssetPageCard, Post, BlogIndex,
 } from '../types';
 
 /** Images always carry their metadata so we can emit dimensions and an LQIP. */
@@ -122,6 +122,24 @@ export const getAboutPage = async (): Promise<AboutPage> => {
     );
   }
   return about;
+};
+
+export const getFaqPage = async (): Promise<FaqPage> => {
+  const faq = await query<FaqPage | null>(`*[_type == "faqPage"][0]{
+    intro ${SECTION_INTRO},
+    groups[] { title, items[] },
+    closing,
+    ${SEO}
+  }`);
+
+  if (!faq) {
+    throw new Error(
+      'No "FAQ page" document found in Sanity.\n' +
+        '  Open the Studio (npm run studio) and fill it in,\n' +
+        '  or run: node scripts/migrate-to-sanity.mjs',
+    );
+  }
+  return faq;
 };
 
 export const getLegalPages = () =>

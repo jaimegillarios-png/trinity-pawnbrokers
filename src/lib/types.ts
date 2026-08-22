@@ -157,6 +157,15 @@ export interface AboutPage {
   seo: Seo;
 }
 
+export interface FaqGroup { title: string; items: FaqItem[] }
+
+export interface FaqPage {
+  intro?: SectionIntro;
+  groups: FaqGroup[];
+  closing?: ClosingSection;
+  seo: Seo;
+}
+
 export interface LegalPage {
   title: string;
   slug: string;

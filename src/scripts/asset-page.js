@@ -93,40 +93,9 @@
   }
 
   /* ---- 4. FAQ accordion — one open at a time ---------------------------- */
-  function initFaqs(list) {
-    if (!list) return;
-    var items = Array.prototype.slice.call(list.querySelectorAll('.faq-item'));
-
-    function setOpen(index) {
-      items.forEach(function (item, i) {
-        var open = i === index;
-        var answer = item.querySelector('.faq-a');
-        var button = item.querySelector('.faq-q');
-        var toggle = item.querySelector('.faq-toggle');
-        answer.hidden = !open;
-        button.setAttribute('aria-expanded', String(open));
-        toggle.textContent = open ? '−' : '+';
-      });
-    }
-
-    items.forEach(function (item, i) {
-      var button = item.querySelector('.faq-q');
-      var answer = item.querySelector('.faq-a');
-      if (!button || !answer) return;
-      if (!answer.id) answer.id = 'faq-a-' + i;
-      button.setAttribute('aria-controls', answer.id);
-      button.addEventListener('click', function () {
-        setOpen(button.getAttribute('aria-expanded') === 'true' ? -1 : i);
-      });
-    });
-
-    setOpen(0); // first answer open by default, matching the design reference
-  }
-
   document.addEventListener('DOMContentLoaded', function () {
     initValuationForm(document.querySelector('[data-valuation-form]'));
     initHowItWorks(document.getElementById('how'));
     initReviewsBadge(document.querySelector('[data-reviews-badge]'));
-    initFaqs(document.querySelector('.faq-list'));
   });
 })();

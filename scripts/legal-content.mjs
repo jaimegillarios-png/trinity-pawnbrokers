@@ -253,52 +253,16 @@ A cookie is a small text file placed on your device when you visit a website. Co
 - The finished wording needs compliance sign-off, like every other policy here.`;
 
 /**
- * Trust & security. Not a legal document — it is the page the masthead and the
- * About page both link to — but the facts come from the same place as the
- * policies: Unbolted's published pawn FAQ.
+ * Trust & security. Deliberately empty.
  *
- * Source: https://unbolted.com/pawn/how-it-works/your-questions/
+ * It was written from Unbolted's pawn FAQ, but that made it a page of claims
+ * about custody, insurance cover and underwriters assembled here rather than
+ * supplied by the business — the wrong way round for the one page whose whole
+ * subject is what happens to someone's property. The facts now live on /faq,
+ * attributed to the FAQ they came from. This page waits for its own wording.
  *
- * Two figures here need checking before this is treated as final: the £25,000
- * standard transit cover, and the underwriter, which the FAQ still names as XL
- * Catlin (now trading as AXA XL).
+ * The masthead links here, so it has to exist and say something honest.
  */
-export const TRUST = `${RELATIONSHIP}
+export const TRUST = `This page is not written yet.
 
-Your item is the whole of the security for a Trinity loan, so what happens to it while we hold it matters more than anything else on this site. This is the full account.
-
-## Getting your item to us
-
-Small items travel by Royal Mail Special Delivery, free and fully insured, on a label we send you. The parcel is tracked the whole way, and it is signed for and opened on camera at our end.
-
-Larger or fragile items — a canvas, a canteen of silver, a piece of furniture — are collected by a specialist logistics company instead. You can also bring an item to the City of London office by appointment.
-
-If you are packing an item yourself: use a rigid box, wrap each piece separately, leave at least two inches of packaging between the item and the outer walls of the box, and tape it well.
-
-## Insurance
-
-Your item is insured in transit and for the whole time we hold it, at no cost to you.
-
-Cover runs up to the full indicative valuation, or the final valuation once that is agreed. Standard cover extends to £25,000; higher cover for a more valuable item is arranged on request, before you send anything.
-
-## Where your item is kept
-
-Items are held either on site or at a partner's secured facility, and they are insured throughout. Nothing is worn, used, displayed or lent out. It sits where you left it until you redeem it.
-
-## How your item is valued
-
-A valuation is an estimate of realisable secondary market value, judged by a specialist in that category. That is not the same as what you paid for the item, and it is not the same as an insurance valuation — both are usually higher.
-
-Most valuations are completed within four working hours of your item arriving, and an offer usually follows within three hours of an in-house valuation.
-
-A final valuation will not come in below the indicative one unless the description or the photographs you gave us missed a fact, a defect or a feature that changes what the item is.
-
-## Getting your item back
-
-When you repay, your item is returned by free, fully insured courier. If it has been held in house, you can collect it by appointment instead.
-
-## If you cannot repay
-
-If a loan is not repaid or renewed at the end of its term, the pledged item is sold to recover what is owed. Anything left over once the loan and the costs of sale are settled is returned to you by bank transfer.
-
-A default is not reported to any credit reference agency. Your item is the security, so there is nothing to report.`;
+Trinity's account of how an item is received, valued, insured, stored and returned belongs here, in the firm's own words and signed off by compliance. The facts are on the [frequently asked questions](/faq) page in the meantime.`;

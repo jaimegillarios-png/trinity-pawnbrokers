@@ -1,0 +1,48 @@
+---
+import '../styles/faq.css';
+import Base from '../layouts/Base.astro';
+import SectionOpener from '../components/SectionOpener.astro';
+import Faqs from '../components/Faqs.astro';
+import Closing from '../components/about/Closing.astro';
+import { getFaqPage, getSiteSettings } from '../lib/sanity/queries';
+import { breadcrumbSchema, faqSchema } from '../lib/seo';
+
+const [faq, site] = await Promise.all([getFaqPage(), getSiteSettings()]);
+const origin = Astro.site?.origin ?? '';
+
+/* One FAQPage block for the whole page, not one per group — Google reads the
+   page as a single entity and duplicate blocks compete with each other. */
+const allItems = faq.groups.flatMap((group) => group.items);
+
+const schemas = [
+  faqSchema(allItems),
+  breadcrumbSchema([
+    { name: 'Home', url: `${origin}/` },
+    { name: 'FAQ', url: `${origin}/faq` },
+  ]),
+];
+---
+<Base seo={faq.seo} site={site} schemas={schemas}>
+  <section class="tr-band tr-band--white">
+    <div class="faq-page">
+      <header class="faq-page__head">
+        <SectionOpener intro={faq.intro} />
+      </header>
+
+      {faq.groups.map((group) => (
+        <section class="faq-group">
+          <h2 class="faq-group__title">{group.title}</h2>
+          {/* Four groups each opening an answer would push the last one off
+              the screen, so this page starts closed. */}
+          <Faqs items={group.items} startClosed />
+        </section>
+      ))}
+    </div>
+  </section>
+
+  <Closing closing={faq.closing} site={site} />
+
+  <script>
+    import '../scripts/faqs.js';
+  </script>
+</Base>

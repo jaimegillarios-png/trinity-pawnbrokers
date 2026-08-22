@@ -384,6 +384,29 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
   line-height: 14.1px;
 }
 
+/* ========================= FAQs ========================= */
+/* Faqs.astro is shared between the item pages and /faq, so its styles live
+   with the shared components rather than in one page's stylesheet. */
+.faq-list { display: flex; flex-direction: column; border-top: 1px solid var(--tr-line-table); }
+.faq-item { border-bottom: 1px solid var(--tr-line); }
+.faq-q {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 22px 4px;
+  cursor: pointer;
+  text-align: left;
+}
+.faq-q > span:first-child { font: 600 var(--tr-h3) var(--tr-font-display); color: var(--tr-green-vault); text-wrap: pretty; }
+.faq-toggle { font: 400 32px/1 var(--tr-font-display); color: var(--tr-gold-deep); flex-shrink: 0; }
+.faq-a { font: 400 var(--tr-body) var(--tr-font-body); color: var(--tr-ink-72); margin: 0; padding: 0 4px 24px; max-width: 64ch; }
+.faq-a[hidden] { display: none; }
+
+
 /* ========================= trust strip ========================= */
 /* TrustStrip.astro is shared, so its styles live with the shared components.
    The translucent ground only reads over a hero image — the strip has to sit

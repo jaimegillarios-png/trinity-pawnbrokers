@@ -1,0 +1,38 @@
+/* ============================================================
+   FAQ page
+   The accordion itself is a shared component — see the FAQs block
+   in trinity-components.css. This file is the page around it.
+   ============================================================ */
+
+.faq-page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: var(--tr-section-top) var(--tr-pad-side) var(--tr-section-bottom);
+}
+.faq-page__head { margin-bottom: 56px; }
+.faq-page__head .tr-eyebrow { margin-top: 0; }
+.faq-page__head .tr-intro { max-width: 56ch; }
+
+.faq-group + .faq-group { margin-top: 56px; }
+/* Micro-caps rather than another h2 at section size: these label four short
+   runs inside one page, and at --tr-h2 they would each read as a new page. */
+.faq-group__title {
+  font: 500 var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
+  text-transform: uppercase;
+  color: var(--tr-gold-deep);
+  margin: 0 0 18px;
+}
+
+/* On a page that is nothing but questions, the item-page heading size is too
+   loud for twenty-four of them in a row. */
+.faq-page .faq-q > span:first-child { font: 600 var(--tr-h4) var(--tr-font-display); }
+.faq-page .faq-toggle { font-size: 26px; }
+.faq-page .faq-q { padding: 18px 4px; }
+.faq-page .faq-a { padding-bottom: 20px; }
+
+@media (max-width: 620px) {
+  .faq-page { padding-top: 64px; padding-bottom: 72px; }
+  .faq-page__head { margin-bottom: 40px; }
+  .faq-group + .faq-group { margin-top: 44px; }
+}

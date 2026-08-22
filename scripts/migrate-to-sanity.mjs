@@ -23,6 +23,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 import { PRIVACY, TERMS, COMPLAINTS, COOKIES, TRUST } from './legal-content.mjs';
+import { FAQ_GROUPS } from './faq-content.mjs';
 
 const DRY = process.argv.includes('--dry-run');
 
@@ -505,15 +506,34 @@ async function buildAboutPage() {
 function mdToBlocks(md, prefix) {
   const blocks = [];
   let n = 0;
+
+  /** Splits "see the [FOS](https://…) page" into spans plus their markDefs. */
+  const inline = (text, key) => {
+    const children = [];
+    const markDefs = [];
+    const re = /\[([^\]]+)\]\(([^)]+)\)/g;
+    let at = 0;
+    let m;
+    let i = 0;
+    while ((m = re.exec(text)) !== null) {
+      if (m.index > at) {
+        children.push({ _key: `${key}s${i++}`, _type: 'span', marks: [], text: text.slice(at, m.index) });
+      }
+      const mark = `${key}l${markDefs.length}`;
+      markDefs.push({ _key: mark, _type: 'link', href: m[2] });
+      children.push({ _key: `${key}s${i++}`, _type: 'span', marks: [mark], text: m[1] });
+      at = m.index + m[0].length;
+    }
+    if (at < text.length) {
+      children.push({ _key: `${key}s${i++}`, _type: 'span', marks: [], text: text.slice(at) });
+    }
+    return { children, markDefs };
+  };
+
   const push = (style, text, listItem) => {
     const key = `${prefix}${n++}`;
-    const block = {
-      _key: key,
-      _type: 'block',
-      style,
-      markDefs: [],
-      children: [{ _key: `${key}s`, _type: 'span', marks: [], text }],
-    };
+    const { children, markDefs } = inline(text, key);
+    const block = { _key: key, _type: 'block', style, markDefs, children };
     if (listItem) { block.listItem = listItem; block.level = 1; }
     blocks.push(block);
   };
@@ -540,6 +560,47 @@ function mdToBlocks(md, prefix) {
  * compliance sign-off; the three sourced pages are indexable because they are
  * already public policy, the cookie placeholder is not.
  */
+/**
+ * The FAQ page. Content comes from the pawn FAQ the same firm publishes as
+ * Unbolted — see faq-content.mjs for the source and the caveats.
+ */
+function buildFaqPage() {
+  return {
+    _id: 'faqPage',
+    _type: 'faqPage',
+    intro: {
+      eyebrow: 'Frequently asked questions',
+      heading: 'Everything people ask before they send us something',
+      intro:
+        'Grouped by where you are in the process. If your question is not here, call us — the answer is quicker than the form.',
+    },
+    groups: keyed(
+      FAQ_GROUPS.map((group) => ({
+        _type: 'faqGroup',
+        title: group.title,
+        items: keyed(group.items.map((item) => ({ _type: 'faqItem', ...item })), 'q'),
+      })),
+      'faqgroup',
+    ),
+    closing: {
+      _type: 'closingSection',
+      eyebrow: 'Still not sure?',
+      heading: 'Ask us before you send anything',
+      intro:
+        'No question is too small, and nothing you ask commits you to anything. A specialist would rather answer it now than have your item arrive packed badly.',
+      cta: { _type: 'cta', label: 'Value your item', href: '/#index' },
+      contactPrefix: 'Or speak to a specialist on',
+      contactSuffix: 'weekdays, 9am to 6pm.',
+    },
+    seo: {
+      _type: 'seo',
+      title: 'Pawn loan FAQs | Trinity Pawnbrokers',
+      description:
+        'How much you can borrow, how quickly the money arrives, what a valuation reflects, how your item travels and where it is kept. Answered in full.',
+    },
+  };
+}
+
 const TODAY = new Date().toISOString().slice(0, 10);
 
 function legalPages() {
@@ -582,6 +643,7 @@ function legalPages() {
         'How your item travels to us, what it is insured for, where it is kept, and how it comes back.',
       updatedAt: TODAY,
       body: TRUST,
+      noIndex: true,
     },
   ];
 
@@ -928,6 +990,7 @@ const docs = [
   await buildSiteSettings(),
   await buildHomePage(),
   await buildAboutPage(),
+  buildFaqPage(),
   ...(await blogSeed()),
   ...legalPages(),
 ];
