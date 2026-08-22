@@ -36,6 +36,11 @@ const schemas = [
         {faq.intro?.eyebrow && <p class="tr-eyebrow">{faq.intro.eyebrow}</p>}
         <h1 class="tr-h2">{faq.intro?.heading ?? 'FAQs'}</h1>
         {faq.intro?.intro && <p class="tr-intro">{faq.intro.intro}</p>}
+        {faq.contactCta && (
+          <a href={faq.contactCta.href} class="tr-cta faq-page__contact">
+            {faq.contactCta.label}
+          </a>
+        )}
       </header>
 
       <div class="faq-page__body">

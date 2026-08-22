@@ -35,6 +35,14 @@ export const faqPage = defineType({
       ],
       validation: (r) => r.required().min(1),
     }),
+    defineField({
+      name: 'contactCta',
+      title: 'Contact link',
+      description:
+        'Sits under the standfirst, for anyone whose question is not on the page. Point it at /contact once that page exists; until then it dials the office.',
+      type: 'cta',
+      group: 'content',
+    }),
     defineField({ name: 'closing', type: 'closingSection', group: 'content' }),
     defineField({ name: 'seo', type: 'seo', group: 'seo', validation: (r) => r.required() }),
   ],

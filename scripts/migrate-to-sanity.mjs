@@ -576,6 +576,10 @@ function buildFaqPage() {
       intro:
         'Grouped by where you are in the process. If your question is not here, call us — the answer is quicker than the form.',
     },
+    // Points at the phone because /contact does not exist yet. Repoint the
+    // href the moment it does — the label already reads as if it goes there.
+    contactCta: { _type: 'cta', label: 'Contact us', href: 'tel:+442035671300' },
+
     groups: keyed(
       FAQ_GROUPS.map((group) => ({
         _type: 'faqGroup',

@@ -161,6 +161,7 @@ export interface FaqGroup { title: string; items: FaqItem[] }
 
 export interface FaqPage {
   intro?: SectionIntro;
+  contactCta?: Cta;
   groups: FaqGroup[];
   closing?: ClosingSection;
   seo: Seo;

@@ -20,6 +20,23 @@
 .faq-page__head .tr-eyebrow { margin-top: 0; }
 .faq-page__head .tr-h2 { margin-bottom: 18px; }
 .faq-page__head .tr-intro { max-width: 34ch; }
+/* Outlined rather than gold: the gold button belongs to the closing band at
+   the foot of the page, and two of them on one screen would compete.
+   Scoped to the header because .tr-cta sets `border: none` — a bare class
+   here ties it on specificity and then loses on stylesheet order. */
+.faq-page__head .faq-page__contact {
+  display: inline-block;
+  margin-top: 26px;
+  color: var(--tr-ink);
+  background: transparent;
+  border: 1px solid var(--tr-line-strong);
+  padding: 15px 26px;
+}
+.faq-page__head .faq-page__contact:hover {
+  border-color: var(--tr-green-vault);
+  background: var(--tr-green-vault);
+  color: var(--tr-neutral);
+}
 
 .faq-group + .faq-group { margin-top: 76px; }
 /* Micro-caps rather than another heading at section size: these label four

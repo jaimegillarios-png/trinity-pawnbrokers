@@ -127,6 +127,7 @@ export const getAboutPage = async (): Promise<AboutPage> => {
 export const getFaqPage = async (): Promise<FaqPage> => {
   const faq = await query<FaqPage | null>(`*[_type == "faqPage"][0]{
     intro ${SECTION_INTRO},
+    contactCta,
     groups[] { title, items[] },
     closing,
     ${SEO}
