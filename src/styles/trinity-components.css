@@ -470,7 +470,16 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
   opacity: 1;
   transition: visibility 0s linear 0s, opacity 0.28s ease 0.08s;
 }
-.faq-a { font: 400 var(--tr-body) var(--tr-font-body); color: var(--tr-ink-72); margin: 0; padding: 0 0 24px; max-width: 64ch; }
+/* The top padding is the gap between a question and its answer. Without it
+   the answer starts flush against the bottom of the hover tint, and the two
+   read as one block rather than as a question and its reply. */
+.faq-a {
+  font: 400 var(--tr-body) var(--tr-font-body);
+  color: var(--tr-ink-72);
+  margin: 0;
+  padding: 10px 0 30px;
+  max-width: 64ch;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .faq-panel,
