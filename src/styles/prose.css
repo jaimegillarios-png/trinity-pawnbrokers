@@ -6,6 +6,24 @@
    this reads as the same publication as the rest of the site.
    ========================================================================== */
 
+/* ---------- legal page column ----------
+   The heading, the date and the body share one column, and that column is
+   centred on the page. Before this the wrapper was .tr-inner--narrow at 860px
+   while .tr-prose capped itself at 62ch (568px) with no auto margins, so the
+   text hung against the left of a container 292px wider than itself and the
+   whole page read as off-centre. One measure, set here, fixes both. */
+.legal-page {
+  /* Content-box: there is no global border-box reset, so the side padding sits
+     outside this figure. 580px is the measure, near the 62ch .tr-prose used to
+     cap itself at. */
+  max-width: 580px;
+  margin: 0 auto;
+  padding: var(--tr-section-top) var(--tr-pad-side) var(--tr-section-bottom);
+}
+/* The column above is already the measure; a second cap inside it would put
+   the body back out of line with its own heading. */
+.legal-page .tr-prose { max-width: none; }
+
 .tr-prose {
   /* A comfortable measure. The rest of the site sets 64ch for intros; running
      body copy wants slightly less. */
