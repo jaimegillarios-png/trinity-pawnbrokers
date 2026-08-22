@@ -22,6 +22,8 @@ import { resolve, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+import { PRIVACY, TERMS, COMPLAINTS, COOKIES, TRUST } from './legal-content.mjs';
+
 const DRY = process.argv.includes('--dry-run');
 
 const projectId = process.env.PUBLIC_SANITY_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID;
@@ -426,10 +428,15 @@ async function buildAboutPage() {
       note:
         'One firm stands behind both: Open Access Finance Ltd, authorised and regulated by the Financial Conduct Authority under reference 741896. Trinity is the counter and the strongroom; Unbolted is the capital and the permission to lend. You deal with Trinity from the valuation to the moment your item comes home.',
       cta: { _type: 'cta', label: 'How your item is protected →', href: '/trust-and-security' },
-      // Not a category shot, and not one used anywhere else: a spotlit gilt
-      // frame on a dark gallery wall. Under the wash it reads as a lit room
-      // holding valuable things, which is what this band is about.
-      image: await uploadImage('images/v4/beat-art.jpg', ''),
+      // Sourced rather than reused. Every photograph already in the repo is
+      // one of the seven category product shots — each stored under three or
+      // four paths (images/cards, images/hero, images/v2, images/v4), so the
+      // "unused" files are the same gold, watch, silver, jewellery, handbag,
+      // diamond and painting that are already on an item page and in the
+      // homepage grid. A wall of brass deposit boxes is custody itself, and
+      // its warmth sits with the gold palette rather than against it.
+      // See images/about/CREDITS.md for the source and licence.
+      image: await uploadImage('images/about/deposit-boxes.jpg', ''),
     },
 
     bench: {
@@ -489,47 +496,111 @@ async function buildAboutPage() {
   };
 }
 
-function legalStubs() {
+/**
+ * Turns the markdown in legal-content.mjs into Portable Text. Deliberately
+ * small: the legal copy only uses headings, paragraphs and lists, and a full
+ * markdown parser would be a dependency to keep current for no gain. Anything
+ * it does not recognise stays a paragraph rather than silently vanishing.
+ */
+function mdToBlocks(md, prefix) {
+  const blocks = [];
+  let n = 0;
+  const push = (style, text, listItem) => {
+    const key = `${prefix}${n++}`;
+    const block = {
+      _key: key,
+      _type: 'block',
+      style,
+      markDefs: [],
+      children: [{ _key: `${key}s`, _type: 'span', marks: [], text }],
+    };
+    if (listItem) { block.listItem = listItem; block.level = 1; }
+    blocks.push(block);
+  };
+
+  for (const raw of md.split('\n')) {
+    const line = raw.trim();
+    if (!line) continue;
+    if (line.startsWith('### ')) push('h3', line.slice(4));
+    else if (line.startsWith('## ')) push('h2', line.slice(3));
+    else if (line.startsWith('- ')) push('normal', line.slice(2), 'bullet');
+    else if (/^\d+\.\s/.test(line)) push('normal', line.replace(/^\d+\.\s/, ''), 'number');
+    else push('normal', line);
+  }
+  return blocks;
+}
+
+/**
+ * The legal pages. Privacy, terms and complaints are the policies Open Access
+ * Finance Ltd already publishes as Unbolted — the same firm and the same FCA
+ * permission, so they are the ones that govern a Trinity loan. Cookies has no
+ * published source and stays an openly-marked placeholder.
+ *
+ * `review: true` keeps a page out of search. Everything here still needs
+ * compliance sign-off; the three sourced pages are indexable because they are
+ * already public policy, the cookie placeholder is not.
+ */
+const TODAY = new Date().toISOString().slice(0, 10);
+
+function legalPages() {
   const pages = [
-    ['privacy', 'Privacy policy', 'How we collect, use and protect personal information.'],
-    ['terms', 'Terms of business', 'The terms on which Trinity provides pawn loans.'],
-    ['cookies', 'Cookie policy', 'What we store on your device, and why.'],
-    ['complaints', 'Complaints procedure', 'How to complain, and what happens next.'],
-    ['trust-and-security', 'Trust & security', 'How your item is valued, insured and stored.'],
+    {
+      slug: 'privacy',
+      title: 'Privacy policy',
+      description:
+        'How Open Access Finance Ltd collects, uses and protects your personal information.',
+      updatedAt: '2018-05-17',
+      body: PRIVACY,
+    },
+    {
+      slug: 'terms',
+      title: 'Terms of business',
+      description: 'The terms on which this website is made available to you.',
+      updatedAt: '2018-05-17',
+      body: TERMS,
+    },
+    {
+      slug: 'complaints',
+      title: 'Complaints procedure',
+      description:
+        'How to complain, what happens next, and how to refer a complaint to the Financial Ombudsman Service.',
+      updatedAt: '2018-05-17',
+      body: COMPLAINTS,
+    },
+    {
+      slug: 'cookies',
+      title: 'Cookie policy',
+      description: 'What we store on your device, and why.',
+      updatedAt: TODAY,
+      body: COOKIES,
+      noIndex: true,
+    },
+    {
+      slug: 'trust-and-security',
+      title: 'Trust & security',
+      description:
+        'How your item travels to us, what it is insured for, where it is kept, and how it comes back.',
+      updatedAt: TODAY,
+      body: TRUST,
+    },
   ];
-  const today = new Date().toISOString().slice(0, 10);
-  return pages.map(([slug, title, description]) => ({
-    _id: `legalPage-${slug}`,
+
+  return pages.map((page) => ({
+    _id: `legalPage-${page.slug}`,
     _type: 'legalPage',
-    title,
-    slug: { _type: 'slug', current: slug },
-    updatedAt: today,
-    body: [
-      {
-        _key: 'placeholder',
-        _type: 'block',
-        style: 'normal',
-        markDefs: [],
-        children: [
-          {
-            _key: 'placeholder0',
-            _type: 'span',
-            marks: [],
-            text:
-              'This page is awaiting its final wording. Replace this text in the Studio before the site goes live.',
-          },
-        ],
-      },
-    ],
+    title: page.title,
+    slug: { _type: 'slug', current: page.slug },
+    updatedAt: page.updatedAt,
+    body: mdToBlocks(page.body, `${page.slug}-`),
     seo: {
       _type: 'seo',
-      title,
-      description,
-      // Kept out of search until the real wording is in.
-      noIndex: true,
+      title: page.title,
+      description: page.description,
+      ...(page.noIndex ? { noIndex: true } : {}),
     },
   }));
 }
+
 
 
 /**
@@ -858,7 +929,7 @@ const docs = [
   await buildHomePage(),
   await buildAboutPage(),
   ...(await blogSeed()),
-  ...legalStubs(),
+  ...legalPages(),
 ];
 for (const [i, file] of ordered.entries()) {
   const mod = await import(pathToFileURL(resolve(dir, file)).href);
