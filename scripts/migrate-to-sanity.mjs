@@ -397,6 +397,16 @@ async function buildAboutPage() {
       ctaGhost: { _type: 'cta', label: 'How a pawn loan works', href: '/#how' },
     },
 
+    record: keyed(
+      [
+        { _type: 'specRow', label: 'Established', value: '2013' },
+        { _type: 'specRow', label: 'Authorised by', value: 'FCA · Ref 741896' },
+        { _type: 'specRow', label: 'Trading as', value: 'Trinity · Unbolted' },
+        { _type: 'specRow', label: 'Where', value: 'City of London' },
+      ],
+      'record',
+    ),
+
     trust: keyed(
       [
         { _type: 'trustItem', text: 'Lending since 2013' },

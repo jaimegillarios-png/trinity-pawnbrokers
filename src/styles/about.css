@@ -5,48 +5,114 @@
    only holds what is particular to this page.
    ============================================================ */
 
-/* ---------- hero ----------
-   Shorter than the item-page hero and centred: there is no form beside it,
-   so a two-column grid would leave half the band empty. */
-.about-hero {
-  position: relative;
-  background: var(--tr-green-vault);
-  color: var(--tr-neutral);
-  overflow: hidden;
-}
-.about-hero__media { position: absolute; inset: 0; }
-.about-hero__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.about-hero__media img { animation: aboutHeroSettle 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
-@keyframes aboutHeroSettle { from { transform: scale(1.06); } to { transform: scale(1); } }
-@media (prefers-reduced-motion: reduce) { .about-hero__media img { animation: none; } }
-
-.about-hero__scrim { position: absolute; inset: 0; pointer-events: none; background: var(--tr-hero-scrim); }
-
-.about-hero__inner {
-  position: relative;
+/* ---------- masthead ----------
+   Warm paper, type first, no photograph behind the words. The rest of the
+   site opens dark-with-a-scrim; this page opens as a letterhead. */
+.about-masthead { background: var(--tr-warm-panel); border-bottom: 1px solid var(--tr-line-soft); }
+.about-masthead__inner {
   max-width: var(--tr-container);
   margin: 0 auto;
-  padding: 104px var(--tr-pad-side) 96px;
+  padding: 88px var(--tr-pad-side) 84px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: var(--tr-gap-col);
+  /* End, not start: the eye runs headline → intro → buttons down the left,
+     and the plaque catches it at the bottom right. Aligned to the top it
+     either floats against the eyebrow or, stretched, opens a hole in its
+     own middle. */
+  align-items: end;
 }
-/* margin-top: 0 — .tr-eyebrow is a <p>, so the UA's 1em top margin would pad
-   the band out by an amount nobody wrote. */
-.about-hero__eyebrow { color: var(--tr-gold-bright); margin-top: 0; }
-.about-hero__title { max-width: 17ch; }
-.about-hero__title span {
-  color: var(--tr-gold-bright);
+
+/* margin-top: 0 — .tr-eyebrow is a <p>, so the UA's 1em top margin would push
+   the band open by an amount nobody wrote. */
+.about-masthead__eyebrow { margin-top: 0; }
+.about-masthead__title {
+  font: 500 var(--tr-display) var(--tr-font-display);
+  color: var(--tr-ink);
+  margin: 0;
+  max-width: 15ch;
+  text-wrap: balance;
+}
+.about-masthead__title em {
   font-style: normal;
+  color: var(--tr-gold-deep);
   text-decoration: underline;
-  text-decoration-color: var(--tr-gold-bright);
+  text-decoration-color: var(--tr-line-gold);
   text-decoration-thickness: 2px;
-  text-underline-offset: 8px;
+  text-underline-offset: 10px;
 }
-.about-hero__intro {
+.about-masthead__intro {
   font: 400 var(--tr-body-lg) var(--tr-font-body);
-  color: var(--tr-on-green-strong);
-  max-width: 58ch;
-  margin: 24px 0 32px;
+  color: var(--tr-ink-72);
+  max-width: 54ch;
+  margin: 30px 0 36px;
 }
-.about-hero__actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.about-masthead__actions { display: flex; gap: 12px; flex-wrap: wrap; }
+/* The shared ghost CTA is drawn for green grounds; on paper it needs ink. */
+.about-masthead__ghost {
+  color: var(--tr-ink);
+  background: transparent;
+  border: 1px solid var(--tr-line-strong);
+  padding: 17px 30px;
+}
+.about-masthead__ghost:hover { border-color: var(--tr-green-vault); background: var(--tr-green-vault); color: var(--tr-neutral); }
+
+/* ---------- the record ----------
+   A plaque, not a card: white, a gold rule across the top, and hairline rows.
+   It carries the facts a regulated lender is judged on, so it reads as a
+   register entry rather than decoration. */
+.about-plaque {
+  background: var(--tr-white);
+  border: 1px solid var(--tr-line);
+  border-top: 2px solid var(--tr-gold-deep);
+  padding: 30px 30px 10px;
+  display: flex;
+  flex-direction: column;
+}
+/* The mark sits at the head like a seal; the rows are pushed to the foot. */
+.about-plaque__mark { margin: 0 auto 20px; }
+.about-plaque__rows { margin: 0; }
+.about-plaque__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 13px 0;
+  border-top: 1px solid var(--tr-line-soft);
+}
+.about-plaque__row:first-child { border-top: 0; padding-top: 0; }
+/* Quieter than the shared microcaps role — these are field names on a plaque,
+   not section labels, and at 12.5px/0.14em the longest of them ("AUTHORISED
+   BY") left the value no room and split it across two lines. */
+.about-plaque__row dt {
+  font: 500 11px/1.3 var(--tr-font-caps);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tr-ink-45);
+  white-space: nowrap;
+}
+.about-plaque__row dd {
+  font: 500 16px/1.3 var(--tr-font-display);
+  color: var(--tr-ink);
+  margin: 0;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ---------- the plate ----------
+   The photograph gets a band of its own, with the trust strip along the
+   bottom edge where its translucent green has something to sit on. */
+.about-plate { position: relative; background: var(--tr-green-vault); overflow: hidden; }
+.about-plate > img {
+  display: block;
+  width: 100%;
+  height: clamp(220px, 27vw, 360px);
+  object-fit: cover;
+  animation: aboutPlate 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+@keyframes aboutPlate { from { transform: scale(1.05); } to { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .about-plate > img { animation: none; } }
+.about-plate .trust { position: absolute; inset: auto 0 0 0; }
 
 /* ---------- why ---------- */
 .about-why__p {
@@ -148,16 +214,25 @@
 .about-closing__contact a { color: var(--tr-gold-bright); text-decoration: underline; text-underline-offset: 4px; }
 
 /* ---------- responsive ---------- */
-@media (max-width: 960px) {
+@media (max-width: 1020px) {
+  .about-masthead__inner { grid-template-columns: minmax(0, 1fr) 300px; gap: 40px; }
+}
+@media (max-width: 860px) {
+  /* The plaque stops being a margin note and becomes a full-width register
+     under the statement. */
+  .about-masthead__inner { grid-template-columns: 1fr; gap: 44px; padding: 72px var(--tr-pad-side) 76px; }
+  .about-masthead__title { max-width: 18ch; }
   .bench-grid { grid-template-columns: repeat(2, 1fr); }
-  .about-hero__inner { padding: 80px var(--tr-pad-side) 72px; }
 }
 @media (max-width: 620px) {
   .bench-grid,
   .principle-grid { grid-template-columns: 1fr; margin-top: 34px; }
-  .about-hero__inner { padding: 60px var(--tr-pad-side) 52px; }
-  .about-hero__title { max-width: none; }
-  .about-hero__actions .tr-cta { flex: 1 1 100%; text-align: center; }
+  .about-masthead__inner { padding: 56px var(--tr-pad-side) 60px; }
+  .about-masthead__title { max-width: none; }
+  .about-masthead__intro { margin: 24px 0 28px; }
+  .about-masthead__actions .tr-cta { flex: 1 1 100%; text-align: center; }
+  /* Stacked, the strip is far too tall to overlay the plate. */
+  .about-plate .trust { position: static; }
   .about-firm__inner { padding: 76px var(--tr-pad-side) 80px; }
   .about-firm__statement { max-width: none; }
   .about-closing__inner { padding: 72px var(--tr-pad-side) 78px; }

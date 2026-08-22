@@ -36,10 +36,11 @@ const schemas = [
   ]),
 ];
 
-const reveal = '.about-why__p, .bench-grid > *, .principle-grid > *, .about-firm__inner > *, .about-closing__inner > *';
+const reveal =
+  '.about-why__p, .bench-grid > *, .principle-grid > *, .about-firm__inner > *, .about-closing__inner > *';
 ---
 <Base seo={about.seo} site={site} schemas={schemas} reveal={reveal}>
-  <AboutHero hero={about.hero} trust={about.trust} />
+  <AboutHero hero={about.hero} record={about.record} trust={about.trust} />
 
   <Why intro={about.why?.intro} paragraphs={about.why?.paragraphs} />
 

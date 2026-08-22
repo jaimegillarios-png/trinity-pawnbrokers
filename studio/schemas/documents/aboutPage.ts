@@ -16,6 +16,16 @@ export const aboutPage = defineType({
   fields: [
     defineField({ name: 'hero', type: 'heroSection', group: 'hero', validation: (r) => r.required() }),
     defineField({
+      name: 'record',
+      title: 'The record',
+      description:
+        'The plaque beside the headline — the establishment facts, four or five rows at most. Anything longer stops reading as a plaque.',
+      type: 'array',
+      of: [defineArrayMember({ type: 'specRow' })],
+      group: 'hero',
+      validation: (r) => r.max(5).warning('The plaque is drawn for up to five rows.'),
+    }),
+    defineField({
       name: 'trust',
       title: 'Trust strip',
       type: 'array',

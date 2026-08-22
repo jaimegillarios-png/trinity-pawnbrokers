@@ -1,46 +1,69 @@
 ---
-import type { HeroSection, TrustItem } from '../../lib/types';
+import type { HeroSection, SpecRow, TrustItem } from '../../lib/types';
 import { urlFor, srcSetFor, lqipFor } from '../../lib/sanity/image';
 import { splitEmphasis } from '../../lib/text';
 import TrustStrip from '../TrustStrip.astro';
 
-interface Props { hero: HeroSection; trust?: TrustItem[] }
-const { hero, trust = [] } = Astro.props;
+interface Props { hero: HeroSection; record?: SpecRow[]; trust?: TrustItem[] }
+const { hero, record = [], trust = [] } = Astro.props;
 const parts = splitEmphasis(hero.heading);
 const lqip = lqipFor(hero.image);
 ---
-{/* Shorter than the item-page hero and with no form beside it — this page is
-    read, not filled in. The trust strip sits inside the section so it keeps
-    the translucent ground that only works over the image. */}
-<section class="about-hero" aria-labelledby="about-title">
-  <div class="about-hero__media">
-    <img
-      src={urlFor(hero.image).width(1600).url()}
-      srcset={srcSetFor(hero.image)}
-      sizes="100vw"
-      alt={hero.image.alt ?? ''}
-      width={hero.image.asset?.metadata?.dimensions?.width}
-      height={hero.image.asset?.metadata?.dimensions?.height}
-      style={lqip ? `background-image:url(${lqip});background-size:cover` : undefined}
-      fetchpriority="high"
-      decoding="async"
-    />
-  </div>
-  <div class="about-hero__scrim"></div>
-
-  <div class="about-hero__inner" data-reveal-hero>
-    {hero.eyebrow && <p class="tr-eyebrow about-hero__eyebrow">{hero.eyebrow}</p>}
-    <h1 id="about-title" class="tr-h1 about-hero__title">
-      {parts.map((p) => (p.emphasis ? <span>{p.text}</span> : p.text))}
-    </h1>
-    <p class="about-hero__intro">{hero.intro}</p>
-    <div class="about-hero__actions">
-      <a href={hero.ctaPrimary.href} class="tr-cta tr-cta--gold">{hero.ctaPrimary.label}</a>
-      {hero.ctaGhost && (
-        <a href={hero.ctaGhost.href} class="tr-cta tr-cta--ghost">{hero.ctaGhost.label}</a>
-      )}
+{/*
+  Every other page opens the same way: a photograph, a scrim, and the headline
+  laid over it. Doing that a ninth time makes the About page read as one more
+  item page. So it is inverted here — the statement comes first on paper, with
+  the establishment record pinned beside it like a plaque, and the photograph
+  follows as its own band with the trust strip along the bottom edge.
+*/}
+<section class="about-masthead" aria-labelledby="about-title">
+  <div class="about-masthead__inner">
+    <div class="about-masthead__copy">
+      {hero.eyebrow && <p class="tr-eyebrow about-masthead__eyebrow">{hero.eyebrow}</p>}
+      <h1 id="about-title" class="about-masthead__title">
+        {parts.map((p) => (p.emphasis ? <em>{p.text}</em> : p.text))}
+      </h1>
+      <p class="about-masthead__intro">{hero.intro}</p>
+      <div class="about-masthead__actions">
+        <a href={hero.ctaPrimary.href} class="tr-cta tr-cta--gold">{hero.ctaPrimary.label}</a>
+        {hero.ctaGhost && (
+          <a href={hero.ctaGhost.href} class="tr-cta about-masthead__ghost">{hero.ctaGhost.label}</a>
+        )}
+      </div>
     </div>
-  </div>
 
-  <TrustStrip items={trust} />
+    {record.length > 0 && (
+      <aside class="about-plaque" aria-label="The record">
+        <span class="tr-mark about-plaque__mark" aria-hidden="true">
+          <span></span>
+          <span class="tr-mark__pair"><span></span><span></span></span>
+        </span>
+        <dl class="about-plaque__rows">
+          {record.map((row) => (
+            <div class="about-plaque__row">
+              <dt>{row.label}</dt>
+              <dd>{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </aside>
+    )}
+  </div>
 </section>
+
+<div class="about-plate">
+  <img
+    src={urlFor(hero.image).width(1800).url()}
+    srcset={srcSetFor(hero.image)}
+    sizes="100vw"
+    alt={hero.image.alt ?? ''}
+    width={hero.image.asset?.metadata?.dimensions?.width}
+    height={hero.image.asset?.metadata?.dimensions?.height}
+    style={lqip ? `background-image:url(${lqip});background-size:cover` : undefined}
+    fetchpriority="high"
+    decoding="async"
+  />
+  {/* The strip's ground is translucent green — it only reads over the plate,
+      so it sits inside it rather than after it. */}
+  <TrustStrip items={trust} />
+</div>
