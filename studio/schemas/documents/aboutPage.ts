@@ -59,6 +59,15 @@ export const aboutPage = defineType({
         }),
         defineField({ name: 'note', type: 'text', rows: 4 }),
         defineField({ name: 'cta', type: 'cta' }),
+        defineField({
+          name: 'image',
+          title: 'Background',
+          description:
+            'Sits behind the band under a heavy dark wash. Pick something low-lit and textural — a bright or busy photograph fights the text rather than backing it.',
+          type: 'image',
+          options: { hotspot: true },
+          fields: [defineField({ name: 'alt', type: 'string' })],
+        }),
       ],
     }),
 

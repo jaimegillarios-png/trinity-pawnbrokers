@@ -150,7 +150,7 @@ export interface AboutPage {
   hero: HeroSection;
   record?: SpecRow[];
   why?: { intro?: SectionIntro; paragraphs?: string[] };
-  oneFirm?: { eyebrow?: string; statement?: string; note?: string; cta?: Cta };
+  oneFirm?: { eyebrow?: string; statement?: string; note?: string; cta?: Cta; image?: SanityImage };
   bench?: { intro?: SectionIntro; disciplines?: IconCard[] };
   principles?: { intro?: SectionIntro; items?: IconCard[] };
   closing?: ClosingSection;

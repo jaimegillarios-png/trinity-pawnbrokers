@@ -107,7 +107,7 @@ export const getAboutPage = async (): Promise<AboutPage> => {
     hero { ..., image ${IMAGE} },
     record[],
     why { intro ${SECTION_INTRO}, paragraphs },
-    oneFirm,
+    oneFirm { ..., image ${IMAGE} },
     bench { intro ${SECTION_INTRO}, disciplines[] },
     principles { intro ${SECTION_INTRO}, items[] },
     closing,

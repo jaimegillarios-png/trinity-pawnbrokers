@@ -122,12 +122,34 @@
 .about-why__p:last-child { margin-bottom: 0; }
 .about-why__p em { font-style: normal; color: var(--tr-gold-deep); }
 
-/* ---------- Trinity & Unbolted ---------- */
-.about-firm { background: var(--tr-green-footer); color: var(--tr-neutral); }
+/* ---------- Trinity & Unbolted ----------
+   A photograph under a heavy wash. The band carries the smallest body text on
+   the page, so the image has to sit well back — it is texture behind the
+   statement, not a picture in its own right. */
+.about-firm {
+  position: relative;
+  background: var(--tr-green-footer);
+  color: var(--tr-neutral);
+  overflow: hidden;
+  isolation: isolate;
+}
+.about-firm__media { position: absolute; inset: 0; z-index: -2; }
+.about-firm__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Two stops rather than a flat fill: slightly clearer at the edges, densest
+   through the middle where the note sits. */
+.about-firm__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(115% 85% at 50% 45%, rgba(11, 29, 20, 0.97) 0%, rgba(11, 29, 20, 0.91) 100%);
+}
 .about-firm__inner {
-  max-width: 820px;
+  position: relative;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 104px var(--tr-pad-side) 110px;
+  padding: 112px var(--tr-pad-side) 118px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -149,7 +171,9 @@
 .about-firm__statement {
   font: 500 var(--tr-quote) var(--tr-font-display);
   color: var(--tr-neutral);
-  max-width: 34ch;
+  /* Set in px, not ch, so the statement and the note below share one measure —
+     two different ch values on two different faces never line up. */
+  max-width: 760px;
   margin: 0;
   text-wrap: pretty;
 }
@@ -158,8 +182,8 @@
 .about-firm__statement em { font-style: normal; color: var(--tr-gold-mid); }
 .about-firm__note {
   font: 400 var(--tr-body-sm) var(--tr-font-body);
-  color: var(--tr-on-green);
-  max-width: 62ch;
+  color: var(--tr-on-green-strong);
+  max-width: 700px;
   margin: 26px 0 0;
 }
 .about-firm__link {
@@ -234,6 +258,7 @@
   /* Two cells a row rather than four in a scrolling line. */
   .about-record__cell { flex: 1 1 44%; border-right: 0; padding-right: 0; margin-right: 0; }
   .about-firm__inner { padding: 76px var(--tr-pad-side) 80px; }
-  .about-firm__statement { max-width: none; }
+  .about-firm__statement,
+  .about-firm__note { max-width: none; }
   .about-closing__inner { padding: 72px var(--tr-pad-side) 78px; }
 }

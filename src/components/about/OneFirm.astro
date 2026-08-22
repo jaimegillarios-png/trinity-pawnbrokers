@@ -1,14 +1,35 @@
 ---
 import { splitEmphasis } from '../../lib/text';
-import type { Cta } from '../../lib/types';
+import { urlFor, srcSetFor } from '../../lib/sanity/image';
+import type { Cta, SanityImage } from '../../lib/types';
 
-interface Props { eyebrow?: string; statement?: string; note?: string; cta?: Cta }
-const { eyebrow, statement, note, cta } = Astro.props;
+interface Props {
+  eyebrow?: string;
+  statement?: string;
+  note?: string;
+  cta?: Cta;
+  image?: SanityImage;
+}
+const { eyebrow, statement, note, cta, image } = Astro.props;
 const parts = statement ? splitEmphasis(statement) : [];
 ---
 {/* Two trading names under one authorisation is the thing customers ask about
-    most, so it gets the green band to itself rather than a footnote. */}
+    most, so it gets a band to itself rather than a footnote. */}
 <section class="about-firm">
+  {image?.asset && (
+    <div class="about-firm__media" aria-hidden="true">
+      <img
+        src={urlFor(image).width(1800).url()}
+        srcset={srcSetFor(image)}
+        sizes="100vw"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  )}
+  <div class="about-firm__scrim" aria-hidden="true"></div>
+
   <div class="about-firm__inner">
     <div class="about-firm__mark" aria-hidden="true">
       <span></span>
