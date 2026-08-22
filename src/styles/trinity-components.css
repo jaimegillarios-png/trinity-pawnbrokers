@@ -611,11 +611,14 @@ section[id], [id].hero-form-card { scroll-margin-top: calc(var(--tr-mast-h, 0px)
 }
 .tr-call:hover { color: var(--tr-green-leaf); }
 
+/* Two bars, the lower one short. Both are flush right so their ends line up
+   with the content padding, which is what the eye reads against the edge. */
 .tr-burger {
   display: none;
   flex-direction: column;
   justify-content: center;
-  gap: 5px;
+  align-items: flex-end;
+  gap: 6px;
   width: 44px;              /* 44px touch target */
   height: 44px;
   padding: 0;
@@ -627,14 +630,18 @@ section[id], [id].hero-form-card { scroll-margin-top: calc(var(--tr-mast-h, 0px)
   display: block;
   width: 22px;
   height: 1.5px;
-  margin: 0 auto;
   background: var(--tr-ink);
-  transition: transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.18s ease;
+  transition:
+    width 0.28s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-/* bars fold into a cross when open */
-[data-nav="open"] .tr-burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-[data-nav="open"] .tr-burger span:nth-child(2) { opacity: 0; }
-[data-nav="open"] .tr-burger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.tr-burger span:nth-child(2) { width: 13px; }
+
+/* Open: the short bar grows to match, and the pair folds into a cross. Bar
+   centres are 7.5px apart (6px gap + 1.5px rule), so each travels half that. */
+[data-nav="open"] .tr-burger span { width: 22px; }
+[data-nav="open"] .tr-burger span:nth-child(1) { transform: translateY(3.75px) rotate(45deg); }
+[data-nav="open"] .tr-burger span:nth-child(2) { transform: translateY(-3.75px) rotate(-45deg); }
 @media (prefers-reduced-motion: reduce) { .tr-burger span { transition: none; } }
 
 /* Tablets get the mobile masthead too: at 1024px the two nav groups, the
