@@ -29,20 +29,26 @@ const schemas = [
       {/* Written out rather than passed to SectionOpener: that component
           renders an h2, and this is the page's own heading. /faq was the only
           page on the site with no h1. */}
+      {/* Written out rather than passed to SectionOpener: that component
+          renders an h2, and this is the page's own heading. /faq was the only
+          page on the site with no h1. */}
       <header class="faq-page__head">
         {faq.intro?.eyebrow && <p class="tr-eyebrow">{faq.intro.eyebrow}</p>}
         <h1 class="tr-h2">{faq.intro?.heading ?? 'FAQs'}</h1>
         {faq.intro?.intro && <p class="tr-intro">{faq.intro.intro}</p>}
       </header>
 
-      {faq.groups.map((group) => (
-        <section class="faq-group">
-          <h2 class="faq-group__title">{group.title}</h2>
-          {/* Four groups each opening an answer would push the last one off
-              the screen, so this page starts closed. */}
-          <Faqs items={group.items} startClosed />
-        </section>
-      ))}
+      <div class="faq-page__body">
+        {faq.groups.map((group) => (
+          <section class="faq-group">
+            <h2 class="faq-group__title">{group.title}</h2>
+            {/* Four groups each opening an answer would push the last one off
+                the screen, so this page starts closed. */}
+            <Faqs items={group.items} startClosed />
+          </section>
+        ))}
+      </div>
+
     </div>
   </section>
 

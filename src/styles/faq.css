@@ -4,18 +4,26 @@
    in trinity-components.css. This file is the page around it.
    ============================================================ */
 
+/* Heading left, the whole run of questions right — the same split the item
+   pages use for their FAQ section. The heading sticks while twenty-four
+   questions scroll past it, so you always know what you are reading. */
 .faq-page {
-  max-width: 880px;
+  max-width: var(--tr-container);
   margin: 0 auto;
   padding: var(--tr-section-top) var(--tr-pad-side) var(--tr-section-bottom);
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: 64px;
+  align-items: start;
 }
-.faq-page__head { margin-bottom: 56px; }
+.faq-page__head { position: sticky; top: 40px; }
 .faq-page__head .tr-eyebrow { margin-top: 0; }
-.faq-page__head .tr-intro { max-width: 56ch; }
+.faq-page__head .tr-h2 { margin-bottom: 18px; }
+.faq-page__head .tr-intro { max-width: 34ch; }
 
-.faq-group + .faq-group { margin-top: 56px; }
-/* Micro-caps rather than another h2 at section size: these label four short
-   runs inside one page, and at --tr-h2 they would each read as a new page. */
+.faq-group + .faq-group { margin-top: 52px; }
+/* Micro-caps rather than another heading at section size: these label four
+   short runs inside one page, and at --tr-h2 each would read as a new page. */
 .faq-group__title {
   font: 500 var(--tr-microcaps-size)/1 var(--tr-font-caps);
   letter-spacing: var(--tr-microcaps-track);
@@ -24,12 +32,12 @@
   margin: 0 0 18px;
 }
 
-/* No size overrides here on purpose: the accordion should read exactly as it
-   does in the FAQ section of the item pages. It is the same component and the
-   same design — this page is just more of it. */
-
+@media (max-width: 960px) {
+  .faq-page { grid-template-columns: 1fr; gap: 44px; }
+  .faq-page__head { position: static; }
+  .faq-page__head .tr-intro { max-width: 56ch; }
+}
 @media (max-width: 620px) {
-  .faq-page { padding-top: 64px; padding-bottom: 72px; }
-  .faq-page__head { margin-bottom: 40px; }
+  .faq-page { padding-top: 64px; padding-bottom: 72px; gap: 34px; }
   .faq-group + .faq-group { margin-top: 44px; }
 }
