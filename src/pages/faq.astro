@@ -1,7 +1,6 @@
 ---
 import '../styles/faq.css';
 import Base from '../layouts/Base.astro';
-import SectionOpener from '../components/SectionOpener.astro';
 import Faqs from '../components/Faqs.astro';
 import ClosingBand from '../components/ClosingBand.astro';
 import { getFaqPage, getSiteSettings } from '../lib/sanity/queries';
@@ -27,8 +26,13 @@ const schemas = [
 <Base seo={faq.seo} site={site} schemas={schemas} reveal={reveal}>
   <section class="tr-band tr-band--white">
     <div class="faq-page">
+      {/* Written out rather than passed to SectionOpener: that component
+          renders an h2, and this is the page's own heading. /faq was the only
+          page on the site with no h1. */}
       <header class="faq-page__head">
-        <SectionOpener intro={faq.intro} />
+        {faq.intro?.eyebrow && <p class="tr-eyebrow">{faq.intro.eyebrow}</p>}
+        <h1 class="tr-h2">{faq.intro?.heading ?? 'FAQs'}</h1>
+        {faq.intro?.intro && <p class="tr-intro">{faq.intro.intro}</p>}
       </header>
 
       {faq.groups.map((group) => (

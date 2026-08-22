@@ -569,8 +569,10 @@ function buildFaqPage() {
     _id: 'faqPage',
     _type: 'faqPage',
     intro: {
-      eyebrow: 'FAQs',
-      heading: 'Everything people ask before they send us something',
+      // No eyebrow: "FAQs" over "Frequently asked questions" was the same
+      // words twice, and the heading is short enough to carry the section
+      // on its own.
+      heading: 'FAQs',
       intro:
         'Grouped by where you are in the process. If your question is not here, call us — the answer is quicker than the form.',
     },

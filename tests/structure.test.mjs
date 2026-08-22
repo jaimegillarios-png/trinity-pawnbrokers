@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { page, ASSET_SLUGS, count, root } from './helpers.mjs';
+import { page, home, ASSET_SLUGS, count, root } from './helpers.mjs';
 
 /**
  * Each section of the item page, asserted by the markup that makes it that
@@ -89,5 +89,16 @@ test('no markup leaks into rendered copy', () => {
     const html = page(slug);
     assert.ok(!/&lt;span|&lt;em|&lt;br/.test(html), `${slug}: escaped HTML is visible in the copy`);
     assert.ok(!/\*[a-z][^*]{2,40}\*/i.test(html), `${slug}: unconverted emphasis markers in the copy`);
+  }
+});
+
+test('every page has exactly one h1', () => {
+  // /faq shipped with none: its heading went through SectionOpener, which
+  // renders an h2 because it is built for sections, not pages.
+  for (const slug of ['index', 'faq', 'about', 'blog', ...ASSET_SLUGS,
+                      'privacy', 'terms', 'cookies', 'complaints', 'trust-and-security']) {
+    const html = slug === 'index' ? home() : page(slug);
+    const count = (html.match(/<h1[\s>]/g) || []).length;
+    assert.equal(count, 1, `${slug} has ${count} h1 elements`);
   }
 });
