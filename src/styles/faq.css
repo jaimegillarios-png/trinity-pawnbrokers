@@ -24,12 +24,9 @@
   margin: 0 0 18px;
 }
 
-/* On a page that is nothing but questions, the item-page heading size is too
-   loud for twenty-four of them in a row. */
-.faq-page .faq-q > span:first-child { font: 600 var(--tr-h4) var(--tr-font-display); }
-.faq-page .faq-q { padding: 18px 8px; }
-.faq-page .faq-toggle { width: 14px; height: 14px; }
-.faq-page .faq-a { padding-bottom: 20px; }
+/* No size overrides here on purpose: the accordion should read exactly as it
+   does in the FAQ section of the item pages. It is the same component and the
+   same design — this page is just more of it. */
 
 @media (max-width: 620px) {
   .faq-page { padding-top: 64px; padding-bottom: 72px; }

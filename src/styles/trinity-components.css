@@ -398,19 +398,15 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
   border: none;
   cursor: pointer;
   text-align: left;
-  /* The hover state is the whole row, so the button is pulled out past the
-     text column and given the width back — the tint reaches past the edges of
-     the list rather than stopping at the first and last character. The 8/-8
-     pair puts the question text back on the list's own left edge, level with
-     the group title above it and the answer below. */
-  padding: 22px 8px;
-  margin-inline: -8px;
-  width: calc(100% + 16px);
-  border-radius: var(--tr-radius);
+  /* Full width, no negative margins: the hover tint is the row, and the row
+     ends where the hairlines above and below it end. Pulling the button out
+     past them left the tint sticking out on both sides. */
+  width: 100%;
+  padding: 22px 4px;
   transition: background 0.2s ease;
 }
 .faq-q:hover,
-.faq-q:focus-visible { background: var(--tr-neutral); }
+.faq-q:focus-visible { background: var(--tr-warm-panel); }
 .faq-q > span:first-child {
   font: 600 var(--tr-h3) var(--tr-font-display);
   color: var(--tr-green-vault);
