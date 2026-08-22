@@ -167,6 +167,25 @@ export interface FaqPage {
   seo: Seo;
 }
 
+export interface ContactChannel {
+  icon?: string;
+  label: string;
+  value: string;
+  href?: string;
+  note?: string;
+}
+
+export interface ContactPointer { title: string; body?: string; cta?: Cta }
+
+export interface ContactPage {
+  intro?: SectionIntro;
+  channels: ContactChannel[];
+  elsewhere?: ContactPointer[];
+  visitIntro?: SectionIntro;
+  mapEmbedUrl?: string;
+  seo: Seo;
+}
+
 export interface LegalPage {
   title: string;
   slug: string;

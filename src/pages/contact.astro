@@ -1,0 +1,96 @@
+---
+import '../styles/contact.css';
+import Base from '../layouts/Base.astro';
+import { getContactPage, getSiteSettings } from '../lib/sanity/queries';
+import { breadcrumbSchema } from '../lib/seo';
+
+const [contact, site] = await Promise.all([getContactPage(), getSiteSettings()]);
+const origin = Astro.site?.origin ?? '';
+
+/* ContactPage points at the organisation rather than restating its details —
+   the address, phone and hours are already on the FinancialService block that
+   Base puts on every page. */
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    '@id': `${origin}/contact#page`,
+    url: `${origin}/contact`,
+    name: contact.seo.title,
+    mainEntity: { '@id': `${origin}/#organisation` },
+    isPartOf: { '@id': `${origin}/#website` },
+  },
+  breadcrumbSchema([
+    { name: 'Home', url: `${origin}/` },
+    { name: 'Contact', url: `${origin}/contact` },
+  ]),
+];
+
+const reveal = '.contact-channel, .contact-pointer';
+---
+<Base seo={contact.seo} site={site} schemas={schemas} reveal={reveal}>
+  <section class="tr-band tr-band--white">
+    <div class="contact-page">
+      <header class="contact-page__head">
+        {contact.intro?.eyebrow && <p class="tr-eyebrow">{contact.intro.eyebrow}</p>}
+        <h1 class="tr-h2">{contact.intro?.heading ?? 'Contact us'}</h1>
+        {contact.intro?.intro && <p class="tr-intro">{contact.intro.intro}</p>}
+      </header>
+
+      <div class="contact-page__body">
+        <ul class="contact-channels">
+          {contact.channels.map((channel) => (
+            <li class="contact-channel">
+              {channel.icon && <i class={`ph-light ${channel.icon} contact-channel__icon`} aria-hidden="true"></i>}
+              <p class="contact-channel__label">{channel.label}</p>
+              <p class="contact-channel__value">
+                {channel.href
+                  ? <a href={channel.href}>{channel.value}</a>
+                  : channel.value}
+              </p>
+              {channel.note && <p class="contact-channel__note">{channel.note}</p>}
+            </li>
+          ))}
+        </ul>
+
+        {contact.elsewhere && contact.elsewhere.length > 0 && (
+          <ul class="contact-pointers">
+            {contact.elsewhere.map((pointer) => (
+              <li class="contact-pointer">
+                <h2 class="contact-pointer__title">{pointer.title}</h2>
+                {pointer.body && <p class="contact-pointer__body">{pointer.body}</p>}
+                {pointer.cta && (
+                  <a href={pointer.cta.href} class="contact-pointer__link">{pointer.cta.label}</a>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  </section>
+
+  {contact.mapEmbedUrl && (
+    <section class="contact-visit">
+      <div class="contact-visit__inner">
+        <div class="contact-visit__copy">
+          {contact.visitIntro?.eyebrow && <p class="tr-eyebrow">{contact.visitIntro.eyebrow}</p>}
+          {contact.visitIntro?.heading && <h2 class="tr-h2">{contact.visitIntro.heading}</h2>}
+          {contact.visitIntro?.intro && <p class="tr-intro">{contact.visitIntro.intro}</p>}
+          <address class="contact-visit__address">
+            {site.address?.street}<br />
+            {[site.address?.locality, site.address?.postcode].filter(Boolean).join(' ')}
+          </address>
+        </div>
+        <div class="contact-visit__map">
+          <iframe
+            src={contact.mapEmbedUrl}
+            title="Map showing Token House Yard, London"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+  )}
+</Base>

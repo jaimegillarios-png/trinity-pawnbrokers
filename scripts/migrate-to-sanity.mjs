@@ -361,6 +361,9 @@ async function buildSiteSettings() {
       postcode: 'EC2R 7AS',
       country: 'GB',
     },
+    // schema.org format, because organisationSchema publishes these verbatim.
+    // Source: unbolted.com/uk/contact-us — the same office and the same firm.
+    openingHours: ['Mo-Th 09:00-17:30', 'Fr 09:00-17:00'],
     fcaReference: '741896',
     legalFooter: (cfg.legal ?? cfg.legalFooter ?? '')
       .replace(/&amp;/g, '&').replace(/&ndash;/g, '–').replace(/&mdash;/g, '—')
@@ -484,7 +487,7 @@ async function buildAboutPage() {
         'Every item page values your item before asking anything of you. No credit check, no obligation, and a confirmed offer within one business day.',
       cta: { _type: 'cta', label: 'Value your item', href: '/#index' },
       contactPrefix: 'Or speak to a specialist on',
-      contactSuffix: 'weekdays, 9am to 6pm.',
+      contactSuffix: 'weekdays, 9am to 5.30pm.',
     },
 
     seo: {
@@ -576,9 +579,7 @@ function buildFaqPage() {
       intro:
         'Grouped by where you are in the process. If your question is not here, call us — the answer is quicker than the form.',
     },
-    // Points at the phone because /contact does not exist yet. Repoint the
-    // href the moment it does — the label already reads as if it goes there.
-    contactCta: { _type: 'cta', label: 'Contact us', href: 'tel:+442035671300' },
+    contactCta: { _type: 'cta', label: 'Contact us', href: '/contact' },
 
     groups: keyed(
       FAQ_GROUPS.map((group) => ({
@@ -596,13 +597,95 @@ function buildFaqPage() {
         'No question is too small, and nothing you ask commits you to anything. A specialist would rather answer it now than have your item arrive packed badly.',
       cta: { _type: 'cta', label: 'Value your item', href: '/#index' },
       contactPrefix: 'Or speak to a specialist on',
-      contactSuffix: 'weekdays, 9am to 6pm.',
+      contactSuffix: 'weekdays, 9am to 5.30pm.',
     },
     seo: {
       _type: 'seo',
       title: 'Pawn loan FAQs | Trinity Pawnbrokers',
       description:
         'How much you can borrow, how quickly the money arrives, what a valuation reflects, how your item travels and where it is kept. Answered in full.',
+    },
+  };
+}
+
+/**
+ * The contact page. Numbers, address, hours and the two-hour reply promise all
+ * come from unbolted.com/uk/contact-us — same firm, same office, same desk.
+ */
+function buildContactPage(mapEmbedUrl) {
+  const channel = (icon, label, value, href, note) => ({
+    _type: 'contactChannel', icon, label, value, href, note,
+  });
+
+  return {
+    _id: 'contactPage',
+    _type: 'contactPage',
+    intro: {
+      heading: 'Contact us',
+      intro:
+        'A specialist answers the phone during office hours. Email gets a reply within two working hours. The office is by appointment, so the right person is in the building when you arrive.',
+    },
+    channels: keyed(
+      [
+        channel(
+          'ph-phone',
+          'Call',
+          '020 3567 1300',
+          'tel:+442035671300',
+          'Monday to Thursday, 9am to 5.30pm. Friday, 9am to 5pm. Closed at weekends and on bank holidays.',
+        ),
+        channel(
+          'ph-envelope-simple',
+          'Email',
+          'support@unbolted.com',
+          'mailto:support@unbolted.com',
+          'We reply within two hours on a working day. Send photographs if you have them — it saves a round trip.',
+        ),
+        channel(
+          'ph-map-pin',
+          'Visit',
+          'Token House, 11–12 Token House Yard, London EC2R 7AS',
+          undefined,
+          'By appointment only. Call or email first and we will have a specialist in the category waiting for you.',
+        ),
+      ],
+      'channel',
+    ),
+    elsewhere: keyed(
+      [
+        {
+          _type: 'pointer',
+          title: 'Want a valuation first?',
+          body: 'Every item page values your item before asking anything of you. No credit check, no obligation.',
+          cta: { _type: 'cta', label: 'Value your item', href: '/#index' },
+        },
+        {
+          _type: 'pointer',
+          title: 'Making a complaint?',
+          body: 'There is a published procedure, with timescales and the route to the Financial Ombudsman Service.',
+          cta: { _type: 'cta', label: 'Complaints procedure', href: '/complaints' },
+        },
+        {
+          _type: 'pointer',
+          title: 'Question about how it works?',
+          body: 'Borrowing limits, valuation, insurance, postage and what happens at the end of a term.',
+          cta: { _type: 'cta', label: 'Read the FAQs', href: '/faq' },
+        },
+      ],
+      'pointer',
+    ),
+    visitIntro: {
+      eyebrow: 'The office',
+      heading: 'Token House, in the City',
+      intro:
+        'Two minutes from Bank. Ring the bell at Token House Yard — we will come down and meet you.',
+    },
+    mapEmbedUrl,
+    seo: {
+      _type: 'seo',
+      title: 'Contact Trinity Pawnbrokers | Call, email or visit',
+      description:
+        'Call 020 3567 1300, email support@unbolted.com, or visit our City of London office by appointment. Office hours, address and how to reach us.',
     },
   };
 }
@@ -992,11 +1075,16 @@ const decodeDeep = (value) => {
   return value;
 };
 
+// The homepage is built first so the contact page can borrow its map embed
+// rather than carrying a second copy of the same URL.
+const home = await buildHomePage();
+
 const docs = [
   await buildSiteSettings(),
-  await buildHomePage(),
+  home,
   await buildAboutPage(),
   buildFaqPage(),
+  buildContactPage(home.visit?.mapEmbedUrl),
   ...(await blogSeed()),
   ...legalPages(),
 ];
