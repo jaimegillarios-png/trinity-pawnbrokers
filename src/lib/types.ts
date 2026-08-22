@@ -146,6 +146,17 @@ export interface HomePage {
   seo: Seo;
 }
 
+export interface AboutPage {
+  hero: HeroSection;
+  trust?: TrustItem[];
+  why?: { intro?: SectionIntro; paragraphs?: string[] };
+  oneFirm?: { eyebrow?: string; statement?: string; note?: string; cta?: Cta };
+  bench?: { intro?: SectionIntro; disciplines?: IconCard[] };
+  principles?: { intro?: SectionIntro; items?: IconCard[] };
+  closing?: ClosingSection;
+  seo: Seo;
+}
+
 export interface LegalPage {
   title: string;
   slug: string;

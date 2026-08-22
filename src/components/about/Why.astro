@@ -1,0 +1,18 @@
+---
+import type { SectionIntro } from '../../lib/types';
+import { splitEmphasis } from '../../lib/text';
+import SectionOpener from '../SectionOpener.astro';
+
+interface Props { intro?: SectionIntro; paragraphs?: string[] }
+const { intro, paragraphs = [] } = Astro.props;
+---
+<section class="tr-band tr-band--white">
+  <div class="tr-inner tr-inner--narrow about-why">
+    <SectionOpener intro={intro} />
+    {paragraphs.map((p) => (
+      <p class="about-why__p">
+        {splitEmphasis(p).map((part) => (part.emphasis ? <em>{part.text}</em> : part.text))}
+      </p>
+    ))}
+  </div>
+</section>

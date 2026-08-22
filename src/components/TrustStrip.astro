@@ -9,7 +9,9 @@ const { items = [] } = Astro.props;
   <div class="trust">
     <div class="trust-inner">
       {items.map((item) => (
-        <span>{item.text}<ConfirmChip note={item.chip} /></span>
+        <span class={item.highlight ? 'trust__highlight' : undefined}>
+          {item.text}<ConfirmChip note={item.chip} />
+        </span>
       ))}
     </div>
   </div>

@@ -79,31 +79,6 @@
 }
 
 /* ---- trust strip ---- */
-.trust {
-  position: relative;
-  border-top: 1px solid var(--tr-trust-rule);
-  background: var(--tr-trust-bg);
-  backdrop-filter: blur(6px);
-}
-.trust-inner {
-  max-width: var(--tr-container);
-  margin: 0 auto;
-  padding: 16px var(--tr-pad-side);
-  display: flex;
-  /* 28px here left the five items needing 1244.7px in a 1240px content box, so
-     the last one wrapped to a line of its own. Archivo sets wider than the Jost
-     this role used to use; 22px restores ~19px of headroom without touching the
-     type. It still wraps rather than overflowing if the copy grows. */
-  gap: 22px;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  font: 500 12.5px/1.5 var(--tr-font-caps);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--tr-on-green);
-}
-.trust-inner > span { white-space: nowrap; }
-.trust__highlight { color: var(--tr-gold-bright); }
 
 /* ========================= valuation form card ========================= */
 .hero-form-card {
@@ -495,19 +470,6 @@
   /* The form is the conversion object; on a phone it is a full-width panel in
      its own right, so its heading carries more weight than the shared --tr-h3. */
   .hero-form-card h2 { font-size: 27px; }
-
-  /* trust strip -> centred, hairline-divided list */
-  .trust-inner {
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-items: stretch;
-    gap: 0;
-    justify-content: flex-start;
-    padding: 4px 24px;
-    text-align: center;
-  }
-  .trust-inner > span { white-space: normal; padding: 13px 0; border-top: 1px solid var(--tr-rule-on-green-2); }
-  .trust-inner > span:first-child { border-top: none; }
 
   /* headings and the form's standfirst fill greedily rather than balancing
      into short lines — on a 271px measure `pretty` was leaving whole lines

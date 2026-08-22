@@ -1,0 +1,68 @@
+---
+import '../styles/about.css';
+import Base from '../layouts/Base.astro';
+import AboutHero from '../components/about/AboutHero.astro';
+import Why from '../components/about/Why.astro';
+import OneFirm from '../components/about/OneFirm.astro';
+import Closing from '../components/about/Closing.astro';
+import SectionOpener from '../components/SectionOpener.astro';
+import CardGrid from '../components/CardGrid.astro';
+import { getAboutPage, getSiteSettings } from '../lib/sanity/queries';
+import { breadcrumbSchema } from '../lib/seo';
+
+const [about, site] = await Promise.all([getAboutPage(), getSiteSettings()]);
+const origin = Astro.site?.origin ?? '';
+
+/**
+ * AboutPage tells Google this describes the organisation rather than being
+ * another service page, and mainEntity points at the one it describes.
+ */
+const aboutSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  '@id': `${origin}/about#page`,
+  url: `${origin}/about`,
+  name: about.seo.title,
+  description: about.seo.description,
+  mainEntity: { '@id': `${origin}/#organisation` },
+  isPartOf: { '@id': `${origin}/#website` },
+};
+
+const schemas = [
+  aboutSchema,
+  breadcrumbSchema([
+    { name: 'Home', url: `${origin}/` },
+    { name: 'About', url: `${origin}/about` },
+  ]),
+];
+
+const reveal = '.about-why__p, .bench-grid > *, .principle-grid > *, .about-firm__inner > *, .about-closing__inner > *';
+---
+<Base seo={about.seo} site={site} schemas={schemas} reveal={reveal}>
+  <AboutHero hero={about.hero} trust={about.trust} />
+
+  <Why intro={about.why?.intro} paragraphs={about.why?.paragraphs} />
+
+  <OneFirm
+    eyebrow={about.oneFirm?.eyebrow}
+    statement={about.oneFirm?.statement}
+    note={about.oneFirm?.note}
+    cta={about.oneFirm?.cta}
+  />
+
+  <section class="tr-band tr-band--grey">
+    <div class="tr-inner about-bench">
+      <SectionOpener intro={about.bench?.intro} />
+      <CardGrid cards={about.bench?.disciplines} class="bench-grid" />
+    </div>
+  </section>
+
+  <section class="tr-band tr-band--white">
+    <div class="tr-inner about-principles">
+      <SectionOpener intro={about.principles?.intro} />
+      <CardGrid cards={about.principles?.items} class="principle-grid" />
+    </div>
+  </section>
+
+  <Closing closing={about.closing} site={site} />
+</Base>

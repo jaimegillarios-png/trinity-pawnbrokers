@@ -373,6 +373,118 @@ async function buildSiteSettings() {
  * from the business — but an empty document that says so is better than a
  * dead link, and it puts the gap where the client will see it.
  */
+/**
+ * The About page. Every claim here is one the site already makes somewhere —
+ * the 2013 start, the £10m figure, the Trinity/Unbolted split, the FCA
+ * reference — restated at length rather than invented. Nothing about named
+ * staff or premises history: the business has to supply that.
+ */
+async function buildAboutPage() {
+  const card = (icon, title, body) => ({ _type: 'iconCard', icon, title, body });
+
+  return {
+    _id: 'aboutPage',
+    _type: 'aboutPage',
+
+    hero: {
+      _type: 'heroSection',
+      image: await uploadImage('images/hero/beat-2.jpeg', "A ring examined under a jeweller's loupe"),
+      eyebrow: 'About the house',
+      heading: 'The pawnbroker for the things you *intend to keep*.',
+      intro:
+        'Trinity exists for one situation: you own something valuable, you need the money it represents, and you have no intention of losing the thing itself. Everything here is arranged around giving it back.',
+      ctaPrimary: { _type: 'cta', label: 'Value your item', href: '/#index' },
+      ctaGhost: { _type: 'cta', label: 'How a pawn loan works', href: '/#how' },
+    },
+
+    trust: keyed(
+      [
+        { _type: 'trustItem', text: 'Lending since 2013' },
+        { _type: 'trustItem', text: '£10m+ pledged & redeemed' },
+        { _type: 'trustItem', text: 'FCA-regulated · Ref 741896' },
+        { _type: 'trustItem', text: '400+ five-star reviews', highlight: true },
+      ],
+      'atrust',
+    ),
+
+    why: {
+      intro: {
+        eyebrow: 'Why Trinity exists',
+        heading: 'The high street was never built for fine things.',
+      },
+      paragraphs: [
+        'A branch pawnbroker prices to the floor. A gold chain is weighed, a watch is glanced at, and the offer is whatever would survive a quick sale — because a shop with a window on every high street has to assume the worst case, and carries the overheads either way.',
+        'That is a perfectly good business. It is a poor one for a Patek, a signed Cartier piece, or a canvas with provenance — the items where the gap between scrap and market is most of the money.',
+        'Trinity was set up to lend against that gap. A specialist in the actual category values the item for what it is, and the loan is funded by *Unbolted’s network of lenders* rather than a branch estate. That is the whole trick, and it is why more of your item’s value reaches you, at a lower rate than the names you have walked past.',
+      ],
+    },
+
+    oneFirm: {
+      eyebrow: 'Trinity · Unbolted',
+      statement:
+        '*Trinity Pawnbrokers* receives, values and safeguards your item. *Unbolted* funds the loan against it.',
+      note:
+        'One firm stands behind both: Open Access Finance Ltd, authorised and regulated by the Financial Conduct Authority under reference 741896. Trinity is the counter and the strongroom; Unbolted is the capital and the permission to lend. You deal with Trinity from the valuation to the moment your item comes home.',
+      cta: { _type: 'cta', label: 'How your item is protected →', href: '/trust-and-security' },
+    },
+
+    bench: {
+      intro: {
+        eyebrow: 'The bench',
+        heading: 'Specialists, not a counter clerk',
+        intro:
+          'An item is only worth what somebody can recognise in it. Each category is valued by someone who works in that category, and the reasoning is shown on screen before you are asked for anything.',
+      },
+      disciplines: keyed(
+        [
+          card('ph-watch', 'Horology', 'References, movements, service history and the state of the bracelet — the things that move a watch valuation, and the things that do not.'),
+          card('ph-diamond', 'Gemmology', 'Certificated or not, stones are assessed on the four Cs and on what the current market is actually paying for that cut and colour.'),
+          card('ph-certificate', 'Hallmarks & silver', 'Maker, assay office and date letter first. Scrap weight is the floor of a silver valuation, never the whole of it.'),
+          card('ph-paint-brush', 'Art & provenance', 'Attribution, condition and paper trail, read against recent auction results for the artist rather than a headline estimate.'),
+          card('ph-handbag', 'Luxury leather goods', 'Date codes, hardware, stitching and the completeness of box and receipt — resale in this category turns on all four.'),
+          card('ph-coins', 'Gold & bullion', 'Assayed and weighed in front of you, priced off the spot rate on the day, with the arithmetic shown.'),
+        ],
+        'bench',
+      ),
+    },
+
+    principles: {
+      intro: {
+        eyebrow: 'What we hold ourselves to',
+        heading: 'Four things that do not change',
+      },
+      items: keyed(
+        [
+          card('ph-magnifying-glass', 'You see the working', 'The valuation, the rate and the total repayable are on screen before you commit to anything. No offer arrives with the reasoning left out.'),
+          card('ph-truck', 'Insured from your door to ours', 'Free Special Delivery on our label, insured in transit, and insured for the whole time your item is with us.'),
+          card('ph-eye', 'Nothing on your credit file', 'Your item is the security, so there is no credit check and no footprint. Nobody is told, and nothing is recorded against your name.'),
+          card('ph-vault', 'Returned as you left it', 'A six-month renewable term. Repay it and the same piece comes back in the same condition, insured on the way home.'),
+        ],
+        'principle',
+      ),
+    },
+
+    closing: {
+      _type: 'closingSection',
+      eyebrow: 'Start where it suits you',
+      heading: 'See what your item is worth as a loan',
+      intro:
+        'Every item page values your item before asking anything of you. No credit check, no obligation, and a confirmed offer within one business day.',
+      cta: { _type: 'cta', label: 'Value your item', href: '/#index' },
+      contactPrefix: 'Or speak to a specialist on',
+      contactSuffix: 'weekdays, 9am to 6pm.',
+    },
+
+    seo: {
+      _type: 'seo',
+      title: 'About Trinity Pawnbrokers | The house behind the loan',
+      description:
+        'A City of London pawnbroker lending against fine things since 2013. Specialist valuations, insured custody, and one FCA-regulated firm behind every loan.',
+      ogImage: await uploadImage('images/hero/beat-2.jpeg', "A ring examined under a jeweller's loupe"),
+    },
+  };
+}
+
 function legalStubs() {
   const pages = [
     ['privacy', 'Privacy policy', 'How we collect, use and protect personal information.'],
@@ -737,7 +849,13 @@ const decodeDeep = (value) => {
   return value;
 };
 
-const docs = [await buildSiteSettings(), await buildHomePage(), ...(await blogSeed()), ...legalStubs()];
+const docs = [
+  await buildSiteSettings(),
+  await buildHomePage(),
+  await buildAboutPage(),
+  ...(await blogSeed()),
+  ...legalStubs(),
+];
 for (const [i, file] of ordered.entries()) {
   const mod = await import(pathToFileURL(resolve(dir, file)).href);
   docs.push(await buildAssetPage(mod.default, i));

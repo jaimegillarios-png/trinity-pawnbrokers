@@ -1,0 +1,27 @@
+---
+import { splitEmphasis } from '../../lib/text';
+import type { Cta } from '../../lib/types';
+
+interface Props { eyebrow?: string; statement?: string; note?: string; cta?: Cta }
+const { eyebrow, statement, note, cta } = Astro.props;
+const parts = statement ? splitEmphasis(statement) : [];
+---
+{/* Two trading names under one authorisation is the thing customers ask about
+    most, so it gets the green band to itself rather than a footnote. */}
+<section class="about-firm">
+  <div class="about-firm__inner">
+    <div class="about-firm__mark" aria-hidden="true">
+      <span></span>
+      <div class="about-firm__mark-pair"><span></span><span></span></div>
+    </div>
+
+    {eyebrow && <p class="tr-eyebrow tr-eyebrow--on-green">{eyebrow}</p>}
+    {statement && (
+      <p class="about-firm__statement">
+        {parts.map((p) => (p.emphasis ? <em>{p.text}</em> : p.text))}
+      </p>
+    )}
+    {note && <p class="about-firm__note">{note}</p>}
+    {cta && <a href={cta.href} class="about-firm__link">{cta.label}</a>}
+  </div>
+</section>

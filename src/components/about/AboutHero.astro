@@ -1,0 +1,46 @@
+---
+import type { HeroSection, TrustItem } from '../../lib/types';
+import { urlFor, srcSetFor, lqipFor } from '../../lib/sanity/image';
+import { splitEmphasis } from '../../lib/text';
+import TrustStrip from '../TrustStrip.astro';
+
+interface Props { hero: HeroSection; trust?: TrustItem[] }
+const { hero, trust = [] } = Astro.props;
+const parts = splitEmphasis(hero.heading);
+const lqip = lqipFor(hero.image);
+---
+{/* Shorter than the item-page hero and with no form beside it — this page is
+    read, not filled in. The trust strip sits inside the section so it keeps
+    the translucent ground that only works over the image. */}
+<section class="about-hero" aria-labelledby="about-title">
+  <div class="about-hero__media">
+    <img
+      src={urlFor(hero.image).width(1600).url()}
+      srcset={srcSetFor(hero.image)}
+      sizes="100vw"
+      alt={hero.image.alt ?? ''}
+      width={hero.image.asset?.metadata?.dimensions?.width}
+      height={hero.image.asset?.metadata?.dimensions?.height}
+      style={lqip ? `background-image:url(${lqip});background-size:cover` : undefined}
+      fetchpriority="high"
+      decoding="async"
+    />
+  </div>
+  <div class="about-hero__scrim"></div>
+
+  <div class="about-hero__inner" data-reveal-hero>
+    {hero.eyebrow && <p class="tr-eyebrow about-hero__eyebrow">{hero.eyebrow}</p>}
+    <h1 id="about-title" class="tr-h1 about-hero__title">
+      {parts.map((p) => (p.emphasis ? <span>{p.text}</span> : p.text))}
+    </h1>
+    <p class="about-hero__intro">{hero.intro}</p>
+    <div class="about-hero__actions">
+      <a href={hero.ctaPrimary.href} class="tr-cta tr-cta--gold">{hero.ctaPrimary.label}</a>
+      {hero.ctaGhost && (
+        <a href={hero.ctaGhost.href} class="tr-cta tr-cta--ghost">{hero.ctaGhost.label}</a>
+      )}
+    </div>
+  </div>
+
+  <TrustStrip items={trust} />
+</section>

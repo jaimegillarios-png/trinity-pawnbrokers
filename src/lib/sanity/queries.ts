@@ -1,5 +1,7 @@
 import { query } from './client';
-import type { AssetPage, HomePage, LegalPage, SiteSettings, AssetPageCard, Post, BlogIndex } from '../types';
+import type {
+  AssetPage, HomePage, AboutPage, LegalPage, SiteSettings, AssetPageCard, Post, BlogIndex,
+} from '../types';
 
 /** Images always carry their metadata so we can emit dimensions and an LQIP. */
 const IMAGE = `{ ..., alt, asset->{ _id, url, metadata { lqip, dimensions } } }`;
@@ -98,6 +100,28 @@ export const getHomePage = async (): Promise<HomePage> => {
     );
   }
   return home;
+};
+
+export const getAboutPage = async (): Promise<AboutPage> => {
+  const about = await query<AboutPage | null>(`*[_type == "aboutPage"][0]{
+    hero { ..., image ${IMAGE} },
+    trust[],
+    why { intro ${SECTION_INTRO}, paragraphs },
+    oneFirm,
+    bench { intro ${SECTION_INTRO}, disciplines[] },
+    principles { intro ${SECTION_INTRO}, items[] },
+    closing,
+    ${SEO}
+  }`);
+
+  if (!about) {
+    throw new Error(
+      'No "About page" document found in Sanity.\n' +
+        '  Open the Studio (npm run studio) and fill it in,\n' +
+        '  or run: node scripts/migrate-to-sanity.mjs',
+    );
+  }
+  return about;
 };
 
 export const getLegalPages = () =>
