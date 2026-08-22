@@ -124,7 +124,9 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
   padding: 17px 30px;
 }
 .tr-cta--ghost:hover { border-color: var(--tr-gold-bright); color: var(--tr-gold-bright); }
-.tr-cta--block { width: 100%; }
+/* border-box because there is no global reset: width:100% plus the button's
+   own side padding would otherwise overflow its container. */
+.tr-cta--block { width: 100%; box-sizing: border-box; }
 
 .tr-phone-btn {
   color: var(--tr-green-leaf);

@@ -1,0 +1,118 @@
+---
+import '../styles/lend.css';
+import Base from '../layouts/Base.astro';
+import SectionOpener from '../components/SectionOpener.astro';
+import CardGrid from '../components/CardGrid.astro';
+import ClosingBand from '../components/ClosingBand.astro';
+import { urlFor } from '../lib/sanity/image';
+import { getLendPage, getAssetLendIndex, getSiteSettings } from '../lib/sanity/queries';
+import { breadcrumbSchema } from '../lib/seo';
+
+const [lend, items, site] = await Promise.all([
+  getLendPage(),
+  getAssetLendIndex(),
+  getSiteSettings(),
+]);
+const origin = Astro.site?.origin ?? '';
+
+/* An ItemList tells Google these seven pages are a set with an order, which a
+   grid of links on the homepage does not. */
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': `${origin}/what-we-lend-against#page`,
+    url: `${origin}/what-we-lend-against`,
+    name: lend.seo.title,
+    description: lend.seo.description,
+    isPartOf: { '@id': `${origin}/#website` },
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: items.map((item, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: item.title,
+        url: `${origin}/${item.slug}`,
+      })),
+    },
+  },
+  breadcrumbSchema([
+    { name: 'Home', url: `${origin}/` },
+    { name: 'What we lend against', url: `${origin}/what-we-lend-against` },
+  ]),
+];
+
+const reveal = '.lend-criteria .tr-card, .lend-item, .lend-other';
+---
+<Base seo={lend.seo} site={site} schemas={schemas} reveal={reveal}>
+  <section class="tr-band tr-band--white">
+    <div class="lend-head">
+      {lend.intro?.eyebrow && <p class="tr-eyebrow">{lend.intro.eyebrow}</p>}
+      <h1 class="lend-head__title">{lend.intro?.heading}</h1>
+      {lend.intro?.intro && <p class="lend-head__intro">{lend.intro.intro}</p>}
+    </div>
+  </section>
+
+  <section class="tr-band tr-band--grey">
+    <div class="tr-inner lend-criteria">
+      <SectionOpener intro={lend.criteria?.intro} />
+      <CardGrid cards={lend.criteria?.items} class="lend-criteria__grid" />
+    </div>
+  </section>
+
+  <section class="tr-band tr-band--white">
+    <div class="tr-inner">
+      <SectionOpener intro={lend.indexIntro} />
+
+      <ul class="lend-items">
+        {items.map((item) => (
+          <li class="lend-item">
+            <a class="lend-item__media" href={`/${item.slug}`} tabindex="-1" aria-hidden="true">
+              <img
+                src={urlFor(item.cardImage).width(560).height(420).fit('crop').url()}
+                alt=""
+                width="560"
+                height="420"
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
+            <div class="lend-item__body">
+              <h3 class="lend-item__title">
+                <a href={`/${item.slug}`}>{item.title}</a>
+              </h3>
+              {item.teaser && <p class="lend-item__teaser">{item.teaser}</p>}
+              {item.accepts && item.accepts.length > 0 && (
+                <>
+                  <p class="lend-item__label">What we take</p>
+                  <ul class="lend-item__accepts">
+                    {item.accepts.map((accepted) => <li>{accepted}</li>)}
+                  </ul>
+                </>
+              )}
+              <a class="lend-item__link" href={`/${item.slug}`}>
+                Value your {item.nounPlural?.toLowerCase() ?? item.title.toLowerCase()} →
+              </a>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      {lend.other && (
+        <div class="lend-other">
+          <div>
+            {lend.other.title && <h3 class="lend-other__title">{lend.other.title}</h3>}
+            {lend.other.body && <p class="lend-other__body">{lend.other.body}</p>}
+          </div>
+          {lend.other.cta && (
+            <a href={lend.other.cta.href} class="tr-cta tr-cta--gold lend-other__cta">
+              {lend.other.cta.label}
+            </a>
+          )}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <ClosingBand closing={lend.closing} site={site} />
+</Base>

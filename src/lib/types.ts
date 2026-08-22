@@ -125,6 +125,20 @@ export interface AssetPageCard {
   teaser?: string;
 }
 
+export interface AssetLendEntry extends AssetPageCard {
+  /** The sub-categories that item page enumerates — "Bars and bullion", etc. */
+  accepts?: string[];
+}
+
+export interface LendPage {
+  intro?: SectionIntro;
+  criteria?: { intro?: SectionIntro; items?: IconCard[] };
+  indexIntro?: SectionIntro;
+  other?: { title?: string; body?: string; cta?: Cta };
+  closing?: ClosingSection;
+  seo: Seo;
+}
+
 export interface RateStat {
   label?: string;
   figure?: string;

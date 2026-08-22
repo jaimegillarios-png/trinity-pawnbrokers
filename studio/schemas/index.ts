@@ -23,6 +23,7 @@ import { legalPage } from './documents/legalPage';
 import { aboutPage } from './documents/aboutPage';
 import { faqPage } from './documents/faqPage';
 import { contactPage } from './documents/contactPage';
+import { lendPage } from './documents/lendPage';
 import { post } from './documents/post';
 import { blogIndex } from './documents/blogIndex';
 
@@ -34,6 +35,7 @@ export const schemaTypes = [
   aboutPage,
   faqPage,
   contactPage,
+  lendPage,
   post,
   blogIndex,
   legalPage,

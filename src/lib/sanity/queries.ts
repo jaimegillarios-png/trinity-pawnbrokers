@@ -1,6 +1,6 @@
 import { query } from './client';
 import type {
-  AssetPage, HomePage, AboutPage, FaqPage, ContactPage, LegalPage, SiteSettings, AssetPageCard, Post, BlogIndex,
+  AssetPage, AssetLendEntry, HomePage, AboutPage, FaqPage, ContactPage, LendPage, LegalPage, SiteSettings, AssetPageCard, Post, BlogIndex,
 } from '../types';
 
 /** Images always carry their metadata so we can emit dimensions and an LQIP. */
@@ -75,6 +75,21 @@ export const getAssetPageCards = () =>
     nounPlural,
     cardImage ${IMAGE},
     "teaser": coalesce(cardTeaser, hero.intro)
+  }`);
+
+/**
+ * The hub at /what-we-lend-against. Same cards as the homepage grid, plus the
+ * sub-categories each item page enumerates — which is what makes the hub
+ * worth a click rather than a second copy of the grid.
+ */
+export const getAssetLendIndex = () =>
+  query<AssetLendEntry[]>(`*[_type == "assetPage"] | order(order asc) {
+    title,
+    "slug": slug.current,
+    nounPlural,
+    cardImage ${IMAGE},
+    "teaser": coalesce(cardTeaser, hero.intro),
+    "accepts": lendAgainst.cards[].title
   }`);
 
 export const getHomePage = async (): Promise<HomePage> => {
@@ -161,6 +176,26 @@ export const getContactPage = async (): Promise<ContactPage> => {
     );
   }
   return contact;
+};
+
+export const getLendPage = async (): Promise<LendPage> => {
+  const lend = await query<LendPage | null>(`*[_type == "lendPage"][0]{
+    intro ${SECTION_INTRO},
+    criteria { intro ${SECTION_INTRO}, items[] },
+    indexIntro ${SECTION_INTRO},
+    other,
+    closing,
+    ${SEO}
+  }`);
+
+  if (!lend) {
+    throw new Error(
+      'No "What we lend against" document found in Sanity.\n' +
+        '  Open the Studio (npm run studio) and fill it in,\n' +
+        '  or run: node scripts/migrate-to-sanity.mjs',
+    );
+  }
+  return lend;
 };
 
 export const getLegalPages = () =>

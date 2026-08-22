@@ -690,6 +690,68 @@ function buildContactPage(mapEmbedUrl) {
   };
 }
 
+/**
+ * The hub the main nav points at. Deliberately not a second copy of the
+ * homepage grid: the criteria are the thing the grid has no room for, and the
+ * category list carries what each item page says it accepts.
+ */
+function buildLendPage() {
+  const card = (icon, title, body) => ({ _type: 'iconCard', icon, title, body });
+
+  return {
+    _id: 'lendPage',
+    _type: 'lendPage',
+    intro: {
+      eyebrow: 'What we lend against',
+      heading: 'If it is valuable and insurable, we can usually lend against it',
+      intro:
+        'Seven categories have a page of their own because they are what people bring us most. They are not the limit. What matters is whether a specialist can authenticate it, an insurer will cover it, and there is a market that would buy it.',
+    },
+    criteria: {
+      intro: {
+        heading: 'What makes something lendable',
+      },
+      items: keyed(
+        [
+          card('ph-magnifying-glass', 'It can be authenticated', 'A specialist in the category has to be able to establish what it is — a reference, a hallmark, a certificate, a provenance trail. Anything that cannot be verified cannot be valued.'),
+          card('ph-shield-check', 'It can be insured', 'Cover runs from the moment your item leaves you until the moment it comes back. If an underwriter will not cover it in transit and storage, we will not take it in.'),
+          card('ph-chart-line-up', 'It has a resale market', 'A valuation is an estimate of what the item would realise on the secondary market today. Rarity alone is not value; there has to be somebody who buys these.'),
+          card('ph-package', 'It can be moved and held safely', 'Most things travel by insured courier. Larger or more fragile items go by specialist logistics. Anything that cannot be safely moved or stored is a conversation, not a no.'),
+        ],
+        'criterion',
+      ),
+    },
+    indexIntro: {
+      eyebrow: 'The seven',
+      heading: 'Categories with a page of their own',
+      intro:
+        'Each one values your item on the page, before asking anything of you. What each page accepts is listed underneath it.',
+    },
+    other: {
+      title: 'Something else?',
+      body:
+        'Classic cars, fine wine, musical instruments, watches nobody has heard of, a single lot from a collection. If it meets the four tests above, tell us what it is and we will tell you honestly whether we can lend against it.',
+      cta: { _type: 'cta', label: 'Ask us about your item', href: '/contact' },
+    },
+    closing: {
+      _type: 'closingSection',
+      eyebrow: 'No obligation',
+      heading: 'See what yours is worth as a loan',
+      intro:
+        'Pick the closest category and the page will value your item before it asks you for anything. No credit check, and a confirmed offer within one business day.',
+      cta: { _type: 'cta', label: 'Value your item', href: '/#index' },
+      contactPrefix: 'Or speak to a specialist on',
+      contactSuffix: 'weekdays, 9am to 5.30pm.',
+    },
+    seo: {
+      _type: 'seo',
+      title: 'What we lend against | Trinity Pawnbrokers',
+      description:
+        'Gold, watches, jewellery, diamonds, fine art, handbags and silver — and what else qualifies. The four tests an item has to pass before we can lend against it.',
+    },
+  };
+}
+
 const TODAY = new Date().toISOString().slice(0, 10);
 
 function legalPages() {
@@ -1085,6 +1147,7 @@ const docs = [
   await buildAboutPage(),
   buildFaqPage(),
   buildContactPage(home.visit?.mapEmbedUrl),
+  buildLendPage(),
   ...(await blogSeed()),
   ...legalPages(),
 ];
