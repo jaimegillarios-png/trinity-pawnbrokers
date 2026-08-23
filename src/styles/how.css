@@ -188,7 +188,12 @@
   .how-step__node i { opacity: 1; transform: none; }
 }
 
-/* ---- the terms table ---- */
+/* ---- the terms table ----
+   Pairs stacked in two columns rather than one full-width row each. Label
+   left and value right works on a 340px plaque; across 750px the eye cannot
+   carry "Loan size" to "From £500, no maximum" without losing the line.
+   Sizes are the page's own: the label is the micro-caps the step meta uses,
+   the value the 18px display face its timing uses. */
 .how-terms {
   display: grid;
   grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
@@ -197,31 +202,34 @@
 }
 .how-terms__head .tr-eyebrow { margin-top: 0; }
 .how-terms__note {
-  font: 400 var(--tr-caption) var(--tr-font-body);
-  color: var(--tr-ink-45);
+  font: 400 var(--tr-body-sm) var(--tr-font-body);
+  color: var(--tr-ink-62);
   margin: 22px 0 0;
-  max-width: 40ch;
+  max-width: 42ch;
 }
-.how-terms__table { margin: 0; border-top: 1px solid var(--tr-line); }
+.how-terms__table {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 var(--tr-gap-col);
+}
 .how-terms__row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 24px;
-  padding: 17px 0;
-  border-bottom: 1px solid var(--tr-line-soft);
+  padding: 18px 0;
+  border-top: 1px solid var(--tr-line-soft);
 }
+/* Both columns start against the same rule. */
+.how-terms__row:nth-child(-n + 2) { border-top: 1px solid var(--tr-line); }
 .how-terms__row dt {
   font: 500 var(--tr-microcaps-size)/1.4 var(--tr-font-caps);
   letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-ink-45);
+  margin-bottom: 6px;
 }
 .how-terms__row dd {
-  font: 500 17px/1.4 var(--tr-font-display);
+  font: 500 18px/1.4 var(--tr-font-display);
   color: var(--tr-green-vault);
   margin: 0;
-  text-align: right;
 }
 
 /* ---- card sections ---- */
@@ -300,6 +308,6 @@
 @media (max-width: 620px) {
   .how-cards__grid { grid-template-columns: 1fr; margin-top: 34px; }
   .how-custody__inner { padding: 76px var(--tr-pad-side) 80px; }
-  .how-terms__row { flex-direction: column; align-items: flex-start; gap: 6px; }
-  .how-terms__row dd { text-align: left; }
+  .how-terms__table { grid-template-columns: 1fr; }
+  .how-terms__row:nth-child(2) { border-top-color: var(--tr-line-soft); }
 }

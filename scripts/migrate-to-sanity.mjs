@@ -774,8 +774,12 @@ function buildHowPage() {
     intro: {
       eyebrow: 'How it works',
       heading: 'Five steps, and your item back at the end',
+      // About the process, not a definition of pawnbroking: this is the page
+      // someone opens to find out what actually happens. No end-to-end
+      // duration claimed here — the per-step timings carry the numbers, and
+      // the total depends on how the item travels.
       intro:
-        'A pawn loan is the oldest and simplest borrowing there is: your item is the security, so there is no credit check and nothing touches your credit file. Plainly, because it matters — if the loan is not repaid or renewed at the end of its term, your item may be sold to settle it. You owe nothing further.',
+        'Five stages, from valuing your item to the money arriving. What happens at each, what we need from you, and how long it takes.',
     },
     steps: keyed(
       [
@@ -833,6 +837,8 @@ function buildHowPage() {
       intro: {
         eyebrow: 'At the end of the term',
         heading: 'Three things can happen',
+        intro:
+          'Plainly, because it matters: if the loan is not repaid or renewed at the end of its term, your item may be sold to settle it. You owe nothing further, and nothing is reported.',
       },
       items: keyed(
         [
