@@ -882,10 +882,15 @@ section[id], [id].hero-form-card { scroll-margin-top: calc(var(--tr-mast-h, 0px)
 
   /* Staggered on the way in; on the way out the delays drop to 0 so the
      menu clears immediately rather than trailing behind the panel. */
-  [data-nav="open"] .masthead-grid > nav:first-of-type .nav-panel > *:nth-child(1) { transition-delay: 0.10s; }
-  [data-nav="open"] .masthead-grid > nav:first-of-type .nav-panel > *:nth-child(2) { transition-delay: 0.16s; }
-  [data-nav="open"] .masthead-grid > nav:last-of-type  .nav-panel > *:nth-child(1) { transition-delay: 0.22s; }
-  [data-nav="open"] .masthead-grid > nav:last-of-type  .nav-panel > *:nth-child(2) { transition-delay: 0.28s; }
+  /* Staggered off the child's own index rather than which nav group it was
+     in — the old pair of rules covered two items per group and left anything
+     after the second with no delay at all. */
+  [data-nav="open"] .nav-panel > *:nth-child(1) { transition-delay: 0.10s; }
+  [data-nav="open"] .nav-panel > *:nth-child(2) { transition-delay: 0.16s; }
+  [data-nav="open"] .nav-panel > *:nth-child(3) { transition-delay: 0.22s; }
+  [data-nav="open"] .nav-panel > *:nth-child(4) { transition-delay: 0.28s; }
+  [data-nav="open"] .nav-panel > *:nth-child(5) { transition-delay: 0.34s; }
+  [data-nav="open"] .nav-panel > *:nth-child(6) { transition-delay: 0.40s; }
 
   @media (prefers-reduced-motion: reduce) {
     [data-nav] .masthead-grid > nav,

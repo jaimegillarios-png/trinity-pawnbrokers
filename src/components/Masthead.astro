@@ -19,18 +19,17 @@ const { site } = Astro.props;
       />
     </a>
 
-    <nav aria-label="What we lend against">
+    {/* One nav, not two. The pair was an artefact of the old three-column bar
+        with the wordmark between them; with the logo on the left they are a
+        single run of links, and the mobile menu's stagger no longer has to
+        guess which group an item is in. */}
+    <nav aria-label="Main">
       <div class="nav-panel">
         <a href="/what-we-lend-against" class="tr-navlink">What we lend against</a>
         <a href="/#how" class="tr-navlink">How it works</a>
-        <a href="/about" class="tr-navlink">About</a>
-        <a href="/blog" class="tr-navlink">Blog</a>
-      </div>
-    </nav>
-
-    <nav aria-label="Trust and contact">
-      <div class="nav-panel">
         <a href="/trust-and-security" class="tr-navlink">Trust &amp; security</a>
+        <a href="/blog" class="tr-navlink">Blog</a>
+        <a href="/about" class="tr-navlink">About</a>
         <a href={`tel:${site.phoneHref}`} class="tr-phone-btn">{site.phone}</a>
       </div>
     </nav>
