@@ -1,0 +1,11 @@
+# The pages.dev host is the review deployment, not the site. It carries the
+# same content as any custom domain attached to this project, and that content
+# still has placeholder figures in a regulated financial promotion — so it
+# must not be indexed. Scoped to the host, so a real domain added later is
+# unaffected and stays indexable.
+https://trinity-pawnbrokers.pages.dev/*
+  X-Robots-Tag: noindex, nofollow
+
+# Deploy previews too.
+https://:version.trinity-pawnbrokers.pages.dev/*
+  X-Robots-Tag: noindex, nofollow
