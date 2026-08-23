@@ -146,14 +146,6 @@
 @media (max-width: 760px) {
   .lend-head { margin-bottom: 48px; }
   .lend-item { grid-template-columns: 1fr; gap: 22px; }
-  /* Full bleed once the rows stack: a photograph inset 28px each side looks
-     like a thumbnail that grew, whereas edge to edge it reads as the category
-     itself. The copy keeps the container's padding. */
-  .lend-item__media {
-    margin-inline: calc(-1 * var(--tr-pad-side));
-    width: calc(100% + var(--tr-pad-side) * 2);
-  }
-  .lend-item__media img { aspect-ratio: 3 / 2; }
   .lend-item__accepts { grid-template-columns: 1fr; }
   .lend-other { padding: 36px 28px; gap: 26px; }
 }
