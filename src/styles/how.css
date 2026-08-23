@@ -2,14 +2,17 @@
    How it works
    ============================================================ */
 
-/* The opener and the timeline share one column, centred. A rail is a vertical
-   device — run across the full 1240 container it left the right half of every
-   step empty, which is what made five steps read as a table. */
-/* .tr-inner.how-intro, not .how-intro: .tr-inner sets max-width too and
-   ties this on specificity, so the winner would be whichever stylesheet the
-   bundler happened to put last. */
-.tr-inner.how-intro { max-width: 900px; }
-.how-head { margin-bottom: 72px; }
+/* Heading left, the timeline right — the split /faq and /contact use. It puts
+   the container's empty half to work, and narrows the rail's own column to
+   something a vertical device suits. */
+.how-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: var(--tr-gap-col);
+  align-items: start;
+}
+/* The heading holds while the five steps scroll past it. */
+.how-head { position: sticky; top: 40px; }
 .how-head .tr-eyebrow { margin-top: 0; }
 .how-head__title {
   font: 500 var(--tr-h1) var(--tr-font-display);
@@ -18,9 +21,9 @@
   text-wrap: balance;
 }
 .how-head__intro {
-  font: 400 var(--tr-body-lg) var(--tr-font-body);
+  font: 400 var(--tr-body) var(--tr-font-body);
   color: var(--tr-ink-72);
-  margin: 28px 0 0;
+  margin: 24px 0 0;
 }
 
 /* ---- the steps ----
@@ -190,12 +193,13 @@
 
 /* ---- responsive ---- */
 @media (max-width: 1020px) {
+  .how-intro { grid-template-columns: 1fr; gap: 48px; }
+  .how-head { position: static; }
   .how-terms { grid-template-columns: 1fr; gap: 40px; }
   .how-terms__note { max-width: 60ch; }
   .how-cards__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
-  .how-head { margin-bottom: 48px; }
   .how-step { grid-template-columns: 48px minmax(0, 1fr); gap: 20px; padding-bottom: 40px; }
   .how-step__node { width: 48px; height: 48px; }
   .how-step__node i { font-size: 21px; }
