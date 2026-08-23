@@ -792,10 +792,11 @@ section[id], [id].hero-form-card { scroll-margin-top: calc(var(--tr-mast-h, 0px)
 /* Tablets get the mobile masthead too: side by side, the logo, five links and
    the phone button have no breathing room long before they actually collide.
    The rule bar keeps its own 760px breakpoint, which is about line length.
-   1100 rather than the old 1024: with About and Blog added the desktop bar
-   needs 1024px of viewport exactly, leaving the layout one pixel from
-   overflowing — a font fallback or a longer label would take it over. */
-@media (max-width: 1100px) {
+   The figure tracks the bar's real width: it has grown from 1024 to 1101 as
+   links were added and "About" became "About the house". 1180 keeps ~80px of
+   headroom, so a font fallback or one more word does not overflow it. Measure
+   again if the nav changes. */
+@media (max-width: 1180px) {
   /* The bar becomes a column: wordmark centred with the call button and the
      burger flanking it, and the two nav groups stacked beneath when open. */
   .masthead-grid {
