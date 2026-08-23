@@ -1,6 +1,6 @@
 import { query } from './client';
 import type {
-  AssetPage, AssetLendEntry, HomePage, AboutPage, FaqPage, ContactPage, LendPage, LegalPage, SiteSettings, AssetPageCard, Post, BlogIndex,
+  AssetPage, AssetLendEntry, HomePage, AboutPage, FaqPage, ContactPage, LendPage, HowPage, LegalPage, SiteSettings, AssetPageCard, Post, BlogIndex,
 } from '../types';
 
 /** Images always carry their metadata so we can emit dimensions and an LQIP. */
@@ -195,6 +195,28 @@ export const getLendPage = async (): Promise<LendPage> => {
     );
   }
   return lend;
+};
+
+export const getHowPage = async (): Promise<HowPage> => {
+  const how = await query<HowPage | null>(`*[_type == "howPage"][0]{
+    intro ${SECTION_INTRO},
+    steps[],
+    terms { intro ${SECTION_INTRO}, rows[], note },
+    sending { intro ${SECTION_INTRO}, items[] },
+    ending { intro ${SECTION_INTRO}, items[] },
+    custody,
+    closing,
+    ${SEO}
+  }`);
+
+  if (!how) {
+    throw new Error(
+      'No "How it works" document found in Sanity.\n' +
+        '  Open the Studio (npm run studio) and fill it in,\n' +
+        '  or run: node scripts/migrate-to-sanity.mjs',
+    );
+  }
+  return how;
 };
 
 export const getLegalPages = () =>

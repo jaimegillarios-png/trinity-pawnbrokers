@@ -199,6 +199,19 @@ export interface ContactPage {
   seo: Seo;
 }
 
+export interface HowStep { title: string; body: string; timing?: string }
+
+export interface HowPage {
+  intro?: SectionIntro;
+  steps: HowStep[];
+  terms?: { intro?: SectionIntro; rows?: SpecRow[]; note?: string };
+  sending?: { intro?: SectionIntro; items?: IconCard[] };
+  ending?: { intro?: SectionIntro; items?: IconCard[] };
+  custody?: { eyebrow?: string; statement?: string; note?: string; cta?: Cta };
+  closing?: ClosingSection;
+  seo: Seo;
+}
+
 export interface LegalPage {
   title: string;
   slug: string;

@@ -753,6 +753,126 @@ function buildLendPage() {
   };
 }
 
+/**
+ * How it works. Nothing here is new: the five steps are the homepage's, the
+ * timings and figures are the FAQ's, and the custody band is the homepage's.
+ * The page exists because "How it works" is a nav item that pointed at a
+ * fragment, and because the account was spread across three places.
+ *
+ * The figures follow the FAQ where the marketing copy disagrees with it —
+ * the fee, the term, the offer timing and the LTV all differ somewhere on the
+ * site, and one page had to pick. See the note under the terms table.
+ */
+function buildHowPage() {
+  const step = (title, timing, body) => ({ _type: 'howStep', title, timing, body });
+  const card = (icon, title, body) => ({ _type: 'iconCard', icon, title, body });
+  const row = (label, value) => ({ _type: 'specRow', label, value });
+
+  return {
+    _id: 'howPage',
+    _type: 'howPage',
+    intro: {
+      eyebrow: 'How it works',
+      heading: 'Five steps, and your item back at the end',
+      intro:
+        'A pawn loan is the oldest and simplest borrowing there is: your item is the security, so there is no credit check and nothing touches your credit file. Plainly, because it matters — if the loan is not repaid or renewed at the end of its term, your item may be sold to settle it. You owe nothing further.',
+    },
+    steps: keyed(
+      [
+        step('Value your item', 'Before you give us anything',
+          'Every item page values your item on the page. Tell it what you have, add a few photographs, and it shows you a figure with the working behind it. No account, no credit check, no obligation.'),
+        step('Receive your offer', 'Within 3 hours',
+          'A specialist in that category reviews what you have sent and confirms an indicative offer. For anything that needs an outside opinion it takes longer, and we will say so rather than guess.'),
+        step('Send it or bring it', 'Free, insured either way',
+          'Small items travel by Royal Mail Special Delivery on a free label we email you, insured door to door and opened on camera when they reach us. Larger or more fragile items go by specialist courier. Or bring it to the City of London office by appointment.'),
+        step('Sign and receive the funds', 'Within 1 working hour',
+          'We confirm the valuation with the item in front of us, you sign the agreement electronically, and the money goes to a UK bank account in your name — within an hour of signing, if your bank is on Faster Payments.'),
+        step('Redeem when you are ready', 'Six months, renewable',
+          'Repay in full whenever you like and your item comes back by free insured courier, in the condition it arrived in. Repay early and you pay less interest, not more.'),
+      ],
+      'step',
+    ),
+
+    terms: {
+      intro: {
+        eyebrow: 'The figures',
+        heading: 'What a Trinity loan actually costs you',
+      },
+      rows: keyed(
+        [
+          row('Loan size', 'From £500, no maximum'),
+          row('Loan to value', 'Up to 80% of the resale valuation'),
+          row('Term', 'Six months, extendable by one further term'),
+          row('Valuation', 'Free, whether or not you go ahead'),
+          row('Set-up fee', 'Payable upfront; covers the valuation'),
+          row('Credit check', 'None, and no footprint on your file'),
+          row('Insurance', 'In transit and in storage, at no cost'),
+        ],
+        'term',
+      ),
+      note:
+        'Figures to be confirmed against the signed agreement before publication. The representative example on each item page is the binding illustration.',
+    },
+
+    sending: {
+      intro: {
+        eyebrow: 'Getting it to us',
+        heading: 'Three ways in, all of them insured',
+      },
+      items: keyed(
+        [
+          card('ph-package', 'By post', 'A free Royal Mail Special Delivery QR label, emailed to you. Tracked the whole way, signed for by us, and opened under camera. Insured up to the full valuation.'),
+          card('ph-truck', 'By specialist courier', 'For anything large, heavy or fragile — a canvas, a canteen of silver, a piece of furniture. Arranged by us; tell us what you have and we will book it.'),
+          card('ph-identification-card', 'In person', 'By appointment at Token House in the City of London, so a specialist in your category is in the building when you arrive.'),
+        ],
+        'send',
+      ),
+    },
+
+    ending: {
+      intro: {
+        eyebrow: 'At the end of the term',
+        heading: 'Three things can happen',
+      },
+      items: keyed(
+        [
+          card('ph-hand-coins', 'You repay', 'The loan closes and your item comes back by free insured courier, or you collect it by appointment. Repay early and you pay less interest.'),
+          card('ph-hourglass', 'You extend', 'Settle the accrued interest and charges and the loan runs for a further term. We reconsider the valuation, and if the item has fallen in value you pay the difference.'),
+          card('ph-scales', 'You do neither', 'The item is sold to recover what is owed. Anything left over once the loan and the costs of sale are settled is returned to you by bank transfer, and the default is not reported to any credit agency.'),
+        ],
+        'end',
+      ),
+    },
+
+    custody: {
+      eyebrow: 'Who holds it · who funds it',
+      statement:
+        '*Trinity Pawnbrokers* receives, values and safeguards your item. *Unbolted* funds the loan against it.',
+      note:
+        'One firm behind both: Open Access Finance Ltd, authorised and regulated by the Financial Conduct Authority under reference 741896. You deal with Trinity throughout.',
+      cta: { _type: 'cta', label: 'Read the FAQs →', href: '/faq' },
+    },
+
+    closing: {
+      _type: 'closingSection',
+      eyebrow: 'Start whenever',
+      heading: 'See what your item is worth first',
+      intro:
+        'Every item page values your item before asking anything of you. Nothing here commits you to a loan.',
+      cta: { _type: 'cta', label: 'Value your item', href: '/what-we-lend-against' },
+      contactPrefix: 'Or speak to a specialist on',
+      contactSuffix: 'weekdays, 9am to 5.30pm.',
+    },
+
+    seo: {
+      _type: 'seo',
+      title: 'How a Trinity pawn loan works | Trinity Pawnbrokers',
+      description:
+        'Five steps from valuation to funds: what you send, how fast an offer arrives, what it costs, and what happens at the end of the six-month term.',
+    },
+  };
+}
+
 const TODAY = new Date().toISOString().slice(0, 10);
 
 function legalPages() {
@@ -1149,6 +1269,7 @@ const docs = [
   buildFaqPage(),
   buildContactPage(home.visit?.mapEmbedUrl),
   buildLendPage(),
+  buildHowPage(),
   ...(await blogSeed()),
   ...legalPages(),
 ];

@@ -1,0 +1,163 @@
+/* ============================================================
+   How it works
+   ============================================================ */
+
+.how-head { margin-bottom: 72px; max-width: 68ch; }
+.how-head .tr-eyebrow { margin-top: 0; }
+.how-head__title {
+  font: 500 var(--tr-h1) var(--tr-font-display);
+  color: var(--tr-ink);
+  margin: 0;
+  text-wrap: balance;
+}
+.how-head__intro {
+  font: 400 var(--tr-body-lg) var(--tr-font-body);
+  color: var(--tr-ink-72);
+  margin: 28px 0 0;
+}
+
+/* ---- the steps ----
+   Numbered rows, not the homepage's five-across stepper: on a page of its own
+   each step carries a paragraph, which will not fit in a fifth of the
+   container. The timing sits in its own column so the five line up. */
+.how-steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+.how-step {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) 190px;
+  gap: 40px;
+  align-items: start;
+  padding: 40px 0;
+  border-top: 1px solid var(--tr-line-soft);
+}
+.how-step:last-child { border-bottom: 1px solid var(--tr-line-soft); }
+.how-step__num {
+  font: 400 var(--tr-h3) var(--tr-font-display);
+  color: var(--tr-gold-deep);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.how-step__title { font: 500 var(--tr-h3) var(--tr-font-display); color: var(--tr-green-vault); margin: 0 0 10px; }
+.how-step__text { font: 400 var(--tr-body) var(--tr-font-body); color: var(--tr-ink-72); margin: 0; max-width: 62ch; }
+.how-step__timing {
+  font: 500 11px/1.5 var(--tr-font-caps);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tr-ink-45);
+  margin: 6px 0 0;
+  text-align: right;
+}
+
+/* ---- the terms table ---- */
+.how-terms {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  gap: var(--tr-gap-col);
+  align-items: start;
+}
+.how-terms__head .tr-eyebrow { margin-top: 0; }
+.how-terms__note {
+  font: 400 var(--tr-caption) var(--tr-font-body);
+  color: var(--tr-ink-45);
+  margin: 22px 0 0;
+  max-width: 40ch;
+}
+.how-terms__table { margin: 0; border-top: 1px solid var(--tr-line); }
+.how-terms__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  padding: 17px 0;
+  border-bottom: 1px solid var(--tr-line-soft);
+}
+.how-terms__row dt {
+  font: 500 var(--tr-microcaps-size)/1.4 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
+  text-transform: uppercase;
+  color: var(--tr-ink-45);
+}
+.how-terms__row dd {
+  font: 500 17px/1.4 var(--tr-font-display);
+  color: var(--tr-green-vault);
+  margin: 0;
+  text-align: right;
+}
+
+/* ---- card sections ---- */
+.how-cards__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--tr-gap-card);
+  margin-top: 46px;
+}
+
+/* ---- who holds it ---- */
+.how-custody { background: var(--tr-green-footer); color: var(--tr-neutral); }
+.how-custody__inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 104px var(--tr-pad-side) 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.how-custody__mark { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-bottom: 30px; }
+.how-custody__mark-pair { display: flex; gap: 8px; }
+.how-custody__mark > span,
+.how-custody__mark-pair > span {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--tr-gold-mid);
+}
+.how-custody__statement {
+  font: 500 var(--tr-quote) var(--tr-font-display);
+  color: var(--tr-neutral);
+  max-width: 700px;
+  margin: 0;
+  text-wrap: pretty;
+}
+.how-custody__statement em { font-style: normal; color: var(--tr-gold-mid); }
+.how-custody__note {
+  font: 400 var(--tr-body-sm) var(--tr-font-body);
+  color: var(--tr-on-green-strong);
+  max-width: 66ch;
+  margin: 24px 0 0;
+}
+.how-custody__link {
+  font: 500 12.5px/1 var(--tr-font-caps);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tr-gold-bright);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  margin-top: 30px;
+}
+.how-custody__link:hover { color: var(--tr-neutral); }
+
+/* ---- responsive ---- */
+@media (max-width: 1020px) {
+  .how-terms { grid-template-columns: 1fr; gap: 40px; }
+  .how-terms__note { max-width: 60ch; }
+  .how-cards__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .how-head { margin-bottom: 48px; }
+  /* The timing moves under the step rather than into a third column that no
+     longer has room for it. */
+  .how-step { grid-template-columns: 48px minmax(0, 1fr); gap: 0 20px; padding: 32px 0; }
+  .how-step__timing {
+    grid-column: 2;
+    text-align: left;
+    margin-top: 14px;
+  }
+  .how-step__num { font-size: 20px; }
+}
+@media (max-width: 620px) {
+  .how-cards__grid { grid-template-columns: 1fr; margin-top: 34px; }
+  .how-custody__inner { padding: 76px var(--tr-pad-side) 80px; }
+  .how-terms__row { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .how-terms__row dd { text-align: left; }
+}

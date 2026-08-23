@@ -38,10 +38,13 @@ test('the footer carries the legal pages and the journal', () => {
   }
 });
 
-test('pages we have not built yet appear but are never linked', () => {
+test('every footer entry is a link, or is marked as not one', () => {
+  // The footer used to list four planned pages as plain text. They are all
+  // built now, so nothing should be pending — but the mechanism stays, and if
+  // an entry is ever marked pending again it must not also be a link.
   const f = footer(home());
   const pending = [...f.matchAll(/class="tr-footer__pending">([^<]+)</g)].map((m) => m[1]);
-  assert.ok(pending.length > 0, 'expected the planned-but-unbuilt entries to be listed');
+  assert.deepEqual(pending, [], `still unbuilt: ${pending.join(', ')}`);
   for (const label of pending) {
     assert.ok(
       !new RegExp(`<a[^>]*>\\s*${label}`).test(f),

@@ -15,6 +15,7 @@ import { workedExample } from './objects/workedExample';
 import { caseStudy } from './objects/caseStudy';
 import { repExample } from './objects/repExample';
 import { closingSection } from './objects/closingSection';
+import { howStep } from './objects/howStep';
 
 import { siteSettings } from './documents/siteSettings';
 import { assetPage } from './documents/assetPage';
@@ -24,6 +25,7 @@ import { aboutPage } from './documents/aboutPage';
 import { faqPage } from './documents/faqPage';
 import { contactPage } from './documents/contactPage';
 import { lendPage } from './documents/lendPage';
+import { howPage } from './documents/howPage';
 import { post } from './documents/post';
 import { blogIndex } from './documents/blogIndex';
 
@@ -36,6 +38,7 @@ export const schemaTypes = [
   faqPage,
   contactPage,
   lendPage,
+  howPage,
   post,
   blogIndex,
   legalPage,
@@ -57,4 +60,5 @@ export const schemaTypes = [
   caseStudy,
   repExample,
   closingSection,
+  howStep,
 ];

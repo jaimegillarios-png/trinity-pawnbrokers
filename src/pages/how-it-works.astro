@@ -1,0 +1,125 @@
+---
+import '../styles/how.css';
+import Base from '../layouts/Base.astro';
+import SectionOpener from '../components/SectionOpener.astro';
+import CardGrid from '../components/CardGrid.astro';
+import ClosingBand from '../components/ClosingBand.astro';
+import { splitEmphasis } from '../lib/text';
+import { getHowPage, getSiteSettings } from '../lib/sanity/queries';
+import { breadcrumbSchema } from '../lib/seo';
+
+const [how, site] = await Promise.all([getHowPage(), getSiteSettings()]);
+const origin = Astro.site?.origin ?? '';
+
+/* HowTo is the schema type for exactly this: an ordered set of steps toward
+   one outcome. It can earn a step-by-step treatment in search results. */
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    '@id': `${origin}/how-it-works#howto`,
+    name: how.intro?.heading ?? 'How a Trinity pawn loan works',
+    description: how.seo.description,
+    totalTime: 'P1D',
+    step: how.steps.map((step, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: step.title,
+      text: step.body,
+    })),
+  },
+  breadcrumbSchema([
+    { name: 'Home', url: `${origin}/` },
+    { name: 'How it works', url: `${origin}/how-it-works` },
+  ]),
+];
+
+const reveal = '.how-step, .how-terms__row, .how-cards .tr-card, .how-custody__inner > *';
+---
+<Base seo={how.seo} site={site} schemas={schemas} reveal={reveal}>
+  <section class="tr-band tr-band--white">
+    <div class="tr-inner">
+      <header class="how-head">
+        {how.intro?.eyebrow && <p class="tr-eyebrow">{how.intro.eyebrow}</p>}
+        <h1 class="how-head__title">{how.intro?.heading}</h1>
+        {how.intro?.intro && <p class="how-head__intro">{how.intro.intro}</p>}
+      </header>
+
+      {/* Numbered rows rather than the homepage's five-across stepper: on a
+          page of its own each step can carry a paragraph, which does not fit
+          in a fifth of the container. */}
+      <ol class="how-steps">
+        {how.steps.map((step, i) => (
+          <li class="how-step">
+            <span class="how-step__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <div class="how-step__body">
+              <h2 class="how-step__title">{step.title}</h2>
+              <p class="how-step__text">{step.body}</p>
+            </div>
+            {step.timing && <p class="how-step__timing">{step.timing}</p>}
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  {how.terms && (
+    <section class="tr-band tr-band--grey">
+      <div class="tr-inner how-terms">
+        <div class="how-terms__head">
+          <SectionOpener intro={how.terms.intro} />
+          {how.terms.note && <p class="how-terms__note">{how.terms.note}</p>}
+        </div>
+        <dl class="how-terms__table">
+          {how.terms.rows?.map((row) => (
+            <div class="how-terms__row">
+              <dt>{row.label}</dt>
+              <dd>{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  )}
+
+  {how.sending && (
+    <section class="tr-band tr-band--white">
+      <div class="tr-inner how-cards">
+        <SectionOpener intro={how.sending.intro} />
+        <CardGrid cards={how.sending.items} class="how-cards__grid" />
+      </div>
+    </section>
+  )}
+
+  {how.ending && (
+    <section class="tr-band tr-band--grey">
+      <div class="tr-inner how-cards">
+        <SectionOpener intro={how.ending.intro} />
+        <CardGrid cards={how.ending.items} class="how-cards__grid" />
+      </div>
+    </section>
+  )}
+
+  {how.custody && (
+    <section class="how-custody">
+      <div class="how-custody__inner">
+        <div class="how-custody__mark" aria-hidden="true">
+          <span></span>
+          <div class="how-custody__mark-pair"><span></span><span></span></div>
+        </div>
+        {how.custody.eyebrow && <p class="tr-eyebrow tr-eyebrow--on-green">{how.custody.eyebrow}</p>}
+        {how.custody.statement && (
+          <p class="how-custody__statement">
+            {splitEmphasis(how.custody.statement).map((p) => (p.emphasis ? <em>{p.text}</em> : p.text))}
+          </p>
+        )}
+        {how.custody.note && <p class="how-custody__note">{how.custody.note}</p>}
+        {how.custody.cta && (
+          <a href={how.custody.cta.href} class="how-custody__link">{how.custody.cta.label}</a>
+        )}
+      </div>
+    </section>
+  )}
+
+  <ClosingBand closing={how.closing} site={site} />
+</Base>
