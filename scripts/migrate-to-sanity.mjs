@@ -764,7 +764,7 @@ function buildLendPage() {
  * site, and one page had to pick. See the note under the terms table.
  */
 function buildHowPage() {
-  const step = (title, timing, body) => ({ _type: 'howStep', title, timing, body });
+  const step = (icon, title, timing, body) => ({ _type: 'howStep', icon, title, timing, body });
   const card = (icon, title, body) => ({ _type: 'iconCard', icon, title, body });
   const row = (label, value) => ({ _type: 'specRow', label, value });
 
@@ -779,15 +779,15 @@ function buildHowPage() {
     },
     steps: keyed(
       [
-        step('Value your item', 'Before you give us anything',
+        step('ph-magnifying-glass', 'Value your item', 'Before you give us anything',
           'Every item page values your item on the page. Tell it what you have, add a few photographs, and it shows you a figure with the working behind it. No account, no credit check, no obligation.'),
-        step('Receive your offer', 'Within 3 hours',
+        step('ph-chat-teardrop-text', 'Receive your offer', 'Within 3 hours',
           'A specialist in that category reviews what you have sent and confirms an indicative offer. For anything that needs an outside opinion it takes longer, and we will say so rather than guess.'),
-        step('Send it or bring it', 'Free, insured either way',
+        step('ph-package', 'Send it or bring it', 'Free, insured either way',
           'Small items travel by Royal Mail Special Delivery on a free label we email you, insured door to door and opened on camera when they reach us. Larger or more fragile items go by specialist courier. Or bring it to the City of London office by appointment.'),
-        step('Sign and receive the funds', 'Within 1 working hour',
+        step('ph-signature', 'Sign and receive the funds', 'Within 1 working hour',
           'We confirm the valuation with the item in front of us, you sign the agreement electronically, and the money goes to a UK bank account in your name — within an hour of signing, if your bank is on Faster Payments.'),
-        step('Redeem when you are ready', 'Six months, renewable',
+        step('ph-hand-coins', 'Redeem when you are ready', 'Six months, renewable',
           'Repay in full whenever you like and your item comes back by free insured courier, in the condition it arrived in. Repay early and you pay less interest, not more.'),
       ],
       'step',

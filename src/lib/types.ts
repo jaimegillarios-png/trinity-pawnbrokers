@@ -199,7 +199,7 @@ export interface ContactPage {
   seo: Seo;
 }
 
-export interface HowStep { title: string; body: string; timing?: string }
+export interface HowStep { icon?: string; title: string; body: string; timing?: string }
 
 export interface HowPage {
   intro?: SectionIntro;

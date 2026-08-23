@@ -5,6 +5,11 @@ export const howStep = defineType({
   title: 'Step',
   type: 'object',
   fields: [
+    defineField({
+      name: 'icon',
+      type: 'string',
+      description: 'A Phosphor icon class, e.g. ph-package. Sits in the node on the timeline.',
+    }),
     defineField({ name: 'title', type: 'string', validation: (r) => r.required() }),
     defineField({ name: 'body', type: 'text', rows: 3, validation: (r) => r.required() }),
     defineField({

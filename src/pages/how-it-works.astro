@@ -38,25 +38,31 @@ const reveal = '.how-step, .how-terms__row, .how-cards .tr-card, .how-custody__i
 ---
 <Base seo={how.seo} site={site} schemas={schemas} reveal={reveal}>
   <section class="tr-band tr-band--white">
-    <div class="tr-inner">
+    <div class="tr-inner how-intro">
       <header class="how-head">
         {how.intro?.eyebrow && <p class="tr-eyebrow">{how.intro.eyebrow}</p>}
         <h1 class="how-head__title">{how.intro?.heading}</h1>
         {how.intro?.intro && <p class="how-head__intro">{how.intro.intro}</p>}
       </header>
 
-      {/* Numbered rows rather than the homepage's five-across stepper: on a
-          page of its own each step can carry a paragraph, which does not fit
-          in a fifth of the container. */}
+      {/* A rail with a node per step rather than five rows in a table. The
+          rail behind each node is grey until that step is revealed, so the
+          gold fills downward as you scroll — the existing reveal observer
+          already adds .in, so this needs no script of its own. */}
       <ol class="how-steps">
         {how.steps.map((step, i) => (
-          <li class="how-step">
-            <span class="how-step__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <li class="how-step" data-last={i === how.steps.length - 1 ? '' : undefined}>
+            <span class="how-step__node" aria-hidden="true">
+              {step.icon && <i class={`ph-light ${step.icon}`}></i>}
+            </span>
             <div class="how-step__body">
+              <p class="how-step__meta">
+                <span class="how-step__num">Step {String(i + 1).padStart(2, '0')}</span>
+                {step.timing && <span class="how-step__timing">{step.timing}</span>}
+              </p>
               <h2 class="how-step__title">{step.title}</h2>
               <p class="how-step__text">{step.body}</p>
             </div>
-            {step.timing && <p class="how-step__timing">{step.timing}</p>}
           </li>
         ))}
       </ol>

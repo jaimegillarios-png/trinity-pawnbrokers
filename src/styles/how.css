@@ -2,7 +2,14 @@
    How it works
    ============================================================ */
 
-.how-head { margin-bottom: 72px; max-width: 68ch; }
+/* The opener and the timeline share one column, centred. A rail is a vertical
+   device — run across the full 1240 container it left the right half of every
+   step empty, which is what made five steps read as a table. */
+/* .tr-inner.how-intro, not .how-intro: .tr-inner sets max-width too and
+   ties this on specificity, so the winner would be whichever stylesheet the
+   bundler happened to put last. */
+.tr-inner.how-intro { max-width: 900px; }
+.how-head { margin-bottom: 72px; }
 .how-head .tr-eyebrow { margin-top: 0; }
 .how-head__title {
   font: 500 var(--tr-h1) var(--tr-font-display);
@@ -17,34 +24,78 @@
 }
 
 /* ---- the steps ----
-   Numbered rows, not the homepage's five-across stepper: on a page of its own
-   each step carries a paragraph, which will not fit in a fifth of the
-   container. The timing sits in its own column so the five line up. */
-.how-steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+   A vertical rail with a node per step. Five rows in a grid read as a table
+   and left most of the container empty; the rail gives the sequence a spine
+   and pulls the copy back beside it. */
+.how-steps { list-style: none; margin: 0; padding: 0; }
 .how-step {
+  position: relative;
   display: grid;
-  grid-template-columns: 72px minmax(0, 1fr) 190px;
-  gap: 40px;
-  align-items: start;
-  padding: 40px 0;
-  border-top: 1px solid var(--tr-line-soft);
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 32px;
+  padding-bottom: 52px;
 }
-.how-step:last-child { border-bottom: 1px solid var(--tr-line-soft); }
-.how-step__num {
-  font: 400 var(--tr-h3) var(--tr-font-display);
+.how-step:last-child { padding-bottom: 0; }
+
+/* The rail. Drawn per step from the node's centre downward, so the last one
+   has none and the line stops at the final node rather than trailing off. */
+.how-step::before {
+  content: '';
+  position: absolute;
+  left: 31px;              /* node centre: 64 / 2 - 1 */
+  top: 32px;
+  bottom: -4px;
+  width: 2px;
+  background: var(--tr-line);
+  transition: background 0.5s ease 0.15s;
+}
+.how-step:last-child::before { display: none; }
+/* The reveal observer adds .in as each step scrolls into view, so the gold
+   fills downward with the reader. No scroll listener of our own. */
+.how-step.in::before { background: var(--tr-line-gold); }
+
+.how-step__node {
+  position: relative;
+  z-index: 1;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--tr-white);
+  border: 1px solid var(--tr-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.4s ease, background 0.4s ease;
+}
+.how-step__node i { font-size: 26px; color: var(--tr-gold-deep); line-height: 1; }
+.how-step.in .how-step__node { border-color: var(--tr-line-gold); background: var(--tr-warm-panel); }
+
+.how-step__body { padding-top: 12px; }
+.how-step__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px 14px;
+  margin: 0 0 10px;
+  font: 500 10.5px/1 var(--tr-font-caps);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.how-step__num { color: var(--tr-ink-45); }
+/* The timing was floated to a third column 700px from the words it described.
+   As a chip beside the step number it is read with them. */
+.how-step__timing {
   color: var(--tr-gold-deep);
-  line-height: 1.1;
-  font-variant-numeric: tabular-nums;
+  border: 1px solid var(--tr-line-gold);
+  border-radius: var(--tr-radius-chip);
+  padding: 5px 9px 4px;
 }
 .how-step__title { font: 500 var(--tr-h3) var(--tr-font-display); color: var(--tr-green-vault); margin: 0 0 10px; }
-.how-step__text { font: 400 var(--tr-body) var(--tr-font-body); color: var(--tr-ink-72); margin: 0; max-width: 62ch; }
-.how-step__timing {
-  font: 500 11px/1.5 var(--tr-font-caps);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--tr-ink-45);
-  margin: 6px 0 0;
-  text-align: right;
+.how-step__text { font: 400 var(--tr-body) var(--tr-font-body); color: var(--tr-ink-72); margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .how-step::before,
+  .how-step__node { transition: none; }
 }
 
 /* ---- the terms table ---- */
@@ -145,15 +196,11 @@
 }
 @media (max-width: 760px) {
   .how-head { margin-bottom: 48px; }
-  /* The timing moves under the step rather than into a third column that no
-     longer has room for it. */
-  .how-step { grid-template-columns: 48px minmax(0, 1fr); gap: 0 20px; padding: 32px 0; }
-  .how-step__timing {
-    grid-column: 2;
-    text-align: left;
-    margin-top: 14px;
-  }
-  .how-step__num { font-size: 20px; }
+  .how-step { grid-template-columns: 48px minmax(0, 1fr); gap: 20px; padding-bottom: 40px; }
+  .how-step__node { width: 48px; height: 48px; }
+  .how-step__node i { font-size: 21px; }
+  .how-step::before { left: 23px; top: 26px; }
+  .how-step__body { padding-top: 6px; }
 }
 @media (max-width: 620px) {
   .how-cards__grid { grid-template-columns: 1fr; margin-top: 34px; }

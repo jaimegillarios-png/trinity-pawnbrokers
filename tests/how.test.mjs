@@ -9,8 +9,16 @@ const how = () => page('how-it-works');
 test('the page carries all five steps in order', () => {
   const html = how();
   assert.equal(count(html, /class="how-step"/g), 5);
-  const nums = [...html.matchAll(/class="how-step__num"[^>]*>(\d+)</g)].map((m) => m[1]);
+  const nums = [...html.matchAll(/class="how-step__num">Step (\d+)</g)].map((m) => m[1]);
   assert.deepEqual(nums, ['01', '02', '03', '04', '05'], 'the steps are not numbered in order');
+});
+
+test('every step has a node with an icon, and a timing', () => {
+  // The rail is drawn from the nodes, so a step without one breaks the line.
+  const html = how();
+  assert.equal(count(html, /class="how-step__node"/g), 5, 'a step is missing its node');
+  assert.equal(count(html, /class="ph-light ph-[a-z-]+"/g) >= 5, true, 'a node has no icon');
+  assert.equal(count(html, /class="how-step__timing"/g), 5, 'a step is missing its timing');
 });
 
 test('the steps go out as HowTo structured data', () => {
