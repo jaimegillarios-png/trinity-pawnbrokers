@@ -721,11 +721,12 @@ function buildLendPage() {
         'criterion',
       ),
     },
+    // No standfirst: with the criteria moved to the foot, this opener sits
+    // directly under the page's own intro, and the two were saying the same
+    // sentence twice.
     indexIntro: {
       eyebrow: 'The seven',
-      heading: 'Categories with a page of their own',
-      intro:
-        'Each one values your item on the page, before asking anything of you. What each page accepts is listed underneath it.',
+      heading: 'Start with the closest one',
     },
     other: {
       title: 'Something else?',

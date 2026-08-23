@@ -45,23 +45,16 @@ const schemas = [
 const reveal = '.lend-criteria .tr-card, .lend-item, .lend-other';
 ---
 <Base seo={lend.seo} site={site} schemas={schemas} reveal={reveal}>
-  <section class="tr-band tr-band--white">
-    <div class="lend-head">
-      {lend.intro?.eyebrow && <p class="tr-eyebrow">{lend.intro.eyebrow}</p>}
-      <h1 class="lend-head__title">{lend.intro?.heading}</h1>
-      {lend.intro?.intro && <p class="lend-head__intro">{lend.intro.intro}</p>}
-    </div>
-  </section>
-
-  <section class="tr-band tr-band--grey">
-    <div class="tr-inner lend-criteria">
-      <SectionOpener intro={lend.criteria?.intro} />
-      <CardGrid cards={lend.criteria?.items} class="lend-criteria__grid" />
-    </div>
-  </section>
-
+  {/* The categories come first: they are what the page is for. The criteria
+      follow at the foot, for the reader who did not find their item above. */}
   <section class="tr-band tr-band--white">
     <div class="tr-inner">
+      <div class="lend-head">
+        {lend.intro?.eyebrow && <p class="tr-eyebrow">{lend.intro.eyebrow}</p>}
+        <h1 class="lend-head__title">{lend.intro?.heading}</h1>
+        {lend.intro?.intro && <p class="lend-head__intro">{lend.intro.intro}</p>}
+      </div>
+
       <SectionOpener intro={lend.indexIntro} />
 
       <ul class="lend-items">
@@ -111,6 +104,13 @@ const reveal = '.lend-criteria .tr-card, .lend-item, .lend-other';
           )}
         </div>
       )}
+    </div>
+  </section>
+
+  <section class="tr-band tr-band--grey">
+    <div class="tr-inner lend-criteria">
+      <SectionOpener intro={lend.criteria?.intro} />
+      <CardGrid cards={lend.criteria?.items} class="lend-criteria__grid" />
     </div>
   </section>
 

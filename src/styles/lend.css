@@ -2,12 +2,10 @@
    What we lend against — the hub the main nav points at
    ============================================================ */
 
-/* ---- header ---- */
-.lend-head {
-  max-width: var(--tr-container);
-  margin: 0 auto;
-  padding: 96px var(--tr-pad-side) 88px;
-}
+/* ---- header ----
+   Inside the same band as the categories now, so it takes a margin rather
+   than its own container padding. */
+.lend-head { margin-bottom: 76px; }
 .lend-head .tr-eyebrow { margin-top: 0; }
 .lend-head__title {
   font: 500 var(--tr-h1) var(--tr-font-display);
@@ -143,7 +141,7 @@
   .lend-item { grid-template-columns: minmax(0, 240px) minmax(0, 1fr); gap: 32px; }
 }
 @media (max-width: 760px) {
-  .lend-head { padding: 68px var(--tr-pad-side) 60px; }
+  .lend-head { margin-bottom: 52px; }
   .lend-item { grid-template-columns: 1fr; gap: 22px; }
   .lend-item__accepts { grid-template-columns: 1fr; }
   .lend-other { padding: 36px 28px; gap: 26px; }
