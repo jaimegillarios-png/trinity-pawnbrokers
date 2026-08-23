@@ -3,22 +3,40 @@
    ============================================================ */
 
 /* ---- header ----
-   Inside the same band as the categories now, so it takes a margin rather
-   than its own container padding. */
-.lend-head { margin-bottom: 76px; }
-.lend-head .tr-eyebrow { margin-top: 0; }
+   Inside the same band as the categories, so it takes a margin rather than
+   its own container padding. */
+.lend-head { margin-bottom: 64px; }
+.lend-head .tr-eyebrow { margin-top: 0; margin-bottom: 26px; }
+.lend-head__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 64px;
+  /* End, not start: the standfirst is a third the height of the statement, so
+     hung from the top it floats. Sitting the two on the same bottom line
+     makes the pairing look chosen. */
+  align-items: end;
+}
 .lend-head__title {
   font: 500 var(--tr-h1) var(--tr-font-display);
   color: var(--tr-ink);
   margin: 0;
-  max-width: 20ch;
   text-wrap: balance;
 }
 .lend-head__intro {
   font: 400 var(--tr-body-lg) var(--tr-font-body);
   color: var(--tr-ink-72);
-  max-width: 62ch;
-  margin: 26px 0 0;
+  margin: 0;
+  padding-bottom: 6px;      /* optical: sits the last lines on one baseline */
+}
+
+/* The list's own label. A full section opener here was a second heading
+   directly under the first, saying the same thing. */
+.lend-items__label {
+  font: 500 var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
+  text-transform: uppercase;
+  color: var(--tr-gold-deep);
+  margin: 0;
 }
 
 /* ---- the four tests ---- */
@@ -34,7 +52,7 @@
    A list of rows rather than a grid of tiles: the homepage already has the
    tiles, and what earns the click here is what sits under each heading —
    the sub-categories that page accepts. */
-.lend-items { list-style: none; margin: 46px 0 0; padding: 0; }
+.lend-items { list-style: none; margin: 18px 0 0; padding: 0; }
 .lend-item {
   display: grid;
   grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
@@ -141,7 +159,9 @@
   .lend-item { grid-template-columns: minmax(0, 240px) minmax(0, 1fr); gap: 32px; }
 }
 @media (max-width: 760px) {
-  .lend-head { margin-bottom: 52px; }
+  .lend-head { margin-bottom: 48px; }
+  .lend-head__grid { grid-template-columns: 1fr; gap: 24px; align-items: start; }
+  .lend-head__intro { padding-bottom: 0; }
   .lend-item { grid-template-columns: 1fr; gap: 22px; }
   .lend-item__accepts { grid-template-columns: 1fr; }
   .lend-other { padding: 36px 28px; gap: 26px; }

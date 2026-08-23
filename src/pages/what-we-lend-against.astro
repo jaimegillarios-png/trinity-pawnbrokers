@@ -49,13 +49,21 @@ const reveal = '.lend-criteria .tr-card, .lend-item, .lend-other';
       follow at the foot, for the reader who did not find their item above. */}
   <section class="tr-band tr-band--white">
     <div class="tr-inner">
-      <div class="lend-head">
+      {/* Statement left, standfirst right, bottom-aligned. Stacked and
+          left-ranged it used half the container and put two headings back to
+          back with one paragraph between them. */}
+      <header class="lend-head">
         {lend.intro?.eyebrow && <p class="tr-eyebrow">{lend.intro.eyebrow}</p>}
-        <h1 class="lend-head__title">{lend.intro?.heading}</h1>
-        {lend.intro?.intro && <p class="lend-head__intro">{lend.intro.intro}</p>}
-      </div>
+        <div class="lend-head__grid">
+          <h1 class="lend-head__title">{lend.intro?.heading}</h1>
+          {lend.intro?.intro && <p class="lend-head__intro">{lend.intro.intro}</p>}
+        </div>
+      </header>
 
-      <SectionOpener intro={lend.indexIntro} />
+      {/* A label, not a second opener — the list below is the page. */}
+      {lend.indexIntro?.eyebrow && (
+        <p class="lend-items__label">{lend.indexIntro.eyebrow}</p>
+      )}
 
       <ul class="lend-items">
         {items.map((item) => (
