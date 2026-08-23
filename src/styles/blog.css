@@ -16,8 +16,11 @@
   margin: 0 auto;
   padding: 88px var(--tr-pad-side) 56px;
 }
+/* --tr-h1, the interior-hero size, not --tr-h2. h2 is the section-heading
+   role; using it for a page title put the blog 26px below the item pages and
+   /about. */
 .blog-head h1 {
-  font: 500 var(--tr-h2) var(--tr-font-display);
+  font: 500 var(--tr-h1) var(--tr-font-display);
   color: var(--tr-green-vault);
   margin: 12px 0 0;
   max-width: 34ch;
@@ -227,8 +230,10 @@
   color: var(--tr-ink-62);
   margin: 32px 0 14px;
 }
+/* Capped below the shared --tr-h1: an article title runs long and this column
+   is 760px, where 64px would take most titles to four lines. */
 .article h1 {
-  font: 500 var(--tr-h2) var(--tr-font-display);
+  font: 500 clamp(34px, 3.4vw, 48px)/1.12 var(--tr-font-display);
   color: var(--tr-green-vault);
   margin: 0;
   text-wrap: balance;
