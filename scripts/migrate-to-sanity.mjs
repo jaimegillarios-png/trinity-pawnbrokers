@@ -1220,12 +1220,13 @@ async function blogSeed() {
       _id: 'blogIndex',
       _type: 'blogIndex',
       eyebrow: 'The blog',
-      // "The bench" is what /about calls the specialists — the same word here
-      // makes the blog read as their notebook rather than a marketing feed,
-      // and it says who is writing, which the old title did not.
-      title: 'Notes from the bench',
+      // Broad on purpose. "Fine things" is the phrase the homepage already
+      // uses and it covers every category; anything narrower — lending
+      // against them, what we look for, the bench — describes one corner of
+      // a blog that should be free to write about the whole field.
+      title: 'Notes on fine things',
       standfirst:
-        'What our specialists look at, what moves a valuation, and what actually happens while we are holding your item.',
+        'Valuation and authentication, provenance and care, and how borrowing against something you own actually works.',
       seo: {
         _type: 'seo',
         title: 'Blog — Trinity Pawnbrokers',
