@@ -7,8 +7,11 @@
    something a vertical device suits. */
 .how-intro {
   display: grid;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-  gap: var(--tr-gap-col);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  /* Wider than the shared --tr-gap-col: the left column is a standing
+     heading, not a column of the same text, so the two want more air between
+     them than two columns of body copy would. */
+  gap: 104px;
   align-items: start;
 }
 /* The heading holds while the five steps scroll past it. */
