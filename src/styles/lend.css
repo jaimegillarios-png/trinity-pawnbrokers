@@ -41,7 +41,9 @@
   padding: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 40px var(--tr-gap-col);
+  /* Row gap well over the column gap: cards sitting the same distance apart
+     in both directions read as one block of eight rather than four rows. */
+  gap: 76px var(--tr-gap-col);
 }
 .lend-item { display: flex; flex-direction: column; }
 
@@ -124,11 +126,11 @@
 /* ---- responsive ---- */
 @media (max-width: 1020px) {
   .lend-criteria__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .lend-items { gap: 36px 32px; }
+  .lend-items { gap: 60px 32px; }
 }
 @media (max-width: 760px) {
   .lend-head { margin-bottom: 48px; }
-  .lend-items { grid-template-columns: 1fr; gap: 44px; }
+  .lend-items { grid-template-columns: 1fr; gap: 56px; }
   .lend-item--other { padding: 34px 28px 32px; }
 }
 @media (max-width: 620px) {
