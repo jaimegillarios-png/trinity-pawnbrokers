@@ -70,3 +70,23 @@ test('every internal link on the hub resolves', () => {
     assert.ok(existsSync(target), `the hub links to ${href}, which is not in the build`);
   }
 });
+
+test('the header indexes the seven and jumps down the page', () => {
+  const html = lend();
+  // indexOf('</nav>') alone finds the masthead's, which closes before this one.
+  const from = html.indexOf('lend-jump');
+  const head = html.slice(from, html.indexOf('</nav>', from));
+  assert.equal(count(head, /<a href="#/g), 7, 'expected a jump link per category');
+  for (const slug of ASSET_SLUGS) {
+    assert.ok(head.includes(`href="#${slug}"`), `no jump link for ${slug}`);
+    // The anchor has to exist further down, or the link is a dead scroll.
+    assert.ok(html.includes(`id="${slug}"`), `nothing to land on for #${slug}`);
+  }
+});
+
+test('the page has one h1 and no competing second heading in the header', () => {
+  const html = lend();
+  const head = html.slice(0, html.indexOf('lend-items'));
+  assert.equal(count(head, /<h1[\s>]/g), 1);
+  assert.equal(count(head, /<h2[\s>]/g), 0, 'the header has a second heading again');
+});
