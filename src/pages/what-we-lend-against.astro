@@ -42,7 +42,7 @@ const schemas = [
   ]),
 ];
 
-const reveal = '.lend-criteria .tr-card, .lend-item, .lend-other';
+const reveal = '.lend-criteria .tr-card, .lend-item';
 ---
 <Base seo={lend.seo} site={site} schemas={schemas} reveal={reveal}>
   {/* The categories come first: they are what the page is for. The criteria
@@ -87,21 +87,26 @@ const reveal = '.lend-criteria .tr-card, .lend-item, .lend-other';
             </div>
           </li>
         ))}
+
+        {/* The eighth cell. Seven categories in a two-up grid leaves an
+            orphan; the overflow prompt fills it, and it belongs among the
+            categories rather than below them — this is where someone who has
+            not found their item is actually looking. */}
+        {lend.other && (
+          <li class="lend-item lend-item--other">
+            <div class="lend-item__body">
+              {lend.other.title && <h3 class="lend-item__title">{lend.other.title}</h3>}
+              {lend.other.body && <p class="lend-item__teaser">{lend.other.body}</p>}
+              {lend.other.cta && (
+                <a href={lend.other.cta.href} class="lend-item__link">
+                  {lend.other.cta.label} →
+                </a>
+              )}
+            </div>
+          </li>
+        )}
       </ul>
 
-      {lend.other && (
-        <div class="lend-other">
-          <div>
-            {lend.other.title && <h3 class="lend-other__title">{lend.other.title}</h3>}
-            {lend.other.body && <p class="lend-other__body">{lend.other.body}</p>}
-          </div>
-          {lend.other.cta && (
-            <a href={lend.other.cta.href} class="tr-cta tr-cta--gold lend-other__cta">
-              {lend.other.cta.label}
-            </a>
-          )}
-        </div>
-      )}
     </div>
   </section>
 

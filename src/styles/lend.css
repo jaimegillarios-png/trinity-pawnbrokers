@@ -32,28 +32,25 @@
 .lend-criteria .tr-card { border-color: var(--tr-line-card); }
 
 /* ---- the seven ----
-   A list of rows rather than a grid of tiles: the homepage already has the
-   tiles, and what earns the click here is what sits under each heading —
-   the sub-categories that page accepts. */
-.lend-items { list-style: none; margin: 0; padding: 0; }
-/* The jump links land here; clear the sticky masthead. */
-.lend-item { scroll-margin-top: 96px; }
-.lend-item {
+   Two up. Cards rather than the homepage's tiles: each one carries what that
+   page accepts, which is what makes this worth a click. Seven is odd, so the
+   overflow prompt takes the eighth cell — see the route. */
+.lend-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: grid;
-  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
-  gap: 44px;
-  align-items: start;
-  padding: 40px 0;
-  border-top: 1px solid var(--tr-line-soft);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px var(--tr-gap-col);
 }
-.lend-item:last-of-type { border-bottom: 1px solid var(--tr-line-soft); }
+.lend-item { display: flex; flex-direction: column; }
 
-.lend-item__media { display: block; overflow: hidden; }
+.lend-item__media { display: block; overflow: hidden; margin-bottom: 26px; }
 .lend-item__media img {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 2;
   object-fit: cover;
   transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
@@ -63,6 +60,9 @@
   .lend-item:hover .lend-item__media img { transition: none; transform: none; }
 }
 
+/* The body grows so every card's link sits on the same line as its neighbour's
+   however unevenly the copy runs. */
+.lend-item__body { display: flex; flex-direction: column; flex: 1; }
 .lend-item__title { font: 500 var(--tr-h3) var(--tr-font-display); margin: 0 0 10px; }
 .lend-item__title a { color: var(--tr-green-vault); text-decoration: none; }
 .lend-item__title a:hover { color: var(--tr-gold-deep); }
@@ -70,7 +70,6 @@
   font: 400 var(--tr-body) var(--tr-font-body);
   color: var(--tr-ink-72);
   margin: 0;
-  max-width: 62ch;
 }
 .lend-item__label {
   font: 500 10.5px/1 var(--tr-font-caps);
@@ -79,16 +78,9 @@
   color: var(--tr-ink-45);
   margin: 22px 0 12px;
 }
-/* Two columns of short phrases: four accepted sub-categories in one column
-   would run the row twice as tall as the photograph beside it. */
-.lend-item__accepts {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px 32px;
-}
+/* One column in a half-width card: at ~590px two would break "Rolex, Patek
+   Philippe and Audemars Piguet" across three lines. */
+.lend-item__accepts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .lend-item__accepts li {
   font: 400 var(--tr-body-sm) var(--tr-font-body);
   color: var(--tr-ink-80);
@@ -106,8 +98,9 @@
   background: var(--tr-gold-mid);
 }
 .lend-item__link {
-  display: inline-block;
-  margin-top: 22px;
+  align-self: start;
+  margin-top: auto;
+  padding-top: 26px;
   font: 500 12px/1 var(--tr-font-caps);
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -117,37 +110,26 @@
 }
 .lend-item__link:hover { color: var(--tr-green-vault); }
 
-/* ---- anything else ---- */
-.lend-other {
-  margin-top: 56px;
+/* ---- the eighth cell ---- */
+.lend-item--other {
   background: var(--tr-green-vault);
   color: var(--tr-neutral);
-  padding: 46px 48px;
-  display: flex;
-  gap: 40px;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  padding: 40px 38px 38px;
 }
-.lend-other__title { font: 500 var(--tr-h3) var(--tr-font-display); color: var(--tr-neutral); margin: 0 0 10px; }
-.lend-other__body {
-  font: 400 var(--tr-body-sm) var(--tr-font-body);
-  color: var(--tr-on-green-strong);
-  margin: 0;
-  max-width: 66ch;
-}
-.lend-other__cta { flex: none; }
+.lend-item--other .lend-item__title { color: var(--tr-neutral); }
+.lend-item--other .lend-item__teaser { color: var(--tr-on-green-strong); }
+.lend-item--other .lend-item__link { color: var(--tr-gold-bright); }
+.lend-item--other .lend-item__link:hover { color: var(--tr-neutral); }
 
 /* ---- responsive ---- */
 @media (max-width: 1020px) {
   .lend-criteria__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .lend-item { grid-template-columns: minmax(0, 240px) minmax(0, 1fr); gap: 32px; }
+  .lend-items { gap: 36px 32px; }
 }
 @media (max-width: 760px) {
   .lend-head { margin-bottom: 48px; }
-  .lend-item { grid-template-columns: 1fr; gap: 22px; }
-  .lend-item__accepts { grid-template-columns: 1fr; }
-  .lend-other { padding: 36px 28px; gap: 26px; }
+  .lend-items { grid-template-columns: 1fr; gap: 44px; }
+  .lend-item--other { padding: 34px 28px 32px; }
 }
 @media (max-width: 620px) {
   /* pretty, not balance. On a 334px column balance held the longest line to
@@ -158,5 +140,4 @@
   .lend-criteria__grid { grid-template-columns: 1fr; margin-top: 34px; }
   /* border-box: there is no global reset, so width:100% plus the button's
      own 34px of side padding overflows the viewport by 12px. */
-  .lend-other__cta { width: 100%; box-sizing: border-box; text-align: center; }
 }

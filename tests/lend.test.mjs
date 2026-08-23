@@ -8,7 +8,10 @@ const lend = () => page('what-we-lend-against');
 
 test('the hub lists every item page, and links to each', () => {
   const html = lend();
+  // Seven categories plus the overflow card, which fills the eighth cell of
+  // the two-up grid rather than leaving an orphan.
   assert.equal(count(html, /class="lend-item"/g), 7, 'expected all seven categories');
+  assert.equal(count(html, /class="lend-item lend-item--other"/g), 1, 'no overflow card');
   for (const slug of ASSET_SLUGS) {
     assert.ok(html.includes(`href="/${slug}"`), `no link to /${slug}`);
   }
