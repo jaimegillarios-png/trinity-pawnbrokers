@@ -133,7 +133,6 @@ export interface AssetLendEntry extends AssetPageCard {
 export interface LendPage {
   intro?: SectionIntro;
   criteria?: { intro?: SectionIntro; items?: IconCard[] };
-  indexIntro?: SectionIntro;
   other?: { title?: string; body?: string; cta?: Cta };
   closing?: ClosingSection;
   seo: Seo;

@@ -182,7 +182,6 @@ export const getLendPage = async (): Promise<LendPage> => {
   const lend = await query<LendPage | null>(`*[_type == "lendPage"][0]{
     intro ${SECTION_INTRO},
     criteria { intro ${SECTION_INTRO}, items[] },
-    indexIntro ${SECTION_INTRO},
     other,
     closing,
     ${SEO}

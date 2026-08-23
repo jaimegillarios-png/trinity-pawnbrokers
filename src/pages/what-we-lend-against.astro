@@ -49,38 +49,10 @@ const reveal = '.lend-criteria .tr-card, .lend-item, .lend-other';
       follow at the foot, for the reader who did not find their item above. */}
   <section class="tr-band tr-band--white">
     <div class="tr-inner">
-      {/* The statement on the left, an index of the seven on the right. The
-          index jumps down this page rather than off it — you see the whole
-          range at a glance, drop to the one that fits, then click through
-          from there. A hub that only restates the homepage grid is not worth
-          the click; one that lets you skip to your own item is. */}
       <header class="lend-head">
-        <div class="lend-head__copy">
-          {lend.intro?.eyebrow && <p class="tr-eyebrow">{lend.intro.eyebrow}</p>}
-          <h1 class="lend-head__title">{lend.intro?.heading}</h1>
-          {lend.intro?.intro && <p class="lend-head__intro">{lend.intro.intro}</p>}
-        </div>
-
-        <nav class="lend-jump" aria-label="The seven categories">
-          {lend.indexIntro?.eyebrow && <p class="lend-jump__label">{lend.indexIntro.eyebrow}</p>}
-          <ul>
-            {items.map((item) => (
-              <li>
-                <a href={`#${item.slug}`}>
-                  <img
-                    src={urlFor(item.cardImage).width(112).height(112).fit('crop').url()}
-                    alt=""
-                    width="56"
-                    height="56"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <span>{item.title}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        {lend.intro?.eyebrow && <p class="tr-eyebrow">{lend.intro.eyebrow}</p>}
+        <h1 class="lend-head__title">{lend.intro?.heading}</h1>
+        {lend.intro?.intro && <p class="lend-head__intro">{lend.intro.intro}</p>}
       </header>
 
       <ul class="lend-items">

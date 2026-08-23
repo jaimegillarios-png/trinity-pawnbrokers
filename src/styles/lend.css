@@ -3,15 +3,9 @@
    ============================================================ */
 
 /* ---- header ----
-   Statement left, an index of the seven right. Inside the same band as the
-   list, so it takes a margin rather than its own container padding. */
-.lend-head {
-  margin-bottom: 72px;
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: 72px;
-  align-items: start;
-}
+   Heading and standfirst, both running the width of the container. Inside the
+   same band as the list, so it takes a margin rather than its own padding. */
+.lend-head { margin-bottom: 72px; }
 .lend-head .tr-eyebrow { margin-top: 0; }
 .lend-head__title {
   font: 500 var(--tr-h1) var(--tr-font-display);
@@ -22,40 +16,11 @@
 .lend-head__intro {
   font: 400 var(--tr-body-lg) var(--tr-font-body);
   color: var(--tr-ink-72);
-  margin: 26px 0 0;
-  max-width: 46ch;
+  /* 70ch, against the 46ch it had in a column. Long for running body copy,
+     but this is three sentences under a display heading, not a page of text. */
+  max-width: 70ch;
+  margin: 28px 0 0;
 }
-
-/* ---- the jump index ---- */
-.lend-jump__label {
-  font: 500 10.5px/1 var(--tr-font-caps);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--tr-ink-45);
-  margin: 0 0 6px;
-}
-.lend-jump ul { list-style: none; margin: 0; padding: 0; }
-.lend-jump a {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 10px 8px 10px 0;
-  border-bottom: 1px solid var(--tr-line-soft);
-  text-decoration: none;
-  transition: background 0.2s ease;
-}
-.lend-jump li:first-child a { border-top: 1px solid var(--tr-line-soft); }
-.lend-jump a:hover,
-.lend-jump a:focus-visible { background: var(--tr-warm-panel); }
-.lend-jump img { display: block; width: 56px; height: 56px; object-fit: cover; flex: none; }
-.lend-jump span {
-  font: 500 18px/1.2 var(--tr-font-display);
-  color: var(--tr-green-vault);
-  transition: color 0.2s ease;
-}
-.lend-jump a:hover span { color: var(--tr-gold-deep); }
-/* The arrow is the affordance: these go down the page, not off it. */
-.lend-jump span::after { content: ' ↓'; color: var(--tr-gold-mid); }
 
 /* ---- the four tests ---- */
 .lend-criteria__grid {
@@ -175,14 +140,6 @@
 
 /* ---- responsive ---- */
 @media (max-width: 1020px) {
-  .lend-head { grid-template-columns: 1fr; gap: 44px; }
-  /* Two columns of short rows rather than one long ladder once the index is
-     under the statement instead of beside it. */
-  .lend-jump ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; }
-  .lend-jump li:nth-child(2) a { border-top: 1px solid var(--tr-line-soft); }
-  /* Stacked, the index's closing rule and the list's opening rule sit 48px
-     apart and read as an empty row. The list keeps its own. */
-  .lend-jump li:last-child a { border-bottom: 0; }
   .lend-criteria__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .lend-item { grid-template-columns: minmax(0, 240px) minmax(0, 1fr); gap: 32px; }
 }
@@ -193,8 +150,6 @@
   .lend-other { padding: 36px 28px; gap: 26px; }
 }
 @media (max-width: 620px) {
-  .lend-jump ul { grid-template-columns: 1fr; }
-  .lend-jump li:nth-child(2) a { border-top: 0; }
   .lend-criteria__grid { grid-template-columns: 1fr; margin-top: 34px; }
   /* border-box: there is no global reset, so width:100% plus the button's
      own 34px of side padding overflows the viewport by 12px. */

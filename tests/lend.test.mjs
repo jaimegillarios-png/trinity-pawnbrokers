@@ -71,22 +71,14 @@ test('every internal link on the hub resolves', () => {
   }
 });
 
-test('the header indexes the seven and jumps down the page', () => {
+test('the header is a heading and a standfirst, nothing else', () => {
   const html = lend();
-  // indexOf('</nav>') alone finds the masthead's, which closes before this one.
-  const from = html.indexOf('lend-jump');
-  const head = html.slice(from, html.indexOf('</nav>', from));
-  assert.equal(count(head, /<a href="#/g), 7, 'expected a jump link per category');
-  for (const slug of ASSET_SLUGS) {
-    assert.ok(head.includes(`href="#${slug}"`), `no jump link for ${slug}`);
-    // The anchor has to exist further down, or the link is a dead scroll.
-    assert.ok(html.includes(`id="${slug}"`), `nothing to land on for #${slug}`);
-  }
-});
-
-test('the page has one h1 and no competing second heading in the header', () => {
-  const html = lend();
-  const head = html.slice(0, html.indexOf('lend-items'));
-  assert.equal(count(head, /<h1[\s>]/g), 1);
+  // Anchored on the markup, not the class name — the inline critical CSS
+  // mentions both of these classes before the elements appear.
+  const from = html.indexOf('<header class="lend-head">');
+  const head = html.slice(from, html.indexOf('<ul class="lend-items"', from));
+  assert.equal(count(head, /<h1[\s>]/g), 1, 'expected exactly one heading');
   assert.equal(count(head, /<h2[\s>]/g), 0, 'the header has a second heading again');
+  assert.equal(count(head, /<a /g), 0, 'the header should carry no links');
+  assert.equal(count(head, /<img/g), 0, 'the header should carry no images');
 });

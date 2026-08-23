@@ -22,7 +22,6 @@ export const lendPage = defineType({
         defineField({ name: 'items', type: 'array', of: [defineArrayMember({ type: 'iconCard' })] }),
       ],
     }),
-    defineField({ name: 'indexIntro', title: 'Opener for the categories', type: 'sectionIntro', group: 'content' }),
     defineField({
       name: 'other',
       title: 'Anything else',
