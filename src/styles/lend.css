@@ -150,6 +150,11 @@
   .lend-other { padding: 36px 28px; gap: 26px; }
 }
 @media (max-width: 620px) {
+  /* pretty, not balance. On a 334px column balance held the longest line to
+     231px and left 103px unused, which is what makes a phone heading look
+     inset when it is not. Plain wrap fills but strands "it" on a line of its
+     own; pretty fills and still avoids the widow. */
+  .lend-head__title { text-wrap: pretty; }
   .lend-criteria__grid { grid-template-columns: 1fr; margin-top: 34px; }
   /* border-box: there is no global reset, so width:100% plus the button's
      own 34px of side padding overflows the viewport by 12px. */
