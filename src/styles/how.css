@@ -17,8 +17,12 @@
 /* The heading holds while the five steps scroll past it. */
 .how-head { position: sticky; top: 40px; }
 .how-head .tr-eyebrow { margin-top: 0; }
+/* Capped at 58px rather than the shared --tr-h1's 64. In a 473px column 64px
+   forces three lines out of forty-one characters — 257/351/383 against 473
+   available, so every line is short and the last is the longest. At 58 it
+   falls into two that nearly fill the measure, 448 and 465. */
 .how-head__title {
-  font: 500 var(--tr-h1) var(--tr-font-display);
+  font: 500 clamp(38px, 4vw, 58px)/1.08 var(--tr-font-display);
   color: var(--tr-ink);
   margin: 0;
   text-wrap: balance;
