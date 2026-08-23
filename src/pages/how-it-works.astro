@@ -53,6 +53,13 @@ const reveal = '.how-step, .how-terms__row, .how-cards .tr-card, .how-custody__i
         {how.steps.map((step, i) => (
           <li class="how-step" data-last={i === how.steps.length - 1 ? '' : undefined}>
             <span class="how-step__node" aria-hidden="true">
+              {/* Two circles, not a CSS border: the gold one is drawn with
+                  stroke-dashoffset so the ring traces itself as the step is
+                  reached, which a border-color swap cannot do. */}
+              <svg class="how-step__ring" viewBox="0 0 64 64" focusable="false">
+                <circle class="how-step__ring-track" cx="32" cy="32" r="31.25" />
+                <circle class="how-step__ring-draw" cx="32" cy="32" r="31.25" />
+              </svg>
               {step.icon && <i class={`ph-light ${step.icon}`}></i>}
             </span>
             <div class="how-step__body">

@@ -37,7 +37,11 @@
    A vertical rail with a node per step. Five rows in a grid read as a table
    and left most of the container empty; the rail gives the sequence a spine
    and pulls the copy back beside it. */
-.how-steps { list-style: none; margin: 0; padding: 0; }
+/* Dropped to the heading's line rather than the eyebrow's. Flush with the
+   eyebrow the sequence began level with a 12px caps label, so the page never
+   settled before the first node — which reads as abrupt even though the
+   heading has already announced five steps. */
+.how-steps { list-style: none; margin: 0; padding: 34px 0 0; }
 .how-step {
   position: relative;
   display: grid;
@@ -48,64 +52,140 @@
 .how-step:last-child { padding-bottom: 0; }
 
 /* The rail. Drawn per step from the node's centre downward, so the last one
-   has none and the line stops at the final node rather than trailing off. */
-.how-step::before {
+   has none and the line stops at the final node rather than trailing off.
+   Two layers: a static grey track, and a gold overlay that scales from the
+   top so the line draws itself rather than changing colour all at once. */
+.how-step::before,
+.how-step::after {
   content: '';
   position: absolute;
   left: 31px;              /* node centre: 64 / 2 - 1 */
   top: 32px;
   bottom: -4px;
   width: 2px;
-  background: var(--tr-line);
-  transition: background 0.5s ease 0.15s;
 }
-.how-step:last-child::before { display: none; }
-/* The reveal observer adds .in as each step scrolls into view, so the gold
-   fills downward with the reader. No scroll listener of our own. */
-.how-step.in::before { background: var(--tr-line-gold); }
+.how-step::before { background: var(--tr-line); }
+.how-step::after {
+  background: var(--tr-gold-mid);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.how-step:last-child::before,
+.how-step:last-child::after { display: none; }
+/* The reveal observer adds .in as each step scrolls into view, so the rail
+   draws downward with the reader. No scroll listener of our own. */
+.how-step.in::after { transform: scaleY(1); }
+
+/* Where the browser supports it, the rail's fill is tied to scroll position
+   rather than to the step entering view — so the line grows continuously
+   under the reader rather than in five jumps. Each segment runs on its own
+   view() timeline and they are adjacent, so the join is seamless.
+   An animation's declarations beat the .in rule above, so no override is
+   needed; browsers without scroll timelines keep the per-step behaviour. */
+@supports (animation-timeline: view()) {
+  .how-step::after {
+    animation: how-rail-fill linear both;
+    animation-timeline: view();
+    /* Starts as the step's top third clears the fold, finishes as its centre
+       passes it — the line stays just ahead of what is being read. */
+    animation-range: cover 12% cover 58%;
+    transition: none;
+  }
+}
+@keyframes how-rail-fill {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
 
 .how-step__node {
   position: relative;
   z-index: 1;
   width: 64px;
   height: 64px;
-  border-radius: 50%;
-  background: var(--tr-white);
-  border: 1px solid var(--tr-line);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.4s ease, background 0.4s ease;
 }
-.how-step__node i { font-size: 26px; color: var(--tr-gold-deep); line-height: 1; }
-.how-step.in .how-step__node { border-color: var(--tr-line-gold); background: var(--tr-warm-panel); }
+.how-step__ring { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.how-step__ring circle { fill: none; stroke-width: 1.5; }
+.how-step__ring-track { stroke: var(--tr-line); fill: var(--tr-white); transition: fill 0.5s ease 0.3s; }
+.how-step.in .how-step__ring-track { fill: var(--tr-warm-panel); }
+/* 2πr at r=31.25 is 196.35. Rotated so the stroke starts at twelve o'clock
+   and traces clockwise, like a dial filling. */
+.how-step__ring-draw {
+  stroke: var(--tr-gold-mid);
+  stroke-linecap: round;
+  stroke-dasharray: 196.35;
+  stroke-dashoffset: 196.35;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 0.85s cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s;
+}
+.how-step.in .how-step__ring-draw { stroke-dashoffset: 0; }
+
+/* The icon arrives once the ring is most of the way round. */
+.how-step__node i {
+  position: relative;
+  font-size: 26px;
+  color: var(--tr-gold-deep);
+  line-height: 1;
+  opacity: 0;
+  transform: scale(0.82);
+  transition: opacity 0.4s ease 0.45s, transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.45s;
+}
+.how-step.in .how-step__node i { opacity: 1; transform: none; }
 
 .how-step__body { padding-top: 12px; }
+/* Label then value, the pattern the terms table further down this page uses
+   and the record plaque on /about: micro-caps for the field name, the display
+   face for what it says. The timing was in an outlined chip, which put a
+   second hard-edged box next to the caps and made two tiny elements compete
+   above the title. */
 .how-step__meta {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 10px 14px;
-  margin: 0 0 10px;
-  font: 500 10.5px/1 var(--tr-font-caps);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  gap: 4px 12px;
+  margin: 0 0 6px;
 }
-.how-step__num { color: var(--tr-ink-45); }
-/* The timing was floated to a third column 700px from the words it described.
-   As a chip beside the step number it is read with them. */
+.how-step__num {
+  /* The shared microcaps role, 12.5px, rather than the 10.5 it was set at —
+     it is a field label sitting beside a 16px value, not a footnote. */
+  font: 500 var(--tr-microcaps-size)/1.6 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
+  text-transform: uppercase;
+  color: var(--tr-ink-45);
+}
+/* The rule is the separator — a middot would sit on the caps' baseline and
+   the value's, which are different. */
+.how-step__num::after {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  margin-left: 12px;
+  vertical-align: 0.25em;
+  background: var(--tr-line);
+}
 .how-step__timing {
+  font: 500 18px/1.4 var(--tr-font-display);
   color: var(--tr-gold-deep);
-  border: 1px solid var(--tr-line-gold);
-  border-radius: var(--tr-radius-chip);
-  padding: 5px 9px 4px;
 }
 .how-step__title { font: 500 var(--tr-h3) var(--tr-font-display); color: var(--tr-green-vault); margin: 0 0 10px; }
-.how-step__text { font: 400 var(--tr-body) var(--tr-font-body); color: var(--tr-ink-72); margin: 0; }
+/* body-lg, the scale's intro size: on this page the step is the reading
+   content, not a caption under a heading. */
+.how-step__text { font: 400 var(--tr-body-lg) var(--tr-font-body); color: var(--tr-ink-72); margin: 0; }
 
+/* Reduced motion: no drawing, just the finished state. */
 @media (prefers-reduced-motion: reduce) {
-  .how-step::before,
-  .how-step__node { transition: none; }
+  .how-step::after,
+  .how-step__ring-track,
+  .how-step__ring-draw,
+  .how-step__node i { transition: none; }
+  .how-step::after { transform: scaleY(1); animation: none; }
+  .how-step__ring-draw { stroke-dashoffset: 0; }
+  .how-step__node i { opacity: 1; transform: none; }
 }
 
 /* ---- the terms table ---- */
@@ -202,6 +282,9 @@
 @media (max-width: 1020px) {
   .how-intro { grid-template-columns: 1fr; gap: 48px; }
   .how-head { position: static; }
+  /* Stacked, the head sits above rather than beside, so the offset would
+     only be a gap on top of a gap. */
+  .how-steps { padding-top: 0; }
   .how-terms { grid-template-columns: 1fr; gap: 40px; }
   .how-terms__note { max-width: 60ch; }
   .how-cards__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -210,7 +293,8 @@
   .how-step { grid-template-columns: 48px minmax(0, 1fr); gap: 20px; padding-bottom: 40px; }
   .how-step__node { width: 48px; height: 48px; }
   .how-step__node i { font-size: 21px; }
-  .how-step::before { left: 23px; top: 26px; }
+  .how-step::before,
+  .how-step::after { left: 23px; top: 26px; }
   .how-step__body { padding-top: 6px; }
 }
 @media (max-width: 620px) {
