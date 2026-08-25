@@ -30,7 +30,10 @@ things CI runs on every push.
 CLOUDFLARE_ACCOUNT_ID=85ec2e0223607ccc7dff4344bb61d02a npm run deploy
 ```
 
-That builds, strips the unused Cloudflare Worker (see below) and uploads.
+That builds, strips the unused Cloudflare Worker (see below) and uploads to
+production. The Pages project's production branch is `main`, matching GitHub —
+deploying under any other branch name makes a preview, and the live URL keeps
+serving whatever was there before.
 
 Two things worth knowing:
 

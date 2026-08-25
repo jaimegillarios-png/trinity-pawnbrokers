@@ -7,7 +7,7 @@
     "dev": "astro dev",
     "build": "astro check && astro build",
     "preview": "wrangler pages dev ./dist",
-    "deploy": "SITE_URL=${SITE_URL:-https://trinity-pawnbrokers.pages.dev} astro build && node scripts/strip-worker.mjs && wrangler pages deploy ./dist --project-name trinity-pawnbrokers --commit-dirty=true",
+    "deploy": "SITE_URL=${SITE_URL:-https://trinity-pawnbrokers.pages.dev} astro build && node scripts/strip-worker.mjs && wrangler pages deploy ./dist --project-name trinity-pawnbrokers --branch main --commit-dirty=true",
     "studio": "npm --prefix studio run dev",
     "studio:deploy": "npm --prefix studio run deploy",
     "astro": "astro",
