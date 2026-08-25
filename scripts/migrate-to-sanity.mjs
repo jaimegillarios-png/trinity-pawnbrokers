@@ -45,6 +45,43 @@ const client = createClient({ projectId, dataset, apiVersion: '2026-01-01', toke
 
 const uploaded = new Map();
 
+/**
+ * Titles and descriptions that fit a search result. Five of the seven were
+ * keyword lists — "Loan Against Diamonds in London | Pawn Certified & Loose
+ * Diamonds | Trinity Pawnbrokers", 87 characters, of which Google shows 70.
+ * The descriptions ran to 266. Both limits are asserted in tests/seo.test.mjs.
+ */
+const ASSET_SEO = {
+  'gold': {
+    title: 'Pawn loans against gold, London | Trinity Pawnbrokers',
+    description: 'Borrow against sovereigns, bars and jewellery gold. Tested, weighed and priced against the live market, and returned to you when you repay.',
+  },
+  'watches': {
+    title: 'Pawn loans against luxury watches | Trinity Pawnbrokers',
+    description: 'Rolex, Patek Philippe, Omega and more, valued by horologists. From £500 with no maximum, and back on your wrist when you repay.',
+  },
+  'jewellery': {
+    title: 'Pawn loans against fine jewellery | Trinity Pawnbrokers',
+    description: 'Cartier, Tiffany, Van Cleef and heirloom pieces, valued beyond the metal. No credit checks, insured both ways, returned as you left it.',
+  },
+  'diamonds': {
+    title: 'Pawn loans against diamonds, London | Trinity Pawnbrokers',
+    description: 'Certified and loose stones, engagement rings and diamond jewellery, graded by specialists. No credit checks, insured both ways, returned as you left it.',
+  },
+  'fine-art': {
+    title: 'Loans against fine art, London | Trinity Pawnbrokers',
+    description: 'Paintings, prints, sculpture and whole collections, valued by art specialists on provenance and market. Discreet, fully insured, returned as you left it.',
+  },
+  'handbags': {
+    title: 'Pawn loans against designer handbags | Trinity Pawnbrokers',
+    description: 'Hermès, Chanel, Louis Vuitton and more, authenticated by specialists. No credit checks, insured both ways, and your bag returned as you left it.',
+  },
+  'silver': {
+    title: 'Pawn loans against silver, London | Trinity Pawnbrokers',
+    description: 'Hallmarked, maker and period silver valued beyond the melt. No credit checks, insured in transit and in storage, returned exactly as you left it.',
+  },
+};
+
 async function uploadImage(relPath, alt) {
   if (!relPath) return undefined;
   const abs = resolve(root, relPath);
@@ -329,8 +366,7 @@ async function buildAssetPage(content, order) {
     complianceNote: content.specimenBar,
     seo: {
       _type: 'seo',
-      title: content.meta.title,
-      description: content.meta.description,
+      ...(ASSET_SEO[content.slug] ?? { title: content.meta.title, description: content.meta.description }),
       noIndex: false,
     },
   };
