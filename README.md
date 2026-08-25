@@ -1,52 +1,86 @@
 # Trinity Pawnbrokers
 
-Static marketing site, built against the Trinity design system.
+Marketing site for Trinity Pawnbrokers — a trading name of Open Access Finance
+Ltd, which also trades as Unbolted and is authorised and regulated by the FCA
+under reference 741896.
 
-## Pages
+**Astro** (static output) · **Sanity** for content · **Cloudflare Pages** for hosting.
 
-| File | What it is |
+| | |
 | --- | --- |
-| `index.html` | Homepage (served at `/`) |
-| `watches.html` | Watches asset page — the written reference instance |
-| `gold` · `jewellery` · `diamonds` · `fine-art` · `handbags` · `silver` `.html` | Sibling asset pages — scaffolded, copy still `TODO` |
-| `index-v1.html`, `index-v2.html` | Earlier homepage directions, kept for reference |
+| Live (review) | https://trinity-pawnbrokers.pages.dev — **noindex**, see below |
+| Content | Sanity project `7fxd9siz`, dataset `production` |
+| Previous site | tagged `v1-static-site` — the hand-built static site this replaced |
+
+## Running it
+
+```bash
+npm install
+cp .env.example .env      # fill in PUBLIC_SANITY_PROJECT_ID
+npm run dev               # localhost:4321
+npm run studio            # the Sanity Studio, localhost:3333
+```
+
+`npm run verify` runs the type check, the build and the tests — the same three
+things CI runs on every push.
+
+## Deploying
+
+```bash
+CLOUDFLARE_ACCOUNT_ID=85ec2e0223607ccc7dff4344bb61d02a npm run deploy
+```
+
+That builds, strips the unused Cloudflare Worker (see below) and uploads.
+
+Two things worth knowing:
+
+- **Every route is prerendered.** The Cloudflare adapter emits a Worker and a
+  `_routes.json` anyway, and Pages then routes most requests through it to be
+  handed a file that was already on disk — which caused intermittent 522s.
+  `scripts/strip-worker.mjs` removes both, and refuses to run the moment any
+  route sets `export const prerender = false`.
+- **The pages.dev host is noindexed** by `public/_headers`, scoped to that host
+  so a real domain added later is unaffected.
+
+## Content
+
+Everything on every page comes from Sanity except the site chrome — the
+masthead links, the footer, and the 404. `scripts/migrate-to-sanity.mjs` is the
+importer: idempotent, and `--dry-run` writes `.migration-preview.json` for
+review without a token.
+
+```bash
+SANITY_API_WRITE_TOKEN=... node scripts/migrate-to-sanity.mjs
+```
 
 ## Design system
 
-Tokens are the single source of truth — no page invents its own hex or type size.
+Tokens are the single source of truth — no page invents its own hex or type
+size.
 
 ```
-src/styles/trinity-tokens.css   ← the tokens (import first, globally)
-src/styles/trinity-components.css ← global chrome: masthead, footer, buttons, cards, type
-src/styles/asset-page.css       ← asset-page layout only
-src/scripts/trinity-reveal.js   ← entrance animations (shared)
-src/scripts/asset-page.js       ← form, FAQ, connector, reviews badge
+src/styles/trinity-tokens.css      ← tokens, imported first and globally
+src/styles/trinity-components.css  ← shared chrome: masthead, footer, cards,
+                                     type roles, the FAQ accordion, the trust
+                                     strip, the closing band
+src/styles/<page>.css              ← one file per page, imported by its route
 ```
 
-Import order on every page: **tokens → components → page**.
+A component shared between pages keeps its styles in `trinity-components.css`.
+Putting them in a page's stylesheet has shipped unstyled components three times
+now — the item pages, the FAQ accordion, and the closing band.
 
-- `docs/DESIGN_SYSTEM.md` — component recipes and the non-negotiable rules
-- `docs/WORKFLOW.md` — how a change flows design → tokens → code
-- `docs/ASSET_PAGES.md` — content/template split for the asset pages
-- `docs/changelog/` — one file per systemic change
+## Before this goes live on a real domain
 
-## Build
-
-Nothing is required to view the site — it is plain static HTML. Two generators
-keep derived files in sync:
-
-```bash
-node scripts/build-theme.mjs         # tokens.json  -> src/styles/trinity-theme.js
-node scripts/build-asset-pages.mjs   # src/content/*.js -> <slug>.html
-node scripts/scaffold-asset.mjs …    # new asset content file (see docs/ASSET_PAGES.md)
-```
-
-Asset `.html` files are **generated** — edit `src/content/<slug>.js` and rebuild.
-
-## Local preview
-
-```
-python3 -m http.server 4173
-```
-
-Then open http://localhost:4173
+- [ ] The representative example still reads `borrowing £[X,XXX] at [X.X]% per
+      month` on the homepage and every item page. It is a financial promotion.
+- [ ] Gold and watches still say "Needs confirmation" / "Awaiting compliance"
+- [ ] Four figures contradict each other across pages: **fees** (homepage says
+      none, the FAQ says a set-up fee is payable), **term** (6–24 months vs
+      6 renewable vs 6 + one extension), **offer timing** (1 business day vs
+      same day vs 3 hours), **LTV** (80% on gold only vs 80% generally)
+- [ ] `/cookies` is an unfinished placeholder; there is no consent banner
+- [ ] `/trust-and-security` is empty and is linked from the masthead
+- [ ] Five blog articles are placeholders
+- [ ] The valuation form posts to `/api/valuation`, which does not exist
+- [ ] Confirm the domain, then rebuild with the real `SITE_URL`
