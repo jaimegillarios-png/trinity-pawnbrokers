@@ -93,6 +93,27 @@ export const product = defineType({
     defineField({ name: 'boxAndPapers', title: 'Box and papers', type: 'string', group: 'detail' }),
     defineField({ name: 'warranty', type: 'string', group: 'detail' }),
 
+    /* Unbolted film every piece — a short clip of the actual watch running,
+       which is the closest a buyer gets to handling it. Hosted here rather
+       than embedded from anywhere else, so it survives the old site being
+       switched off. */
+    defineField({
+      name: 'video',
+      title: 'Video of this piece',
+      type: 'file',
+      group: 'item',
+      options: { accept: 'video/mp4,video/quicktime,video/webm' },
+      description: 'A short clip of the actual watch. MP4 plays everywhere; keep it under about 40MB.',
+      fields: [
+        defineField({
+          name: 'poster',
+          title: 'Poster frame',
+          type: 'image',
+          description: 'Optional. Shown before it plays — otherwise the first photograph is used.',
+        }),
+      ],
+    }),
+
     /* Set by the checkout route, not by a person. A unique piece is held for
        the length of one Stripe session so two buyers cannot pay for the same
        watch. The Studio shows it read-only so staff can see why an item is

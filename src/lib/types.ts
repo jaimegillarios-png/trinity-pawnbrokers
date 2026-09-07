@@ -263,6 +263,8 @@ export interface Product {
   condition?: string;
   boxAndPapers?: string;
   warranty?: string;
+  /** A short clip of the actual piece, hosted with the images. */
+  video?: { url?: string; mime?: string; poster?: SanityImage };
   seo?: Seo;
 }
 

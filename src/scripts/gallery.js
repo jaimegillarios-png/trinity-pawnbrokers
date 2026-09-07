@@ -22,7 +22,15 @@
 
     function show(to) {
       index = (to + frames.length) % frames.length;
-      frames.forEach(function (frame, i) { frame.hidden = i !== index; });
+      frames.forEach(function (frame, i) {
+        frame.hidden = i !== index;
+        /* Leaving a frame while it is playing should stop it — otherwise the
+           sound follows you through the rest of the photographs. */
+        if (i !== index) {
+          var playing = frame.querySelector('video');
+          if (playing && !playing.paused) playing.pause();
+        }
+      });
       thumbs.forEach(function (thumb, i) {
         thumb.setAttribute('aria-selected', i === index ? 'true' : 'false');
       });

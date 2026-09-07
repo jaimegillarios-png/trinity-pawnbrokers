@@ -633,3 +633,29 @@
   .shop-section__grid,
   .shop-assurances__grid { margin-top: 34px; }
 }
+
+/* ---- the film, in the rail with the photographs ----
+   Unbolted film every piece running. It is another view of the same watch, so
+   it belongs in the gallery rather than in a section of its own. */
+.gallery__thumb--video { position: relative; }
+.gallery__play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(16, 39, 28, 0.42);
+  color: var(--tr-white);
+}
+.gallery__play svg { width: 22px; height: 22px; fill: currentColor; }
+.gallery__thumb--video[aria-selected='true'] .gallery__play { background: rgba(16, 39, 28, 0.2); }
+
+.gallery__frame--video video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background: var(--tr-green-vault);
+}
+/* A portrait clip must not be cropped to a square — some are filmed upright. */
+.gallery__frame--video video[data-portrait] { object-fit: contain; }

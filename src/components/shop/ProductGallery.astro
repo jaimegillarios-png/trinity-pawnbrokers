@@ -5,6 +5,12 @@ import type { Product } from '../../lib/types';
 interface Props { product: Product }
 const { product } = Astro.props;
 const images = product.images ?? [];
+/* The film sits last in the rail rather than in a section of its own: it is
+   another view of the same watch, and a buyer flicking through photographs
+   should reach it without hunting for it. */
+const video = product.video?.url ? product.video : null;
+const videoPoster = video?.poster ?? images[0];
+const slides = images.length + (video ? 1 : 0);
 ---
 {/* A rail of thumbnails beside one large frame, the way the pieces are
     actually photographed — eighteen shots of a single watch, because at this
@@ -13,8 +19,8 @@ const images = product.images ?? [];
     Every image is in the markup and visible with no JavaScript: the script
     below turns the stack into a gallery, so a failed script leaves a long page
     of photographs rather than one photograph and nine dead thumbnails. */}
-<div class="gallery" data-gallery data-count={images.length}>
-  {images.length > 1 && (
+<div class="gallery" data-gallery data-count={slides}>
+  {slides > 1 && (
     <div class="gallery__rail" role="tablist" aria-label={`${product.title} photographs`}>
       {images.map((image, i) => (
         <button
@@ -22,7 +28,7 @@ const images = product.images ?? [];
           class="gallery__thumb"
           role="tab"
           aria-selected={i === 0 ? 'true' : 'false'}
-          aria-label={`Photograph ${i + 1} of ${images.length}`}
+          aria-label={`Photograph ${i + 1} of ${slides}`}
           data-gallery-thumb={i}
         >
           <img
@@ -35,6 +41,31 @@ const images = product.images ?? [];
           />
         </button>
       ))}
+
+      {video && (
+        <button
+          type="button"
+          class="gallery__thumb gallery__thumb--video"
+          role="tab"
+          aria-selected="false"
+          aria-label={`Video of this ${product.brand}`}
+          data-gallery-thumb={images.length}
+        >
+          {videoPoster && (
+            <img
+              src={urlFor(videoPoster).width(160).height(160).fit('crop').url()}
+              alt=""
+              width="80"
+              height="80"
+              loading="lazy"
+              decoding="async"
+            />
+          )}
+          <span class="gallery__play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false"><path d="M8 5.5v13l11-6.5z" /></svg>
+          </span>
+        </button>
+      )}
     </div>
   )}
 
@@ -55,7 +86,25 @@ const images = product.images ?? [];
       </figure>
     ))}
 
-    {images.length > 1 && (
+    {video && (
+      <figure class="gallery__frame gallery__frame--video" data-gallery-frame={images.length}>
+        {/* preload="none" so a 40MB clip is not fetched by everyone who opens
+            the page to look at the photographs. */}
+        <video
+          controls
+          playsinline
+          preload="none"
+          poster={videoPoster ? urlFor(videoPoster).width(1200).height(1200).fit('crop').url() : undefined}
+          data-gallery-video
+        >
+          <source src={video.url} type={video.mime ?? 'video/mp4'} />
+          Your browser cannot play this video.
+          <a href={video.url}>Download it instead</a>.
+        </video>
+      </figure>
+    )}
+
+    {slides > 1 && (
       <>
         <button type="button" class="gallery__nav gallery__nav--prev" data-gallery-prev
           aria-label="Previous photograph" hidden>

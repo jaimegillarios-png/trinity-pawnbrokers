@@ -236,6 +236,7 @@ const PRODUCT = `{
   condition,
   boxAndPapers,
   warranty,
+  video { "url": asset->url, "mime": asset->mimeType, poster ${IMAGE} },
   ${SEO}
 }`;
 

@@ -14,3 +14,6 @@ trinity-pawn-brokers-rebranding/
 
 # Scraped source imagery — 27MB, and it lives in Sanity once imported.
 scripts/data/unbolted/images/
+
+# Fetched product films — 300MB, and they belong in the CMS once transcoded.
+scripts/data/unbolted/videos/
