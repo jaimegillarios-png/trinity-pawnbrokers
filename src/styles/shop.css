@@ -421,35 +421,33 @@
 .gallery__thumb:focus-visible { outline: 2px solid var(--tr-gold-deep); outline-offset: 2px; }
 
 /* Shown only when the rail has somewhere to go, and only on the side it can
-   go to — an arrow that does nothing is worse than no arrow. Overlaid on the
-   ends of the row so the row itself stays flush with the photograph. */
+   go to — an arrow that does nothing is worse than no arrow.
+
+   Overlaid on the ends of the row rather than sitting beside it: in the flow
+   they pushed the row inwards by their own width, so the first thumbnail no
+   longer started where the photograph above it started. The bordered white
+   box is deliberate — it reads as a control, where a bare chevron on a fade
+   read as decoration. */
 .gallery__scroll {
   position: absolute;
   top: 0;
-  width: 30px;
+  width: 26px;
   height: 68px;
   display: grid;
   place-items: center;
   padding: 0;
-  border: none;
-  color: var(--tr-green-vault);
+  border: 1px solid var(--tr-line-soft);
+  background: var(--tr-white);
+  color: var(--tr-ink-62);
   cursor: pointer;
   z-index: 1;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, border-color 0.2s ease;
 }
-.gallery__scroll--prev {
-  left: 0;
-  /* Fades the thumbnails out under the arrow rather than covering them with a
-     block, so it stays obvious that the row continues past it. */
-  background: linear-gradient(to right, var(--tr-white) 55%, rgba(255, 255, 255, 0));
-}
-.gallery__scroll--next {
-  right: 0;
-  background: linear-gradient(to left, var(--tr-white) 55%, rgba(255, 255, 255, 0));
-}
-.gallery__scroll svg { width: 16px; height: 16px; }
-.gallery__scroll:hover { color: var(--tr-gold-deep); }
-.gallery__scroll:focus-visible { outline: 2px solid var(--tr-gold-deep); outline-offset: -2px; }
+.gallery__scroll--prev { left: 0; }
+.gallery__scroll--next { right: 0; }
+.gallery__scroll svg { width: 15px; height: 15px; }
+.gallery__scroll:hover { color: var(--tr-green-vault); border-color: var(--tr-line-strong); }
+.gallery__scroll:focus-visible { outline: 2px solid var(--tr-gold-deep); outline-offset: 2px; }
 
 .gallery__stage { order: 1; position: relative; min-width: 0; }
 .gallery__frame { margin: 0; }
