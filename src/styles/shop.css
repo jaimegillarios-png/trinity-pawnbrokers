@@ -116,20 +116,20 @@
   letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-ink-45);
-  margin: 0 0 12px;
+  margin: 0 0 10px;
 }
-.product__title { font: 500 var(--tr-h2) var(--tr-font-display); color: var(--tr-green-vault); margin: 0 0 16px; text-wrap: balance; }
+.product__title { font: 500 var(--tr-h2) var(--tr-font-display); color: var(--tr-green-vault); margin: 0 0 14px; text-wrap: balance; }
 .product__price {
   font: 500 26px/1.3 var(--tr-font-display);
   color: var(--tr-ink);
-  margin: 0 0 20px;
+  margin: 0 0 24px;
   display: flex;
   align-items: baseline;
   gap: 14px;
 }
 .product__rrp { font: 400 15px/1.4 var(--tr-font-body); color: var(--tr-ink-45); text-decoration: line-through; }
 .product__gone { color: var(--tr-ink-45); }
-.product__summary { font: 400 var(--tr-body-lg) var(--tr-font-body); color: var(--tr-ink-72); margin: 0 0 28px; }
+.product__summary { font: 400 var(--tr-body-lg) var(--tr-font-body); color: var(--tr-ink-72); margin: 0 0 32px; max-width: 52ch; }
 
 .product__add { border: 0; cursor: pointer; }
 .product__add[data-in-cart='true'] { background: var(--tr-green-vault); color: var(--tr-neutral); }
@@ -142,14 +142,20 @@
   margin: 0;
 }
 
-.product__specs { margin: 36px 0 0; border-top: 1px solid var(--tr-line); }
+/* ---- the specification ----
+   One rule per row and none anywhere else. It had a rule above the table, a
+   rule under every row including the last, and a third above the closing line
+   — at two different opacities, so the column read as ruled paper. Moving the
+   line to the top of each row gives the table its opening rule for free and
+   lets it end on white. */
+.product__specs { margin: 40px 0 0; }
 .product__spec {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 24px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--tr-line-soft);
+  gap: 28px;
+  padding: 13px 0;
+  border-top: 1px solid var(--tr-line-soft);
 }
 .product__spec dt {
   font: 500 var(--tr-microcaps-size)/1.4 var(--tr-font-caps);
@@ -158,9 +164,14 @@
   color: var(--tr-ink-45);
   white-space: nowrap;
 }
-.product__spec dd { font: 400 var(--tr-body-sm) var(--tr-font-body); color: var(--tr-ink-80); margin: 0; text-align: right; }
+.product__spec dd {
+  font: 400 var(--tr-body-sm) var(--tr-font-body);
+  color: var(--tr-ink-80);
+  margin: 0;
+  text-align: right;
+}
 
-.product__condition { margin-top: 34px; }
+.product__condition { margin-top: 38px; }
 .product__condition-title {
   font: 500 var(--tr-microcaps-size)/1 var(--tr-font-caps);
   letter-spacing: var(--tr-microcaps-track);
@@ -169,12 +180,14 @@
   margin: 0 0 12px;
 }
 .product__condition p { font: 400 var(--tr-body) var(--tr-font-body); color: var(--tr-ink-72); margin: 0; }
+
+/* Set apart by space and by being the quietest thing on the page, rather than
+   by a fourth horizontal line. */
 .product__assurance {
   font: 400 var(--tr-caption) var(--tr-font-body);
   color: var(--tr-ink-45);
-  margin: 30px 0 0;
-  padding-top: 20px;
-  border-top: 1px solid var(--tr-line-soft);
+  margin: 36px 0 0;
+  max-width: 46ch;
 }
 
 /* ---- cart ---- */

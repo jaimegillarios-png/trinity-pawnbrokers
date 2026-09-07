@@ -224,3 +224,20 @@ test('a cropped image is served cropped at every width', () => {
     assert.match(src, /croppedSrcSetFor\(/, `${file} pairs a cropped src with an uncropped srcset`);
   }
 });
+
+test('the product column is ruled once per spec row and nowhere else', () => {
+  /* It had a rule above the table, one under every row including the last, and
+     a third above the closing line — at two different opacities, so the column
+     read as ruled paper. The line now sits on top of each row, which gives the
+     table its opening rule for free and lets it end on white. */
+  const css = readFileSync(resolve(root, 'src/styles/shop.css'), 'utf8');
+  const rule = (selector) => {
+    const start = css.indexOf(selector);
+    assert.ok(start > -1, `no rule for ${selector}`);
+    return css.slice(start, css.indexOf('}', start));
+  };
+  assert.ok(!/border/.test(rule('.product__specs {')), 'the table wrapper still draws a rule');
+  assert.ok(!/border/.test(rule('.product__assurance {')), 'the closing line still draws a rule');
+  assert.match(rule('.product__spec {'), /border-top: 1px solid var\(--tr-line-soft\)/);
+  assert.ok(!/border-bottom/.test(rule('.product__spec {')), 'rows must not rule both edges');
+});
