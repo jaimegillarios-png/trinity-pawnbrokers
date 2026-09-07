@@ -1,8 +1,21 @@
-# The pages.dev host is the review deployment, not the site. It carries the
-# same content as any custom domain attached to this project, and that content
-# still has placeholder figures in a regulated financial promotion — so it
-# must not be indexed. Scoped to the host, so a real domain added later is
-# unaffected and stays indexable.
+# Nothing this project serves is ready to be indexed yet.
+#
+# The homepage still carries a representative example reading "borrowing
+# £[X,XXX] at [X.X]% per month" — a financial promotion, with placeholders, for
+# an FCA-authorised firm. Two sale policies carry visible [TO CONFIRM: …]
+# markers, and nine pages say "(placeholder)". None of that should reach a
+# search result under Trinity's name.
+#
+# So the rule covers the real domain as well as the review hosts. Deleting the
+# first block below is the whole change when the copy has been signed off —
+# and it should be one deliberate commit, not a side effect of something else.
+https://trinitypawnbrokers.co.uk/*
+  X-Robots-Tag: noindex, nofollow
+
+https://www.trinitypawnbrokers.co.uk/*
+  X-Robots-Tag: noindex, nofollow
+
+# The review deployment.
 https://trinity-pawnbrokers.pages.dev/*
   X-Robots-Tag: noindex, nofollow
 

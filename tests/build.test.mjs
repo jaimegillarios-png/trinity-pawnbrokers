@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { dist, page, file, ASSET_SLUGS, count } from './helpers.mjs';
 
@@ -40,5 +40,22 @@ test('pages carry rendered content, not just chrome', () => {
     const html = page(slug);
     assert.ok(count(html, /class="tr-card"/g) >= 4, `${slug}: too few cards`);
     assert.ok(count(html, /class="faq-item"/g) >= 5, `${slug}: too few FAQs`);
+  }
+});
+
+test('nothing is indexable while the copy still has placeholders in it', () => {
+  /* The homepage carries a representative example reading "borrowing £[X,XXX]
+     at [X.X]% per month" — a financial promotion, with placeholders, for an
+     FCA-authorised firm. Until that is real, no host serving this build may be
+     indexed, the eventual live domain included. */
+  const headers = readFileSync(resolve(dist, '_headers'), 'utf8');
+  const home = readFileSync(resolve(dist, 'index.html'), 'utf8');
+  const placeholders = /£\[X,XXX\]|\[X\.X\]%|TO CONFIRM/.test(home + readFileSync(resolve(dist, 'terms-of-sale/index.html'), 'utf8'));
+  if (!placeholders) return; // Copy is signed off — the rule may be lifted.
+
+  for (const host of ['trinitypawnbrokers.co.uk', 'trinity-pawnbrokers.pages.dev']) {
+    const block = headers.slice(headers.indexOf(`https://${host}/*`));
+    assert.ok(headers.includes(`https://${host}/*`), `${host} has no _headers rule`);
+    assert.match(block.slice(0, 200), /X-Robots-Tag: noindex/, `${host} is indexable`);
   }
 });
