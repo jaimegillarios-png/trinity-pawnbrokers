@@ -241,3 +241,16 @@ test('the product column is ruled once per spec row and nowhere else', () => {
   assert.match(rule('.product__spec {'), /border-top: 1px solid var\(--tr-line-soft\)/);
   assert.ok(!/border-bottom/.test(rule('.product__spec {')), 'rows must not rule both edges');
 });
+
+test('the breadcrumb does not sit in a band of its own', () => {
+  /* Every .tr-band draws a rule beneath itself to divide alternating grounds.
+     A white breadcrumb band above a white product band drew a line between two
+     identical surfaces and boxed the breadcrumb in against the masthead's own
+     rule. */
+  const html = page(`shop/${SLUGS[0]}`);
+  const main = html.slice(html.indexOf('<main'), html.indexOf('</main>'));
+  const bands = main.match(/class="tr-band[^"]*"/g) ?? [];
+  assert.equal(bands.length, 1, `the product page has ${bands.length} bands: ${bands.join(', ')}`);
+  assert.match(main, /class="product-crumbs"/, 'no breadcrumb');
+  assert.ok(!/tr-band[^"]*product-crumbs/.test(main), 'the breadcrumb is still its own band');
+});

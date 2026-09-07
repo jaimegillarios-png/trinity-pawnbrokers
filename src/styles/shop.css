@@ -521,13 +521,8 @@
   .gallery__nav { opacity: 1; }
 }
 
-/* ---- breadcrumb over the piece ----
-   The section padding lives on .tr-inner, not on .tr-band — setting it on the
-   band does nothing, which is how a one-line breadcrumb came to be 259px tall
-   with 104px of section padding above it and 110px below. */
-.product-crumbs .tr-inner {
-  padding-top: 24px;
-  padding-bottom: 0;
+/* ---- breadcrumb over the piece ---- */
+.product-crumbs {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 9px;
@@ -537,7 +532,12 @@
 }
 .product-crumbs a { color: var(--tr-ink-62); text-decoration: none; }
 .product-crumbs a:hover { color: var(--tr-green-leaf); text-decoration: underline; text-underline-offset: 4px; }
-.product-band .tr-inner { padding-top: 30px; }
+
+/* The section padding lives on .tr-inner, not on .tr-band. The breadcrumb
+   opens the section, so it takes the top padding and the grid below it starts
+   from zero. */
+.product-band > .tr-inner:first-child { padding-top: 26px; padding-bottom: 0; }
+.product-band .product { padding-top: 26px; }
 
 /* ---- the shop's account of itself ---- */
 .shop-story__inner {

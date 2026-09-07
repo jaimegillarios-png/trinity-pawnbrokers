@@ -59,15 +59,20 @@ const seo = product.seo ?? {
 ---
 <Base seo={seo} site={site} schemas={schemas} nav="shop">
 
-  <nav class="tr-band tr-band--white product-crumbs" aria-label="Breadcrumb">
-    <div class="tr-inner">
-      <a href="/shop/items">Shop</a>
-      <span aria-hidden="true">›</span>
-      <span>{product.title}</span>
-    </div>
-  </nav>
-
   <section class="tr-band tr-band--white product-band">
+    <div class="tr-inner">
+      {/* Inside the section, not a band of its own. Every .tr-band draws a
+          rule beneath itself to divide alternating grounds — so a white
+          breadcrumb band above a white product band drew a line between two
+          identical surfaces, and boxed the breadcrumb in against the
+          masthead's own rule. */}
+      <nav class="product-crumbs" aria-label="Breadcrumb">
+        <a href="/shop/items">Shop</a>
+        <span aria-hidden="true">›</span>
+        <span>{product.title}</span>
+      </nav>
+    </div>
+
     <div class="tr-inner product">
       <ProductGallery product={product} />
 
