@@ -25,6 +25,11 @@ export default defineConfig({
     }),
   ],
   build: { inlineStylesheets: 'auto' },
+  /* Astro defaults to 4321 and quietly walks up when it is busy, which leaves
+     the launcher pointing at a port nothing is serving. Honouring PORT lets
+     whoever starts the server decide, and keeps 4321 as the default when
+     nobody has. */
+  server: { port: Number(process.env.PORT) || 4321 },
   vite: {
     build: { cssMinify: 'lightningcss' },
   },
