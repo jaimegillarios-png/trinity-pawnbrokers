@@ -13,6 +13,24 @@ if (!projectId) {
   );
 }
 
+/**
+ * One document each, opened directly from the nav and keyed by a fixed `_id`.
+ * A second copy of any of these would not render anywhere — the site queries
+ * `*[_type == "…"][0]` — so duplicate and delete are taken away rather than
+ * left to surprise someone.
+ */
+const SINGLETONS = [
+  'siteSettings',
+  'homePage',
+  'lendPage',
+  'howPage',
+  'aboutPage',
+  'faqPage',
+  'contactPage',
+  'shopPage',
+  'blogIndex',
+];
+
 export default defineConfig({
   name: 'trinity',
   title: 'Trinity Pawnbrokers',
@@ -22,12 +40,11 @@ export default defineConfig({
   schema: {
     types: schemaTypes,
     // Singletons should not be creatable or deletable from the global menus.
-    templates: (prev) =>
-      prev.filter((t) => !['siteSettings', 'homePage', 'blogIndex'].includes(t.schemaType)),
+    templates: (prev) => prev.filter((t) => !SINGLETONS.includes(t.schemaType)),
   },
   document: {
     actions: (prev, { schemaType }) =>
-      ['siteSettings', 'homePage', 'blogIndex'].includes(schemaType)
+      SINGLETONS.includes(schemaType)
         ? prev.filter(({ action }) => action !== 'duplicate' && action !== 'delete')
         : prev,
   },

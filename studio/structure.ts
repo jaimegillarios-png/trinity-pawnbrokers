@@ -1,18 +1,28 @@
 import type { StructureResolver } from 'sanity/structure';
 
 /**
- * Singletons are pinned at the top as single entries rather than lists —
- * "Site settings" and "Homepage" are one document each, and a list of one is
- * a papercut every time an editor opens it.
+ * The Studio's left-hand nav, written out explicitly.
+ *
+ * Explicit means nothing appears here by accident — and nothing appears at all
+ * unless it is listed. A schema can be registered, seeded and rendering on the
+ * live site while being unreachable to the person who is supposed to edit it,
+ * which is how the shop and five page singletons spent a while invisible.
+ * Adding a document type means adding it here too.
+ *
+ * Singletons are pinned as single entries rather than lists: each is one
+ * document, and a list of one is a papercut every time an editor opens it.
  */
+
+/** One document, opened directly. The id must match the seeded `_id`. */
+const single = (S: Parameters<StructureResolver>[0], title: string, type: string) =>
+  S.listItem().title(title).id(type).child(S.document().schemaType(type).documentId(type));
+
 export const structure: StructureResolver = (S) =>
   S.list()
     .title('Trinity')
     .items([
-      S.listItem()
-        .title('Homepage')
-        .id('homePage')
-        .child(S.document().schemaType('homePage').documentId('homePage')),
+      single(S, 'Homepage', 'homePage'),
+
       S.listItem()
         .title('Item pages')
         .schemaType('assetPage')
@@ -21,20 +31,78 @@ export const structure: StructureResolver = (S) =>
             .title('Item pages')
             .defaultOrdering([{ field: 'order', direction: 'asc' }]),
         ),
+
+      /* The one-off pages. Each is a single document, so they are grouped
+         rather than left as seven entries competing with the lists. */
       S.listItem()
-        .title('Legal pages')
-        .schemaType('legalPage')
-        .child(S.documentTypeList('legalPage').title('Legal pages')),
+        .title('Pages')
+        .child(
+          S.list()
+            .title('Pages')
+            .items([
+              single(S, 'What we lend against', 'lendPage'),
+              single(S, 'How it works', 'howPage'),
+              single(S, 'About the house', 'aboutPage'),
+              single(S, 'FAQs', 'faqPage'),
+              single(S, 'Contact', 'contactPage'),
+            ]),
+        ),
+
+      /* The catalogue. Shop items are the one list on this site that changes
+         weekly, so they get their own section rather than sitting under Pages
+         — and the wording of the shop itself sits beside them. */
+      S.listItem()
+        .title('Shop')
+        .child(
+          S.list()
+            .title('Shop')
+            .items([
+              single(S, 'Shop page wording', 'shopPage'),
+              S.divider(),
+              S.listItem()
+                .title('All items')
+                .schemaType('product')
+                .child(
+                  S.documentTypeList('product')
+                    .title('All items')
+                    .defaultOrdering([{ field: 'price', direction: 'desc' }]),
+                ),
+              /* Filtered views, because "what is actually for sale" is the
+                 question staff ask most and the full list buries it once sold
+                 pieces accumulate. */
+              S.listItem()
+                .title('For sale')
+                .child(
+                  S.documentList()
+                    .title('For sale')
+                    .filter('_type == "product" && status == "available"')
+                    .defaultOrdering([{ field: 'price', direction: 'desc' }]),
+                ),
+              S.listItem()
+                .title('Reserved')
+                .child(
+                  S.documentList()
+                    .title('Reserved')
+                    .filter('_type == "product" && status == "reserved"'),
+                ),
+              S.listItem()
+                .title('Sold')
+                .child(
+                  S.documentList()
+                    .title('Sold')
+                    .filter('_type == "product" && status == "sold"')
+                    .defaultOrdering([{ field: '_updatedAt', direction: 'desc' }]),
+                ),
+            ]),
+        ),
+
       S.listItem()
         .title('Blog')
         .child(
           S.list()
             .title('Blog')
             .items([
-              S.listItem()
-                .title('Index settings')
-                .id('blogIndex')
-                .child(S.document().schemaType('blogIndex').documentId('blogIndex')),
+              single(S, 'Index settings', 'blogIndex'),
               S.listItem()
                 .title('Articles')
                 .schemaType('post')
@@ -45,9 +113,13 @@ export const structure: StructureResolver = (S) =>
                 ),
             ]),
         ),
-      S.divider(),
+
       S.listItem()
-        .title('Site settings')
-        .id('siteSettings')
-        .child(S.document().schemaType('siteSettings').documentId('siteSettings')),
+        .title('Legal pages')
+        .schemaType('legalPage')
+        .child(S.documentTypeList('legalPage').title('Legal pages')),
+
+      S.divider(),
+
+      single(S, 'Site settings', 'siteSettings'),
     ]);
