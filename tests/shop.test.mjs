@@ -13,6 +13,23 @@ const SLUGS = [
   'breitling-navitimer-placeholder',
 ];
 
+
+/* Which piece is in which state is live CMS data — a real sale moves a slug
+   from one bucket to the next, and a test that names one breaks for a reason
+   that has nothing to do with the code. So the buckets are read back off the
+   built pages, and the assertions are about behaviour per state. */
+const byStatus = () => {
+  const out = { available: [], reserved: [], sold: [] };
+  for (const slug of SLUGS) {
+    const p = structuredData(page(`shop/${slug}`)).find((b) => b['@type'] === 'Product');
+    const a = p?.offers?.availability ?? '';
+    if (a.endsWith('InStock')) out.available.push(slug);
+    else if (a.endsWith('LimitedAvailability')) out.reserved.push(slug);
+    else if (a.endsWith('SoldOut')) out.sold.push(slug);
+  }
+  return out;
+};
+
 test('every shop page builds', () => {
   for (const p of ['shop', 'shop/items', 'shop/cart', ...SLUGS.map((s) => `shop/${s}`)]) {
     assert.ok(existsSync(resolve(dist, p, 'index.html')), `${p} did not build`);
@@ -37,15 +54,22 @@ test('the shop carries its own nav, with the cart in it', () => {
 
 test('a sold piece cannot be added to a cart', () => {
   // The only guard that matters on a catalogue of unique items.
-  const sold = page('shop/breitling-navitimer-placeholder');
-  assert.ok(!sold.includes('data-add-to-cart'), 'a sold piece still offers an add button');
-  assert.match(text(sold), /has been sold/i);
+  const { available, reserved, sold } = byStatus();
+  assert.ok(sold.length, 'no sold piece in the catalogue to test against');
+  assert.ok(available.length, 'nothing is for sale, so the add button is untestable');
 
-  const reserved = page('shop/jaeger-lecoultre-reverso-placeholder');
-  assert.ok(!reserved.includes('data-add-to-cart'), 'a reserved piece still offers an add button');
-
-  const available = page(`shop/${SLUGS[0]}`);
-  assert.match(available, /data-add-to-cart="rolex-air-king-placeholder"/);
+  for (const slug of sold) {
+    const html = page(`shop/${slug}`);
+    assert.ok(!html.includes('data-add-to-cart'), `${slug}: a sold piece still offers an add button`);
+    assert.match(text(html), /has been sold/i, slug);
+  }
+  for (const slug of reserved) {
+    const html = page(`shop/${slug}`);
+    assert.ok(!html.includes('data-add-to-cart'), `${slug}: a reserved piece still offers an add button`);
+  }
+  for (const slug of available) {
+    assert.match(page(`shop/${slug}`), new RegExp(`data-add-to-cart="${slug}"`), slug);
+  }
 });
 
 test('prices are only ever rendered by the server', () => {
@@ -59,18 +83,22 @@ test('prices are only ever rendered by the server', () => {
 });
 
 test('each piece is published as a Product with the right availability', () => {
-  const cases = [
-    ['rolex-air-king-placeholder', 'InStock'],
-    ['jaeger-lecoultre-reverso-placeholder', 'LimitedAvailability'],
-    ['breitling-navitimer-placeholder', 'SoldOut'],
-  ];
-  for (const [slug, expected] of cases) {
+  for (const slug of SLUGS) {
     const product = structuredData(page(`shop/${slug}`)).find((b) => b['@type'] === 'Product');
     assert.ok(product, `${slug}: no Product block`);
-    assert.equal(product.offers.availability, `https://schema.org/${expected}`, slug);
+    assert.match(
+      product.offers.availability,
+      /schema\.org\/(InStock|LimitedAvailability|SoldOut)$/,
+      `${slug}: availability is not one Google recognises`,
+    );
     assert.equal(product.offers.priceCurrency, 'GBP');
     assert.match(product.offers.price, /^\d+\.\d{2}$/, `${slug}: price is not a plain amount`);
   }
+
+  // The page and its structured data must agree — that is the real risk here.
+  const { available, sold } = byStatus();
+  for (const slug of sold) assert.match(text(page(`shop/${slug}`)), /sold/i, slug);
+  for (const slug of available) assert.ok(page(`shop/${slug}`).includes('data-add-to-cart'), slug);
 });
 
 test('placeholder stock is kept out of search', () => {

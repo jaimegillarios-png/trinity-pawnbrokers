@@ -801,14 +801,15 @@ section[id], [id].hero-form-card { scroll-margin-top: calc(var(--tr-mast-h, 0px)
 [data-nav="open"] .tr-burger span:nth-child(2) { transform: translateY(-3.75px) rotate(-45deg); }
 @media (prefers-reduced-motion: reduce) { .tr-burger span { transition: none; } }
 
-/* Tablets get the mobile masthead too: side by side, the logo, five links and
+/* Tablets get the mobile masthead too: side by side, the logo, four links and
    the phone button have no breathing room long before they actually collide.
    The rule bar keeps its own 760px breakpoint, which is about line length.
-   The figure tracks the bar's real width: it has grown from 1024 to 1101 as
-   links were added and "About" became "About the house". 1180 keeps ~80px of
-   headroom, so a font fallback or one more word does not overflow it. Measure
-   again if the nav changes. */
-@media (max-width: 1180px) {
+   The figure tracks the bar's real width, measured rather than guessed: it
+   went 1024 → 1101 as links were added, and back to 943 when Blog and About
+   moved to the footer (logo 179 + gap 32 + nav run 676 + 2×28 padding). 1024
+   keeps ~80px of headroom, so a font fallback or one more word does not
+   overflow it. Measure again if the nav changes. */
+@media (max-width: 1024px) {
   /* The bar becomes a column: wordmark centred with the call button and the
      burger flanking it, and the two nav groups stacked beneath when open. */
   .masthead-grid {
