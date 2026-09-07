@@ -161,3 +161,16 @@ test('a hold is only ever cleared for the session that took it', () => {
   const release = src.slice(src.indexOf('export async function release'));
   assert.match(release.slice(0, 600), /status == "available"/);
 });
+
+test('a bad confirmation link does not empty a cart', () => {
+  /* Landing here with an unrecognised session id means no order was found —
+     often just a stale link. Clearing unconditionally would throw away a cart
+     for a purchase that never happened. */
+  const src = readFileSync(resolve(root, 'src/pages/shop/order-confirmed.astro'), 'utf8');
+  assert.match(src, /if \(window\.__trinityOrderFound\) window\.TrinityCart\?\.clear\(\)/);
+  assert.match(src, /window\.__trinityOrderFound = \$\{state !== 'unknown'\}/);
+  // The cart script still loads on every branch, or the shop bar's count is blank.
+  const gate = src.indexOf('__trinityOrderFound =');
+  assert.ok(src.indexOf("import '../../scripts/cart.js'") > gate, 'cart.js must load after the flag');
+  assert.match(src, /state === 'unknown'\s*\?\s*'Order not found/, 'the tab lies about the outcome');
+});

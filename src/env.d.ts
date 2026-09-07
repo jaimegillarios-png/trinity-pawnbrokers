@@ -27,6 +27,9 @@ interface ImportMeta {
 /** The cart, attached by src/scripts/cart.js. Optional because a page may run
  *  before that module has loaded. */
 interface Window {
+  /** Set by the order confirmation page: true only when Stripe returned a real
+   *  session, so a bad link cannot empty someone's cart. */
+  __trinityOrderFound?: boolean;
   TrinityCart?: {
     read(): string[];
     add(slug: string): void;

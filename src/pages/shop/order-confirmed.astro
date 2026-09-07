@@ -46,7 +46,10 @@ try {
 }
 
 const seo = {
-  title: 'Order confirmed | Trinity Pawnbrokers',
+  title:
+    state === 'unknown'
+      ? 'Order not found | Trinity Pawnbrokers'
+      : 'Order confirmed | Trinity Pawnbrokers',
   description: 'Thank you for your order.',
   noIndex: true,
 };
@@ -122,11 +125,16 @@ const seo = {
     </div>
   </section>
 
+  {/* Always loaded, so the cart count in the shop bar is right on every branch
+      of this page. */}
+  <script is:inline set:html={`window.__trinityOrderFound = ${state !== 'unknown'};`} />
   <script>
     import '../../scripts/cart.js';
     /* Paid for, so it is no longer "being considered". Clearing here rather
        than before the redirect means an abandoned checkout keeps the cart
-       intact for someone who changes their mind on Stripe's page. */
-    window.TrinityCart?.clear();
+       intact for someone who changes their mind on Stripe's page — and only on
+       a session we actually found, so a bad link or an unreachable Stripe does
+       not empty a cart for an order that never happened. */
+    if (window.__trinityOrderFound) window.TrinityCart?.clear();
   </script>
 </Base>
