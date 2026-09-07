@@ -29,6 +29,26 @@ import { SHIPPING, TERMS_OF_SALE } from './shop-legal.mjs';
 
 const DRY = process.argv.includes('--dry-run');
 
+/**
+ * `--only a,b` writes just those documents, matched on `_id` or on the tail of
+ * it (`--only shipping-and-returns` finds `legalPage-shipping-and-returns`).
+ *
+ * Without it this is a full overwrite: every document is createOrReplace'd,
+ * which is right for the initial import and destructive afterwards, because
+ * anything edited in the Studio since is silently reverted to what the repo
+ * says. Once real people are editing content, a full run is the exception.
+ */
+const ONLY = (() => {
+  const i = process.argv.indexOf('--only');
+  if (i === -1) return null;
+  const list = (process.argv[i + 1] ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+  if (!list.length) fail('--only needs a comma-separated list of document ids.');
+  return list;
+})();
+
+/** `--new-only` never touches a document that already exists. */
+const NEW_ONLY = process.argv.includes('--new-only');
+
 const projectId = process.env.PUBLIC_SANITY_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID;
 const dataset = process.env.PUBLIC_SANITY_DATASET || 'production';
 const token = process.env.SANITY_API_WRITE_TOKEN;
@@ -1439,6 +1459,37 @@ if (DRY) {
   process.exit(0);
 }
 
-const tx = decoded.reduce((t, doc) => t.createOrReplace(doc), client.transaction());
+let writing = decoded;
+
+if (ONLY) {
+  writing = decoded.filter((d) => ONLY.some((id) => d._id === id || d._id.endsWith(`-${id}`)));
+  const missed = ONLY.filter((id) => !writing.some((d) => d._id === id || d._id.endsWith(`-${id}`)));
+  if (missed.length) fail(`--only matched nothing for: ${missed.join(', ')}`);
+}
+
+if (NEW_ONLY) {
+  const ids = writing.map((d) => d._id);
+  const existing = new Set(await client.fetch('*[_id in $ids]._id', { ids }));
+  const skipped = writing.filter((d) => existing.has(d._id));
+  writing = writing.filter((d) => !existing.has(d._id));
+  if (skipped.length) {
+    console.log(`  Left alone (already in Sanity):\n    ${skipped.map((d) => d._id).join('\n    ')}\n`);
+  }
+}
+
+if (!writing.length) {
+  console.log('  Nothing to write.\n');
+  process.exit(0);
+}
+
+if (!ONLY && !NEW_ONLY) {
+  console.log(
+    '  Full overwrite: every document is being replaced with what the repo says.\n' +
+      '  Anything edited in the Studio since the last run will be reverted.\n' +
+      '  Use --only <id> or --new-only to write a subset.\n',
+  );
+}
+
+const tx = writing.reduce((t, doc) => t.createOrReplace(doc), client.transaction());
 await tx.commit();
-console.log(`\n  Wrote ${decoded.length} documents.\n`);
+console.log(`  Wrote ${writing.length} document(s):\n    ${writing.map((d) => d._id).join('\n    ')}\n`);
