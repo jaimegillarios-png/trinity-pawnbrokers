@@ -15,12 +15,13 @@
  * The signatures expiring is why this fetches the playlist fresh each run
  * rather than caching URLs.
  */
-import { mkdir, writeFile, readFile } from 'node:fs/promises';
+import { mkdir, writeFile, readFile, rm } from 'node:fs/promises';
+import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { createDecipheriv } from 'node:crypto';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import muxjs from 'mux.js';
+import ffmpeg from 'ffmpeg-static';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const out = resolve(root, 'scripts/data/unbolted/videos');
@@ -29,8 +30,14 @@ const SITE = 'https://unboltedluxury.com';
 const UA =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 ' +
   '(KHTML, like Gecko) Chrome/141.0 Safari/537.36';
-const get = (url, as = 'text') =>
-  fetch(url, { headers: { 'user-agent': UA, referer: SITE + '/' } }).then((r) => {
+const get = (url, as = 'text', range = null) =>
+  fetch(url, {
+    headers: {
+      'user-agent': UA,
+      referer: SITE + '/',
+      ...(range ? { range: `bytes=${range.start}-${range.end}` } : {}),
+    },
+  }).then((r) => {
     if (!r.ok) throw new Error(`${r.status} ${url.slice(0, 90)}`);
     return as === 'text' ? r.text() : r.arrayBuffer();
   });
@@ -44,13 +51,12 @@ async function videoConfig(slug) {
 }
 
 /**
- * The lightest rendition, not the largest.
+ * The largest rendition, because we transcode it ourselves afterwards.
  *
- * The source serves adaptive HLS and can afford a 32Mbps 1080p ladder; we
- * serve one file to everybody, and a 249MB clip beside a photograph is not a
- * product video, it is a download. The small rendition is 640x360-ish and
- * around a tenth the weight, which is the right trade for a clip that plays
- * in a 600px frame. Re-run with VIDEO_QUALITY=high to take the big one.
+ * Taking the small one and shipping it as-is was the earlier approach and it
+ * was the wrong trade: the source's own 360p is encoded at up to 17Mbps, so it
+ * was both heavy and soft. Downscaling 1080p to 720p at a sane bitrate is
+ * smaller and sharper than either.
  */
 function bestVariant(master) {
   const lines = master.split('\n');
@@ -61,8 +67,7 @@ function bestVariant(master) {
     const url = lines[i + 1]?.trim();
     if (url) options.push({ url, pixels: res ? Number(res[1]) * Number(res[2]) : 0 });
   }
-  const ordered = options.sort((a, b) => a.pixels - b.pixels);
-  return (process.env.VIDEO_QUALITY === 'high' ? ordered[ordered.length - 1] : ordered[0])?.url;
+  return options.sort((a, b) => b.pixels - a.pixels)[0]?.url;
 }
 
 /**
@@ -78,34 +83,31 @@ function decrypt(buffer, key, sequence, iv) {
 }
 
 /**
- * MPEG-TS is not playable in a browser; fragmented MP4 is.
+ * MPEG-TS is not playable in a browser, and the source encoding is far too
+ * heavy to serve — up to 17Mbps for 360p. ffmpeg does both jobs at once:
+ * downscale to 720p, re-encode at a sane quality, and move the moov atom to
+ * the front so playback can start before the file has finished arriving.
  *
- * Each segment is transmuxed on its own, the way a player does it. Pushing the
- * whole concatenated stream in one go looks tidier and is wrong: the PTS
- * resets at every segment boundary read as enormous gaps, and a fourteen
- * second clip came out claiming twenty-six hours — and carrying the padding to
- * match, which is where the weight was coming from.
+ * The long side is capped rather than the height, because one of these was
+ * filmed upright and would otherwise be scaled to 720 wide and 1280 tall.
  */
-async function remux(segments) {
-  let init = null;
-  const parts = [];
-
-  for (const segment of segments) {
-    await new Promise((done, fail) => {
-      const transmuxer = new muxjs.mp4.Transmuxer({ remux: true, keepOriginalTimestamps: false });
-      transmuxer.on('data', (out) => {
-        if (!init) init = Buffer.from(out.initSegment);
-        parts.push(Buffer.from(out.data));
-      });
-      transmuxer.on('done', done);
-      transmuxer.on('error', fail);
-      transmuxer.push(new Uint8Array(segment));
-      transmuxer.flush();
-    });
-  }
-
-  if (!init || !parts.length) throw new Error('transmuxer produced nothing');
-  return Buffer.concat([init, ...parts]);
+function transcode(tsPath, mp4Path) {
+  const args = [
+    '-hide_banner', '-loglevel', 'error', '-y',
+    '-i', tsPath,
+    '-vf', "scale='if(gt(iw,ih),min(1280,iw),-2)':'if(gt(iw,ih),-2,min(1280,ih))':flags=lanczos",
+    '-c:v', 'libx264', '-preset', 'slow', '-crf', '23',
+    '-profile:v', 'high', '-pix_fmt', 'yuv420p',
+    '-c:a', 'aac', '-b:a', '96k',
+    '-movflags', '+faststart',
+    mp4Path,
+  ];
+  return new Promise((done, fail) => {
+    const proc = spawn(ffmpeg, args);
+    let stderr = '';
+    proc.stderr.on('data', (d) => { stderr += d; });
+    proc.on('close', (code) => (code === 0 ? done() : fail(new Error(stderr.slice(0, 300)))));
+  });
 }
 
 async function fetchOne(slug) {
@@ -133,21 +135,48 @@ async function fetchOne(slug) {
     if (rawIv) iv = Buffer.from(rawIv, 'hex');
   }
 
-  const segments = media
-    .split('\n')
-    .filter((line) => line.trim() && !line.startsWith('#'))
-    .map((line) => (line.startsWith('http') ? line.trim() : base + line.trim() + query));
+  /**
+   * These playlists use #EXT-X-BYTERANGE: every "segment" line points at the
+   * same file and names a slice of it. Treating them as separate URLs
+   * downloaded the whole thing once per segment — eleven copies concatenated,
+   * which is why a 62-second clip transcoded to eleven minutes.
+   *
+   * The ranges are contiguous, so the parts reassemble into exactly the
+   * original file, which is then decrypted in one pass with the IV the
+   * playlist gives.
+   */
+  const lines = media.split('\n');
+  const parts = [];
+  let pendingRange = null;
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (line.startsWith('#EXT-X-BYTERANGE:')) {
+      const [length, offset] = line.slice(17).split('@').map(Number);
+      pendingRange = { start: offset || 0, end: (offset || 0) + length - 1 };
+      continue;
+    }
+    if (!line || line.startsWith('#')) continue;
+    const url = line.startsWith('http') ? line : base + line + query;
+    parts.push({ url, range: pendingRange });
+    pendingRange = null;
+  }
 
-  const chunks = [];
-  for (const [i, url] of segments.entries()) {
-    const raw = Buffer.from(await get(url, 'buffer'));
-    chunks.push(key ? decrypt(raw, key, i, iv) : raw);
+  const buffers = [];
+  for (const part of parts) {
+    buffers.push(Buffer.from(await get(part.url, 'buffer', part.range)));
     process.stdout.write('.');
   }
 
-  const mp4 = await remux(chunks);
-  await writeFile(target, mp4);
-  return { slug, bytes: mp4.length, segments: segments.length, seconds: Math.round(config.durationSeconds) };
+  const joined = Buffer.concat(buffers);
+  const chunks = [key ? decrypt(joined, key, 0, iv) : joined];
+
+  const tsPath = resolve(out, `${slug}.ts`);
+  await writeFile(tsPath, Buffer.concat(chunks));
+  await transcode(tsPath, target);
+  await rm(tsPath, { force: true });
+
+  const { size } = await import('node:fs').then((fs) => fs.promises.stat(target));
+  return { slug, bytes: size, segments: parts.length, seconds: Math.round(config.durationSeconds) };
 }
 
 await mkdir(out, { recursive: true });

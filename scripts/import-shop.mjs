@@ -10,8 +10,8 @@
  * Run with --replace to clear the placeholder products first.
  */
 import { createClient } from '@sanity/client';
-import { readFile } from 'node:fs/promises';
-import { createReadStream } from 'node:fs';
+import { readFile, readdir } from 'node:fs/promises';
+import { createReadStream, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -86,6 +86,31 @@ function summaryOf(product) {
  * still pushes 27MB up the wire — and this script is re-run every time the
  * catalogue changes.
  */
+/**
+ * The films, if fetch-videos.mjs has been run. Optional: the catalogue imports
+ * perfectly well without them, and they are large enough that fetching them is
+ * a deliberate step rather than part of every run.
+ */
+const videoDir = resolve(data, 'videos');
+const haveVideos = new Set(
+  existsSync(videoDir) ? (await readdir(videoDir)).filter((f) => f.endsWith('.mp4')) : [],
+);
+
+const uploadedFiles = new Map(
+  (await client.fetch(`*[_type == "sanity.fileAsset" && defined(originalFilename)]{ _id, originalFilename }`))
+    .map((a) => [a.originalFilename, a._id]),
+);
+
+async function uploadVideo(file) {
+  if (uploadedFiles.has(file)) return uploadedFiles.get(file);
+  const asset = await client.assets.upload('file', createReadStream(resolve(videoDir, file)), {
+    filename: file,
+    contentType: 'video/mp4',
+  });
+  uploadedFiles.set(file, asset._id);
+  return asset._id;
+}
+
 const uploaded = new Map(
   (await client.fetch(`*[_type == "sanity.imageAsset" && defined(originalFilename)]{ _id, originalFilename }`))
     .map((a) => [a.originalFilename, a._id]),
@@ -136,6 +161,12 @@ for (const product of products) {
     .filter(Boolean).join('. ');
 
   const slug = slugify(product.title);
+
+  /* Named by the source slug, because that is what the fetch script sees. */
+  const videoFile = `${product.slug}.mp4`;
+  const videoAsset = haveVideos.has(videoFile) ? await uploadVideo(videoFile) : null;
+  if (videoAsset) process.stdout.write('🎬');
+
   docs.push({
     _id: `product-${slug}`,
     _type: 'product',
@@ -153,6 +184,9 @@ for (const product of products) {
     ...(row(product.specs, 'Condition') ? { condition: row(product.specs, 'Condition') } : {}),
     ...(box ? { boxAndPapers: box } : {}),
     ...(row(product.specs, 'Warranty') ? { warranty: row(product.specs, 'Warranty') } : {}),
+    ...(videoAsset
+      ? { video: { _type: 'file', asset: { _type: 'reference', _ref: videoAsset } } }
+      : {}),
     seo: {
       _type: 'seo',
       title: `${product.title} | Trinity Pawnbrokers`,
@@ -249,4 +283,7 @@ await client.createOrReplace({
 });
 
 await docs.reduce((tx, doc) => tx.createOrReplace(doc), client.transaction()).commit();
-console.log(`\n  ${docs.length} products, ${uploaded.size} images uploaded, shop page written.`);
+console.log(
+  `\n  ${docs.length} products, ${uploaded.size} images, ` +
+    `${uploadedFiles.size} films, shop page written.`,
+);

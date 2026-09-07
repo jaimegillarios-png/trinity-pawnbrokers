@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { dist, page, home, text, count, structuredData } from './helpers.mjs';
+import { dist, root, page, home, text, count, structuredData } from './helpers.mjs';
 
 /* Read off the build rather than listed here. The catalogue is real stock now
    — pieces sell, new ones arrive — so any hardcoded list is a test that fails
@@ -142,4 +142,23 @@ test('every internal shop link resolves', () => {
       assert.ok(existsSync(target), `${p} links to ${href}, which is not in the build`);
     }
   }
+});
+
+test('the film is in the gallery, and costs nothing to not watch', () => {
+  /* Several pieces say "please review the photos plus a video of this actual
+     watch", so the page is incomplete without it. */
+  const withVideo = SLUGS.map((s) => page(`shop/${s}`)).filter((h) => h.includes('data-gallery-video'));
+  assert.ok(withVideo.length >= 5, `only ${withVideo.length} products carry a film`);
+
+  for (const html of withVideo) {
+    // Nobody opening the page to look at photographs should fetch 15MB of video.
+    assert.match(html, /<video[^>]*preload="none"/, 'the film preloads');
+    assert.match(html, /gallery__thumb--video/, 'no play badge in the rail');
+    assert.match(html, /poster="/, 'no poster frame, so the frame opens black');
+    // A browser that cannot play it still gets a way to the file.
+    assert.match(html, /Download it instead/);
+  }
+
+  const script = readFileSync(resolve(root, 'src/scripts/gallery.js'), 'utf8');
+  assert.match(script, /playing\.pause\(\)/, 'the film keeps playing after you flick past it');
 });
