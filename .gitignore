@@ -8,3 +8,6 @@ dist/
 .fontcache/
 trinity-pawn-brokers-rebranding/
 .migration-preview.json
+
+# Local Pages runtime secrets — same rules as .env
+.dev.vars

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { dist, root, page } from './helpers.mjs';
 
@@ -78,13 +78,17 @@ test('the webhook refuses an unsigned payload', () => {
 test('only the server routes go through the Worker', () => {
   const routes = JSON.parse(readFileSync(resolve(dist, '_routes.json'), 'utf8'));
   assert.deepEqual(routes.exclude, [], 'an exclude list can go stale; use include only');
-  for (const route of ['/api/checkout', '/api/stripe-webhook', '/shop/order-confirmed']) {
+  for (const route of ['/api/checkout', '/api/stripe-webhook', '/api/order']) {
     assert.ok(routes.include.includes(route), `${route} must reach the Worker`);
     assert.ok(routes.include.includes(`${route}/`), `${route}/ must reach the Worker too`);
   }
   // The bug this replaced: prerendered pages being routed through the Worker.
   assert.ok(!routes.include.some((r) => r === '/*'), 'the Worker must not catch everything');
   assert.ok(!routes.include.includes('/about'), 'prerendered pages must not reach the Worker');
+  assert.ok(
+    !routes.include.includes('/shop/order-confirmed'),
+    'the confirmation page is prerendered now; routing it through the Worker serves [object Object]',
+  );
 });
 
 test('the cart can actually be checked out', () => {
@@ -106,13 +110,46 @@ test('checkout sends slugs and nothing else', () => {
   assert.match(script, /JSON\.stringify\(\{ slugs: slugs \}\)/);
 });
 
-test('the confirmation page is server-rendered, so it cannot be faked from cache', () => {
-  const src = readFileSync(resolve(root, 'src/pages/shop/order-confirmed.astro'), 'utf8');
-  assert.match(src, /export const prerender = false/);
+test('no page is server-rendered, because Pages cannot serve one', () => {
+  /* On deployed Cloudflare Pages the adapter's streamed HTML response arrives
+     as the literal string "[object Object]" — verified with a minimal SSR page
+     carrying no data at all. API routes returning a plain body are unaffected.
+     So every page here is prerendered and the shop's one dynamic page fetches
+     its order from /api/order. Regressing this shows a blank screen to someone
+     who has just paid, which is the worst place on the site for one. */
+  const pages = readdirSync(resolve(root, 'src/pages'), { recursive: true })
+    .filter((f) => String(f).endsWith('.astro'))
+    .filter((f) => /export const prerender = false/.test(
+      readFileSync(resolve(root, 'src/pages', String(f)), 'utf8'),
+    ));
+  assert.deepEqual(pages, [], `these pages render on the server: ${pages.join(', ')}`);
   assert.ok(
-    !existsSync(resolve(dist, 'shop/order-confirmed/index.html')),
-    'the confirmation page was prerendered',
+    existsSync(resolve(dist, 'shop/order-confirmed/index.html')),
+    'the confirmation page must be prerendered',
   );
+});
+
+test('the confirmation page asks an API route for the order', () => {
+  const html = page('shop/order-confirmed');
+  for (const hook of ['data-order-loading', 'data-order-missing', 'data-order-found']) {
+    assert.match(html, new RegExp(hook), `no ${hook} state`);
+  }
+  // It must not sit blank: the loading state is the only one visible on arrival.
+  assert.ok(!/data-order-loading[^>]*hidden/.test(html), 'the loading state starts hidden');
+  assert.match(html, /data-order-missing hidden/);
+  assert.match(html, /data-order-found hidden/);
+
+  const script = readFileSync(resolve(root, 'src/scripts/order-confirmed.js'), 'utf8');
+  assert.match(script, /\/api\/order\?session_id=/);
+  // A stale link must not empty a cart — clear only on an order we found.
+  const clearAt = script.indexOf('TrinityCart.clear()');
+  assert.ok(clearAt > script.indexOf("show('found')"), 'the cart is cleared before the order is confirmed');
+});
+
+test('the order route refuses anything that is not a session id', () => {
+  const route = readFileSync(resolve(root, 'src/pages/api/order.ts'), 'utf8');
+  assert.match(route, /startsWith\('cs_'\)/);
+  assert.match(route, /cache-control': 'no-store'/);
 });
 
 test('the cart page drops a piece that sold while the cart sat open', () => {
@@ -164,15 +201,15 @@ test('a hold is only ever cleared for the session that took it', () => {
 
 test('a bad confirmation link does not empty a cart', () => {
   /* Landing here with an unrecognised session id means no order was found —
-     often just a stale link. Clearing unconditionally would throw away a cart
-     for a purchase that never happened. */
-  const src = readFileSync(resolve(root, 'src/pages/shop/order-confirmed.astro'), 'utf8');
-  assert.match(src, /if \(window\.__trinityOrderFound\) window\.TrinityCart\?\.clear\(\)/);
-  assert.match(src, /window\.__trinityOrderFound = \$\{state !== 'unknown'\}/);
-  // The cart script still loads on every branch, or the shop bar's count is blank.
-  const gate = src.indexOf('__trinityOrderFound =');
-  assert.ok(src.indexOf("import '../../scripts/cart.js'") > gate, 'cart.js must load after the flag');
-  assert.match(src, /state === 'unknown'\s*\?\s*'Order not found/, 'the tab lies about the outcome');
+     often just a stale link. Clearing regardless would throw away a cart for a
+     purchase that never happened. */
+  const script = readFileSync(resolve(root, 'src/scripts/order-confirmed.js'), 'utf8');
+  const missing = script.slice(script.indexOf("state === 'unknown'"));
+  assert.match(missing.slice(0, 60), /return show\('missing'\)/);
+  assert.ok(
+    script.indexOf('TrinityCart.clear()') > script.indexOf("show('found')"),
+    'the cart is cleared on a path that does not know the order is real',
+  );
 });
 
 test('the webhook does not trust the API version the event arrived in', () => {

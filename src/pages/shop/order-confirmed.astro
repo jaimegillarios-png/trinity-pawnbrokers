@@ -2,54 +2,19 @@
 import '../../styles/shop.css';
 import Base from '../../layouts/Base.astro';
 import ShopNav from '../../components/shop/ShopNav.astro';
-import { money } from '../../lib/money';
 import { getLegalPages, getSiteSettings } from '../../lib/sanity/queries';
-import { readEnv } from '../../lib/shop/env';
-import { stripeFor } from '../../lib/shop/stripe';
 
-/* Server-rendered: the order only exists at Stripe, and only for the person
-   holding this session id. */
-export const prerender = false;
-
-const sessionId = Astro.url.searchParams.get('session_id');
-if (!sessionId) return Astro.redirect('/shop', 302);
+/* Prerendered, like every other page here. The order itself is fetched from
+   /api/order by the script below — on deployed Cloudflare Pages the adapter's
+   streamed HTML arrives as the literal string "[object Object]", so a
+   server-rendered page shows a blank screen to someone who has just paid.
+   A static shell asking an API route for its content avoids that entirely. */
 
 const [site, legals] = await Promise.all([getSiteSettings(), getLegalPages()]);
 const hasReturns = legals.some((page) => page.slug === 'shipping-and-returns');
 
-type Line = { name: string; amount: number };
-let lines: Line[] = [];
-let total = 0;
-let email: string | null = null;
-let reference = '';
-/* paid — done. pending — an async method that has not settled. unknown — we
-   could not reach Stripe, or this id is not one of ours. Each says something
-   different to the buyer, so none of them collapse into "error". */
-let state: 'paid' | 'pending' | 'unknown' = 'unknown';
-
-try {
-  const session = await stripeFor(readEnv(Astro.locals)).checkout.sessions.retrieve(sessionId, {
-    expand: ['line_items'],
-  });
-  state = session.payment_status === 'paid' ? 'paid' : 'pending';
-  total = session.amount_total ?? 0;
-  email = session.customer_details?.email ?? null;
-  // Short enough to read down a phone line, and it is what staff will search
-  // for in the Stripe dashboard.
-  reference = sessionId.slice(-8).toUpperCase();
-  lines = (session.line_items?.data ?? []).map((item) => ({
-    name: item.description ?? 'Item',
-    amount: item.amount_total,
-  }));
-} catch (error) {
-  console.error('could not retrieve session', error);
-}
-
 const seo = {
-  title:
-    state === 'unknown'
-      ? 'Order not found | Trinity Pawnbrokers'
-      : 'Order confirmed | Trinity Pawnbrokers',
+  title: 'Order confirmed | Trinity Pawnbrokers',
   description: 'Thank you for your order.',
   noIndex: true,
 };
@@ -59,7 +24,15 @@ const seo = {
 
   <section class="tr-band tr-band--white">
     <div class="tr-inner confirm">
-      {state === 'unknown' ? (
+      {/* Shown while the order is fetched. Someone who has just paid should
+          never see an empty page, nor a "not found" that turns out to be
+          wrong a moment later. */}
+      <header class="shop-head" data-order-loading>
+        <p class="tr-eyebrow">Order</p>
+        <h1 class="shop-head__title">Confirming your order…</h1>
+      </header>
+
+      <div data-order-missing hidden>
         <header class="shop-head">
           <p class="tr-eyebrow">Order</p>
           <h1 class="shop-head__title">We could not find that order</h1>
@@ -69,72 +42,46 @@ const seo = {
             address you used and we will find it.
           </p>
         </header>
-      ) : (
-        <>
-          <header class="shop-head confirm__head">
-            <p class="tr-eyebrow">Order {reference}</p>
-            <h1 class="shop-head__title">
-              {state === 'paid' ? 'Thank you — that is yours' : 'Thank you — payment is clearing'}
-            </h1>
-            <p class="shop-head__intro">
-              {state === 'paid'
-                ? 'We have taken the piece off sale and it is being prepared for despatch.'
-                : 'Your payment method settles over a day or two. We have held the piece for you and will confirm the moment it clears.'}
-              {email && <> A confirmation is on its way to <strong>{email}</strong>.</>}
-            </p>
-          </header>
+      </div>
 
-          <ul class="confirm__list">
-            {lines.map((line) => (
-              <li class="confirm__row">
-                <span class="confirm__name">{line.name}</span>
-                <span class="confirm__amount">{money(line.amount)}</span>
-              </li>
-            ))}
-          </ul>
+      <div data-order-found hidden>
+        <header class="shop-head confirm__head">
+          <p class="tr-eyebrow">Order <span data-order-ref></span></p>
+          <h1 class="shop-head__title" data-order-heading></h1>
+          <p class="shop-head__intro" data-order-intro></p>
+        </header>
 
-          <div class="confirm__total">
-            <span>Paid</span>
-            <strong>{money(total)}</strong>
-          </div>
+        <ul class="confirm__list" data-order-lines></ul>
 
-          <div class="confirm__next">
-            <h2 class="confirm__next-title">What happens now</h2>
-            <ol class="confirm__steps">
-              <li>
-                We check the piece over once more, photograph it as it leaves us, and pack it.
-              </li>
-              <li>
-                It travels insured and signed-for. We will email you the tracking details.
-              </li>
-              <li>
-                Fourteen days from the day it arrives, you can send it back for a full refund.
-                {hasReturns && <> <a href="/shipping-and-returns">How returns work</a></>}
-              </li>
-            </ol>
-          </div>
+        <div class="confirm__total">
+          <span>Paid</span>
+          <strong data-order-total></strong>
+        </div>
 
-          <p class="confirm__help">
-            Any questions, quote order <strong>{reference}</strong> and call
-            {' '}<a href={`tel:${site.phoneHref}`}>{site.phone}</a>.
-          </p>
+        <div class="confirm__next">
+          <h2 class="confirm__next-title">What happens now</h2>
+          <ol class="confirm__steps">
+            <li>We check the piece over once more, photograph it as it leaves us, and pack it.</li>
+            <li>It travels insured and signed-for. We will email you the tracking details.</li>
+            <li>
+              Fourteen days from the day it arrives, you can send it back for a full refund.
+              {hasReturns && <> <a href="/shipping-and-returns">How returns work</a></>}
+            </li>
+          </ol>
+        </div>
 
-          <a class="tr-cta tr-cta--ghost" href="/shop/items">Back to the shop</a>
-        </>
-      )}
+        <p class="confirm__help">
+          Any questions, quote order <strong data-order-ref></strong> and call
+          {' '}<a href={`tel:${site.phoneHref}`}>{site.phone}</a>.
+        </p>
+
+        <a class="tr-cta tr-cta--ghost" href="/shop/items">Back to the shop</a>
+      </div>
     </div>
   </section>
 
-  {/* Always loaded, so the cart count in the shop bar is right on every branch
-      of this page. */}
-  <script is:inline set:html={`window.__trinityOrderFound = ${state !== 'unknown'};`} />
   <script>
     import '../../scripts/cart.js';
-    /* Paid for, so it is no longer "being considered". Clearing here rather
-       than before the redirect means an abandoned checkout keeps the cart
-       intact for someone who changes their mind on Stripe's page — and only on
-       a session we actually found, so a bad link or an unreachable Stripe does
-       not empty a cart for an order that never happened. */
-    if (window.__trinityOrderFound) window.TrinityCart?.clear();
+    import '../../scripts/order-confirmed.js';
   </script>
 </Base>
