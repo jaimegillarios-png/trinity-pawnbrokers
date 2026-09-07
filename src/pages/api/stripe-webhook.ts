@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { readEnv } from '../../lib/shop/env';
-import { verifyWebhook } from '../../lib/shop/stripe';
+import { stripeFor, verifyWebhook } from '../../lib/shop/stripe';
 import { markSold, release } from '../../lib/shop/stock';
 
 export const prerender = false;
@@ -31,11 +31,21 @@ export const POST: APIRoute = async ({ request, locals }) => {
   try {
     switch (event.type) {
       case 'checkout.session.completed': {
-        const session = event.data.object;
+        /* The event body is rendered in whatever API version the account or
+           the endpoint is pinned to, which may be far older than the one this
+           code was written against — old enough that `payment_status` does not
+           exist in the payload at all, in which case a real payment would look
+           unpaid and the piece would never be marked sold.
+           
+           So the event is used only for the session id, and the state is read
+           back through our own pinned client. One extra call, and the handler
+           stops depending on a setting in someone else's dashboard. */
+        const id = event.data.object.id;
+        const session = await stripeFor(env).checkout.sessions.retrieve(id);
         /* Cards settle inside the session; bank debits do not. An unpaid
            session keeps its hold and waits for the async event below, so the
            piece is neither sold early nor released while money is in flight. */
-        if (session.payment_status === 'paid') await markSold(env, session.id);
+        if (session.payment_status === 'paid') await markSold(env, id);
         break;
       }
 

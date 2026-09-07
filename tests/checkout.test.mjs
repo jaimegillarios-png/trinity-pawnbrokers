@@ -174,3 +174,21 @@ test('a bad confirmation link does not empty a cart', () => {
   assert.ok(src.indexOf("import '../../scripts/cart.js'") > gate, 'cart.js must load after the flag');
   assert.match(src, /state === 'unknown'\s*\?\s*'Order not found/, 'the tab lies about the outcome');
 });
+
+test('the webhook does not trust the API version the event arrived in', () => {
+  /* Stripe renders the event body in whatever version the account or endpoint
+     is pinned to. A 2017-era account sends a payload with no `payment_status`
+     at all, so a real payment reads as unpaid and the piece is never sold. The
+     id is the only field old enough to rely on. */
+  const hook = readFileSync(resolve(root, 'src/pages/api/stripe-webhook.ts'), 'utf8');
+  const branch = hook.slice(
+    hook.indexOf("case 'checkout.session.completed'"),
+    hook.indexOf("case 'checkout.session.async_payment_succeeded'"),
+  );
+  assert.match(branch, /sessions\.retrieve\(id\)/, 'state must be read back, not taken from the event');
+  assert.ok(
+    !/event\.data\.object\.payment_status/.test(branch),
+    'payment_status read straight off the event payload',
+  );
+  assert.match(branch, /session\.payment_status === 'paid'/);
+});
