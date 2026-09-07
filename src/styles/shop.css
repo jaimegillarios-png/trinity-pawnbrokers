@@ -374,30 +374,66 @@
    thumbnails either ran taller than the photograph or scrolled inside its own
    little window; underneath, the full width takes most sets in one row and the
    photograph gets the space it was cropped for. */
-.gallery__rail { display: none; }
-.gallery[data-ready] .gallery__rail {
+.gallery__railwrap { display: none; }
+
+/* One row that slides, rather than a block that wraps. Two rows of thumbnails
+   under the photograph read as a contact sheet and pushed the specification
+   off the screen; a single row keeps the piece and its details together and
+   says "there is more" without spending the height. */
+.gallery[data-ready] .gallery__railwrap {
   order: 2;
-  /* Wrapped, not scrolled. A strip that scrolls showed seven of seventeen and
-     hid the rest behind a gesture — the same fault as the vertical rail, just
-     rotated. auto-fill lets the thumbnails size themselves to the row so the
-     last one lands flush with the edge instead of trailing off. */
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
-  gap: 8px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px;
 }
+.gallery__rail {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
+  /* The scrollbar is redundant beside the arrows and steals a row of height. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.gallery__rail::-webkit-scrollbar { display: none; }
+
 .gallery__thumb {
+  flex: none;
+  width: 68px;
   padding: 0;
   border: 1px solid var(--tr-line-soft);
   background: none;
   cursor: pointer;
   line-height: 0;
   opacity: 0.55;
+  scroll-snap-align: start;
   transition: opacity 0.2s ease, border-color 0.2s ease;
 }
 .gallery__thumb img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; }
 .gallery__thumb:hover { opacity: 0.85; }
 .gallery__thumb[aria-selected='true'] { opacity: 1; border-color: var(--tr-gold-deep); }
 .gallery__thumb:focus-visible { outline: 2px solid var(--tr-gold-deep); outline-offset: 2px; }
+
+/* Shown only when the rail has somewhere to go, and only on the side it can
+   go to — an arrow that does nothing is worse than no arrow. */
+.gallery__scroll {
+  width: 26px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--tr-line-soft);
+  background: var(--tr-white);
+  color: var(--tr-ink-62);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.gallery__scroll svg { width: 15px; height: 15px; }
+.gallery__scroll:hover { color: var(--tr-green-vault); border-color: var(--tr-line-strong); }
+.gallery__scroll:focus-visible { outline: 2px solid var(--tr-gold-deep); outline-offset: 2px; }
 
 .gallery__stage { order: 1; position: relative; min-width: 0; }
 .gallery__frame { margin: 0; }
@@ -451,8 +487,10 @@
 }
 
 @media (max-width: 900px) {
-  /* Smaller cells so a phone still gets two rows rather than six. */
-  .gallery[data-ready] .gallery__rail { grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); }
+  /* No thumbnails on a phone. At that width they are too small to tell one
+     three-quarter view from another, and the arrows and the counter already
+     say how many photographs there are and where you are in them. */
+  .gallery[data-ready] .gallery__railwrap { display: none; }
   .gallery__nav { opacity: 1; }
 }
 

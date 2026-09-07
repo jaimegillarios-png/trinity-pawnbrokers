@@ -15,6 +15,9 @@
     var counter = root.querySelector('[data-gallery-count]');
     var prev = root.querySelector('[data-gallery-prev]');
     var next = root.querySelector('[data-gallery-next]');
+    var rail = root.querySelector('[data-gallery-thumb]') && thumbs[0].parentElement;
+    var railPrev = root.querySelector('[data-rail-prev]');
+    var railNext = root.querySelector('[data-rail-next]');
     var index = 0;
 
     root.setAttribute('data-ready', 'true');
@@ -40,6 +43,29 @@
       if (active && active.scrollIntoView) {
         active.scrollIntoView({ block: 'nearest', inline: 'nearest' });
       }
+      updateRailArrows();
+    }
+
+    /* An arrow that cannot move is worse than no arrow, so each one appears
+       only while the rail has somewhere to go on that side. The rail is
+       hidden entirely on a phone, where the buttons would be measuring a
+       zero-width element — hence the offsetParent check. */
+    function updateRailArrows() {
+      if (!rail || !railPrev || !railNext) return;
+      if (!rail.offsetParent) {
+        railPrev.hidden = true;
+        railNext.hidden = true;
+        return;
+      }
+      var max = rail.scrollWidth - rail.clientWidth;
+      railPrev.hidden = max <= 1 || rail.scrollLeft <= 1;
+      railNext.hidden = max <= 1 || rail.scrollLeft >= max - 1;
+    }
+
+    function slide(direction) {
+      if (!rail) return;
+      // Most of a screenful, so the eye keeps a couple of thumbnails as anchors.
+      rail.scrollBy({ left: direction * rail.clientWidth * 0.8, behavior: 'smooth' });
     }
 
     thumbs.forEach(function (thumb, i) {
@@ -47,6 +73,10 @@
     });
     if (prev) prev.addEventListener('click', function () { show(index - 1); });
     if (next) next.addEventListener('click', function () { show(index + 1); });
+    if (railPrev) railPrev.addEventListener('click', function () { slide(-1); });
+    if (railNext) railNext.addEventListener('click', function () { slide(1); });
+    if (rail) rail.addEventListener('scroll', updateRailArrows, { passive: true });
+    window.addEventListener('resize', updateRailArrows);
 
     /* Arrow keys, but only while the gallery has focus — hijacking them for
        the whole page would break scrolling everywhere else. */
@@ -56,5 +86,6 @@
     });
 
     show(0);
+    updateRailArrows();
   });
 })();

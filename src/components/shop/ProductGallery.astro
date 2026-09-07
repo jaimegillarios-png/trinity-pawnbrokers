@@ -21,6 +21,15 @@ const slides = images.length + (video ? 1 : 0);
     of photographs rather than one photograph and nine dead thumbnails. */}
 <div class="gallery" data-gallery data-count={slides}>
   {slides > 1 && (
+    <div class="gallery__railwrap">
+      <button type="button" class="gallery__scroll gallery__scroll--prev" data-rail-prev
+        aria-label="Scroll thumbnails left" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6"
+            stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+
     <div class="gallery__rail" role="tablist" aria-label={`${product.title} photographs`}>
       {images.map((image, i) => (
         <button
@@ -66,6 +75,15 @@ const slides = images.length + (video ? 1 : 0);
           </span>
         </button>
       )}
+    </div>
+
+      <button type="button" class="gallery__scroll gallery__scroll--next" data-rail-next
+        aria-label="Scroll thumbnails right" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.6"
+            stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
     </div>
   )}
 

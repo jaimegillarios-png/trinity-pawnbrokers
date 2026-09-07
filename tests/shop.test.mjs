@@ -163,25 +163,45 @@ test('the film is in the gallery, and costs nothing to not watch', () => {
   assert.match(script, /playing\.pause\(\)/, 'the film keeps playing after you flick past it');
 });
 
-test('the gallery thumbnails sit under the frame, and all of them fit', () => {
-  /* A rail beside the frame either ran taller than the photograph or scrolled
-     inside its own window; a scrolling strip underneath showed seven of
-     seventeen. Wrapped, every thumbnail is visible without a gesture. */
+test('the thumbnails are one sliding row, and absent on a phone', () => {
+  /* Two rows read as a contact sheet and pushed the specification off the
+     screen. One row that slides keeps the piece and its details together. On a
+     phone they go entirely: at that width one three-quarter view is
+     indistinguishable from the next, and the arrows and counter already say
+     how many photographs there are. */
   const css = readFileSync(resolve(root, 'src/styles/shop.css'), 'utf8');
-  /* Read the whole declaration block rather than a fixed slice — a comment
-     inside the rule pushed the property past the window and failed this for
-     the wrong reason. */
-  const ruleFrom = (selector) => {
-    const start = css.indexOf(selector);
+  const ruleFrom = (selector, from = 0) => {
+    const start = css.indexOf(selector, from);
     assert.ok(start > -1, `no rule for ${selector}`);
     return css.slice(start, css.indexOf('}', start));
   };
 
-  const rail = ruleFrom('.gallery[data-ready] .gallery__rail');
-  assert.match(rail, /order: 2/, 'the rail must come after the frame');
-  assert.match(rail, /repeat\(auto-fill/, 'the rail should wrap, not scroll');
-  assert.ok(!/overflow-x: auto/.test(rail), 'the rail still scrolls sideways');
+  const wrap = ruleFrom('.gallery[data-ready] .gallery__railwrap');
+  assert.match(wrap, /order: 2/, 'the rail must come after the frame');
   assert.match(ruleFrom('.gallery__stage {'), /order: 1/);
+
+  const rail = ruleFrom('.gallery__rail {');
+  assert.match(rail, /overflow-x: auto/, 'a slider has to scroll');
+  assert.ok(!/wrap/.test(rail), 'the row must not wrap');
+  assert.ok(!/auto-fill/.test(rail), 'auto-fill makes it a grid again');
+
+  // Hidden below the phone breakpoint.
+  const mobile = css.slice(css.indexOf('@media (max-width: 900px)', css.indexOf('.gallery__scroll')));
+  assert.match(mobile, /\.gallery\[data-ready\] \.gallery__railwrap \{ display: none/);
+
+  /* A piece photographed once renders no rail at all, correctly — so test
+     against one that actually has a gallery. */
+  const withGallery = SLUGS.map((slug) => page(`shop/${slug}`)).find((h) => h.includes('gallery__rail'));
+  assert.ok(withGallery, 'no product has more than one photograph');
+  const html = withGallery;
+  assert.match(html, /data-rail-prev/, 'no slider control');
+  assert.match(html, /data-rail-next/);
+  // Both start hidden; the script shows whichever side can actually move.
+  assert.match(html, /data-rail-prev[^>]*hidden/);
+
+  const script = readFileSync(resolve(root, 'src/scripts/gallery.js'), 'utf8');
+  assert.match(script, /function updateRailArrows/);
+  assert.match(script, /rail\.offsetParent/, 'the arrows must stay hidden where the rail is not shown');
 });
 
 test('a cropped image is served cropped at every width', () => {
