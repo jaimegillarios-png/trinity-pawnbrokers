@@ -182,6 +182,13 @@ test('the thumbnails are one sliding row, and absent on a phone', () => {
 
   const rail = ruleFrom('.gallery__rail {');
   assert.match(rail, /overflow-x: auto/, 'a slider has to scroll');
+
+  /* The arrows are overlaid, not in the flow. Beside the rail they pushed the
+     row inwards by their own width, so the first thumbnail did not start where
+     the photograph above it started. */
+  const arrow = ruleFrom('.gallery__scroll {');
+  assert.match(arrow, /position: absolute/, 'an arrow in the flow insets the row');
+  assert.match(wrap, /position: relative/, 'the overlaid arrows need a containing block');
   assert.ok(!/wrap/.test(rail), 'the row must not wrap');
   assert.ok(!/auto-fill/.test(rail), 'auto-fill makes it a grid again');
 
