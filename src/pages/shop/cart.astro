@@ -1,7 +1,6 @@
 ---
 import '../../styles/shop.css';
 import Base from '../../layouts/Base.astro';
-import ShopNav from '../../components/shop/ShopNav.astro';
 import { urlFor } from '../../lib/sanity/image';
 import { money } from '../../lib/money';
 import { getLegalPages, getProducts, getSiteSettings } from '../../lib/sanity/queries';
@@ -29,8 +28,7 @@ const seo = {
   noIndex: true,
 };
 ---
-<Base seo={seo} site={site}>
-  <ShopNav />
+<Base seo={seo} site={site} nav="shop">
 
   <section class="tr-band tr-band--white">
     <div class="tr-inner cart">

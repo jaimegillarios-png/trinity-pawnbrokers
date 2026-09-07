@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { dist, root, page } from './helpers.mjs';
+import { dist, root, page, structuredData } from './helpers.mjs';
 
 /* `isBuyable` is the whole defence against selling a one-of-a-kind watch to two
    people, so it is tested as logic rather than through the page. Imported from
@@ -249,13 +249,22 @@ test('a line item does not repeat the brand', () => {
     title.toLowerCase().startsWith(brand.toLowerCase()) ? title : `${brand} ${title}`;
   assert.equal(name('Cartier', 'Cartier Santos de Cartier'), 'Cartier Santos de Cartier');
   assert.equal(name('Rolex', 'Air-King'), 'Rolex Air-King');
-  for (const slug of ['cartier-santos-placeholder', 'rolex-air-king-placeholder']) {
+  /* Checked against whatever is actually in the catalogue, since the pieces
+     change. Most titles already open with the brand — "Tudor Black Bay" — and
+     prefixing it again read "Tudor Tudor Black Bay" on the payment page. */
+  const slugs = readdirSync(resolve(dist, 'shop'), { withFileTypes: true })
+    .filter((e) => e.isDirectory() && !['items', 'cart', 'about', 'order-confirmed'].includes(e.name))
+    .map((e) => e.name);
+  assert.ok(slugs.length, 'no products built');
+  for (const slug of slugs) {
     const html = page(`shop/${slug}`);
-    const brand = html.match(/"brand":\s*\{\s*"@type":\s*"Brand",\s*"name":\s*"([^"]+)"/)?.[1];
-    const title = html.match(/<h1[^>]*>([^<]+)</)?.[1]?.trim();
-    if (!brand || !title) continue;
-    assert.ok(!name(brand, title).match(new RegExp(`^${brand}\\s+${brand}\\b`, 'i')),
-      `${slug} would show the brand twice`);
+    const product = structuredData(html).find((b) => b['@type'] === 'Product');
+    if (!product) continue;
+    const shown = name(product.brand.name, product.name);
+    assert.ok(
+      !new RegExp(`^${product.brand.name}\\s+${product.brand.name}\\b`, 'i').test(shown),
+      `${slug} would show the brand twice: "${shown}"`,
+    );
   }
 });
 

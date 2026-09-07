@@ -1,0 +1,78 @@
+---
+import { urlFor, srcSetFor, lqipFor } from '../../lib/sanity/image';
+import type { Product } from '../../lib/types';
+
+interface Props { product: Product }
+const { product } = Astro.props;
+const images = product.images ?? [];
+---
+{/* A rail of thumbnails beside one large frame, the way the pieces are
+    actually photographed — eighteen shots of a single watch, because at this
+    price the buyer is inspecting it, not admiring it.
+
+    Every image is in the markup and visible with no JavaScript: the script
+    below turns the stack into a gallery, so a failed script leaves a long page
+    of photographs rather than one photograph and nine dead thumbnails. */}
+<div class="gallery" data-gallery data-count={images.length}>
+  {images.length > 1 && (
+    <div class="gallery__rail" role="tablist" aria-label={`${product.title} photographs`}>
+      {images.map((image, i) => (
+        <button
+          type="button"
+          class="gallery__thumb"
+          role="tab"
+          aria-selected={i === 0 ? 'true' : 'false'}
+          aria-label={`Photograph ${i + 1} of ${images.length}`}
+          data-gallery-thumb={i}
+        >
+          <img
+            src={urlFor(image).width(160).height(160).fit('crop').url()}
+            alt=""
+            width="80"
+            height="80"
+            loading="lazy"
+            decoding="async"
+          />
+        </button>
+      ))}
+    </div>
+  )}
+
+  <div class="gallery__stage">
+    {images.map((image, i) => (
+      <figure class="gallery__frame" data-gallery-frame={i}>
+        <img
+          src={urlFor(image).width(1200).height(1200).fit('crop').url()}
+          srcset={srcSetFor(image)}
+          sizes="(max-width: 900px) 100vw, 46vw"
+          alt={image.alt ?? `${product.title}, photograph ${i + 1}`}
+          width="1200"
+          height="1200"
+          loading={i === 0 ? 'eager' : 'lazy'}
+          decoding="async"
+          style={(() => { const l = lqipFor(image); return l ? `background-image:url(${l});background-size:cover` : undefined; })()}
+        />
+      </figure>
+    ))}
+
+    {images.length > 1 && (
+      <>
+        <button type="button" class="gallery__nav gallery__nav--prev" data-gallery-prev
+          aria-label="Previous photograph" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <button type="button" class="gallery__nav gallery__nav--next" data-gallery-next
+          aria-label="Next photograph" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <p class="gallery__count" data-gallery-count hidden></p>
+      </>
+    )}
+  </div>
+</div>

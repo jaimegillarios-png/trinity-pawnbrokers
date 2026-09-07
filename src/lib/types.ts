@@ -267,6 +267,14 @@ export interface Product {
 }
 
 export interface ShopPage {
+  hero?: HeroSection;
+  featured?: SectionIntro;
+  /** Shown on the shop home and on /shop/about. */
+  story?: {
+    heading?: string;
+    body?: unknown[];
+    image?: SanityImage;
+  };
   intro?: SectionIntro;
   assurances?: IconCard[];
   closing?: ClosingSection;

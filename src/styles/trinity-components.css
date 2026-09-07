@@ -926,3 +926,79 @@ section[id], [id].hero-form-card { scroll-margin-top: calc(var(--tr-mast-h, 0px)
 }
 .tr-footer__nav a { color: var(--tr-on-green); text-decoration: none; }
 .tr-footer__nav a:hover { color: var(--tr-gold-mid); text-decoration: underline; text-underline-offset: 4px; }
+
+/* ---- the masthead in shop dress ----
+   Not a second bar under the first: the same bar, carrying the shop's own
+   links and a cart where the phone number sits. The way back to pawnbroking
+   is a link like any other, set apart by its arrow rather than by shouting. */
+.tr-wordmark__sub {
+  font: 500 17px/1 var(--tr-font-display);
+  letter-spacing: 0.08em;
+  color: var(--tr-gold-deep);
+  margin-left: 10px;
+  padding-left: 11px;
+  border-left: 1px solid var(--tr-line);
+  align-self: center;
+}
+.masthead[data-variant='shop'] .tr-wordmark { display: flex; align-items: center; }
+
+.tr-navlink--out { display: inline-flex; align-items: center; gap: 5px; color: var(--tr-ink-62); }
+.tr-navlink--out:hover { color: var(--tr-green-leaf); }
+.tr-navlink__arrow { width: 13px; height: 13px; flex: none; }
+
+.tr-cart-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--tr-green-leaf);
+  text-decoration: none;
+  border: 1px solid var(--tr-leaf-border);
+  padding: 9px 16px;
+  border-radius: var(--tr-radius);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.tr-cart-btn:hover,
+.tr-cart-btn[aria-current='page'] {
+  background: var(--tr-green-vault);
+  color: var(--tr-neutral);
+  border-color: var(--tr-green-vault);
+}
+.tr-cart-btn__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: 10px;
+  background: var(--tr-gold-bright);
+  color: var(--tr-green-vault);
+  font: 600 11px/1 var(--tr-font-body);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The compact cart, shown where the phone icon is on the rest of the site. */
+.tr-call--cart { position: relative; }
+.tr-call--cart svg { fill: none; stroke: currentColor; }
+.tr-call--cart circle { fill: currentColor; stroke: none; }
+.tr-call__count {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: var(--tr-gold-bright);
+  color: var(--tr-green-vault);
+  font: 600 10px/17px var(--tr-font-body);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 1024px) {
+  /* In the stacked menu the cart is a full-width row like everything else, and
+     the icon in the bar takes over the count. */
+  .tr-cart-btn { justify-content: center; width: 100%; box-sizing: border-box; }
+  .tr-wordmark__sub { font-size: 15px; }
+}

@@ -1,8 +1,8 @@
 ---
 import '../../styles/shop.css';
 import Base from '../../layouts/Base.astro';
-import ShopNav from '../../components/shop/ShopNav.astro';
-import { urlFor, srcSetFor } from '../../lib/sanity/image';
+import ProductGallery from '../../components/shop/ProductGallery.astro';
+import { urlFor } from '../../lib/sanity/image';
 import { money } from '../../lib/money';
 import { getProducts, getSiteSettings } from '../../lib/sanity/queries';
 import { breadcrumbSchema } from '../../lib/seo';
@@ -57,25 +57,19 @@ const seo = product.seo ?? {
   description: product.summary,
 };
 ---
-<Base seo={seo} site={site} schemas={schemas}>
-  <ShopNav />
+<Base seo={seo} site={site} schemas={schemas} nav="shop">
 
-  <section class="tr-band tr-band--white">
+  <nav class="tr-band tr-band--white product-crumbs" aria-label="Breadcrumb">
+    <div class="tr-inner">
+      <a href="/shop/items">Shop</a>
+      <span aria-hidden="true">›</span>
+      <span>{product.title}</span>
+    </div>
+  </nav>
+
+  <section class="tr-band tr-band--white product-band">
     <div class="tr-inner product">
-      <div class="product__media">
-        {product.images.map((image, i) => (
-          <img
-            src={urlFor(image).width(1100).height(1100).fit('crop').url()}
-            srcset={srcSetFor(image)}
-            sizes="(max-width: 900px) 100vw, 46vw"
-            alt={image.alt ?? `${product.title}, photograph ${i + 1}`}
-            width="1100"
-            height="1100"
-            loading={i === 0 ? 'eager' : 'lazy'}
-            decoding="async"
-          />
-        ))}
-      </div>
+      <ProductGallery product={product} />
 
       <div class="product__body">
         <p class="product__brand">{product.brand}</p>
@@ -144,5 +138,6 @@ const seo = product.seo ?? {
 
   <script>
     import '../../scripts/cart.js';
+    import '../../scripts/gallery.js';
   </script>
 </Base>

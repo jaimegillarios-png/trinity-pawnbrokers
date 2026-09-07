@@ -1,0 +1,75 @@
+---
+import '../../styles/shop.css';
+import Base from '../../layouts/Base.astro';
+import ShopStory from '../../components/shop/ShopStory.astro';
+import CardGrid from '../../components/CardGrid.astro';
+import SectionOpener from '../../components/SectionOpener.astro';
+import ClosingBand from '../../components/ClosingBand.astro';
+import { getShopPage, getSiteSettings } from '../../lib/sanity/queries';
+import { breadcrumbSchema } from '../../lib/seo';
+
+const [shop, site] = await Promise.all([getShopPage(), getSiteSettings()]);
+const origin = Astro.site?.origin ?? '';
+const addr = site.address;
+
+const schemas = [
+  breadcrumbSchema([
+    { name: 'Home', url: `${origin}/` },
+    { name: 'Shop', url: `${origin}/shop` },
+    { name: 'About the shop', url: `${origin}/shop/about` },
+  ]),
+];
+
+const seo = {
+  title: 'About the shop | Trinity Pawnbrokers',
+  description:
+    'Who sells these watches, and why we have them. Over £100 million lent against luxury assets since 2014, and thirty years of watch experience at the bench.',
+};
+---
+<Base seo={seo} site={site} schemas={schemas} nav="shop" reveal=".shop-assurances .tr-card">
+  {shop.story && <ShopStory story={shop.story} />}
+
+  <section class="tr-band tr-band--grey">
+    <div class="tr-inner shop-assurances">
+      <SectionOpener intro={shop.intro} />
+      <CardGrid cards={shop.assurances} class="shop-assurances__grid" />
+    </div>
+  </section>
+
+  {/* The shop is a counter in a real building, and someone spending five
+      figures wants to know they can walk in. Address and hours come from site
+      settings, so there is one copy of them. */}
+  <section class="tr-band tr-band--white">
+    <div class="tr-inner shop-visit">
+      <h2 class="tr-h2">Visit us</h2>
+      <div class="shop-visit__grid">
+        <div>
+          <p class="shop-visit__label">Address</p>
+          <address class="shop-visit__value">
+            {addr?.street}<br />{addr?.locality} {addr?.postcode}
+          </address>
+        </div>
+        <div>
+          <p class="shop-visit__label">Hours</p>
+          <p class="shop-visit__value">
+            Monday–Friday<br />9.30am – 5pm<br />
+            <span class="shop-visit__note">By appointment only</span>
+          </p>
+        </div>
+        <div>
+          <p class="shop-visit__label">Phone</p>
+          <p class="shop-visit__value">
+            <a href={`tel:${site.phoneHref}`}>{site.phone}</a>
+          </p>
+        </div>
+      </div>
+      <a class="tr-cta tr-cta--gold" href="/contact">Make an appointment</a>
+    </div>
+  </section>
+
+  <ClosingBand closing={shop.closing} site={site} />
+
+  <script>
+    import '../../scripts/cart.js';
+  </script>
+</Base>

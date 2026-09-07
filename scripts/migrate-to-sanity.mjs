@@ -24,7 +24,6 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 import { PRIVACY, TERMS, COMPLAINTS, COOKIES, TRUST } from './legal-content.mjs';
 import { FAQ_GROUPS } from './faq-content.mjs';
-import { PRODUCTS } from './shop-content.mjs';
 import { SHIPPING, TERMS_OF_SALE } from './shop-legal.mjs';
 
 const DRY = process.argv.includes('--dry-run');
@@ -937,82 +936,6 @@ function buildHowPage() {
   };
 }
 
-/**
- * The shop's own front page, and its placeholder stock. Every product is
- * marked "(placeholder)" in its title — see shop-content.mjs for why.
- */
-function buildShopPage() {
-  const card = (icon, title, body) => ({ _type: 'iconCard', icon, title, body });
-  return {
-    _id: 'shopPage',
-    _type: 'shopPage',
-    intro: {
-      eyebrow: 'The shop',
-      heading: 'Pieces that have passed through our hands',
-      intro:
-        'Watches taken in against a loan and never redeemed, or bought outright. Every one has been through the same bench as a pledge — authenticated, timed and photographed as it is, not as we would like it to be.',
-    },
-    assurances: keyed(
-      [
-        card('ph-seal-check', 'Authenticated here', 'Every piece is checked by the same specialists who value pledges, before it is listed. What we could not verify, we do not sell.'),
-        card('ph-eye', 'Described as it is', 'Condition is written plainly, marks included. The photographs are of the actual piece, not a catalogue shot.'),
-        card('ph-truck', 'Insured to your door', 'Fully insured delivery, signed for. Fourteen days to change your mind, as the law provides.'),
-      ],
-      'assure',
-    ),
-    closing: {
-      _type: 'closingSection',
-      eyebrow: 'Not what you were after?',
-      heading: 'Stock changes constantly',
-      intro:
-        'Pieces arrive as loans end. Tell us what you are looking for and we will let you know when something fits.',
-      cta: { _type: 'cta', label: 'Get in touch', href: '/contact' },
-      contactPrefix: 'Or speak to a specialist on',
-      contactSuffix: 'weekdays, 9am to 5.30pm.',
-    },
-    seo: {
-      _type: 'seo',
-      title: 'Buy pre-owned luxury watches | Trinity Pawnbrokers',
-      description:
-        'Authenticated pre-owned watches from the pawnbroker that valued them. Condition described plainly, insured delivery, fourteen days to change your mind.',
-    },
-  };
-}
-
-async function buildProducts() {
-  const out = [];
-  for (const p of PRODUCTS) {
-    out.push({
-      _id: `product-${p.slug}`,
-      _type: 'product',
-      title: p.title,
-      slug: { _type: 'slug', current: p.slug },
-      brand: p.brand,
-      status: p.status,
-      price: p.price,
-      ...(p.rrp ? { rrp: p.rrp } : {}),
-      images: keyed([await uploadImage(p.image, `${p.title} — placeholder photograph`)], 'img'),
-      summary: p.summary,
-      reference: p.reference,
-      year: p.year,
-      specs: keyed(
-        p.specs.map(([label, value]) => ({ _type: 'specRow', label, value })),
-        'spec',
-      ),
-      condition: p.condition,
-      boxAndPapers: p.boxAndPapers,
-      warranty: p.warranty,
-      seo: {
-        _type: 'seo',
-        title: `${p.title} | Trinity Pawnbrokers`,
-        description: p.summary.slice(0, 160),
-        // Placeholder stock must not be indexed.
-        noIndex: true,
-      },
-    });
-  }
-  return out;
-}
 
 const TODAY = new Date().toISOString().slice(0, 10);
 
@@ -1436,8 +1359,6 @@ const docs = [
   buildContactPage(home.visit?.mapEmbedUrl),
   buildLendPage(),
   buildHowPage(),
-  buildShopPage(),
-  ...(await buildProducts()),
   ...(await blogSeed()),
   ...legalPages(),
 ];

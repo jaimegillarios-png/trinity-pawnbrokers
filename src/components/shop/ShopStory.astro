@@ -1,0 +1,36 @@
+---
+import { PortableText } from 'astro-portabletext';
+import { urlFor, srcSetFor, lqipFor } from '../../lib/sanity/image';
+import type { ShopPage } from '../../lib/types';
+
+interface Props { story: NonNullable<ShopPage['story']> }
+const { story } = Astro.props;
+const lqip = story.image ? lqipFor(story.image) : undefined;
+---
+{/* Two columns, image left. The shop's own account of itself, which on the
+    source site is a separate About page — it earns a place on the home page
+    because "who is selling me a five-figure watch" is the question a first
+    visitor actually has. */}
+<section class="tr-band tr-band--white shop-story">
+  <div class="tr-inner shop-story__inner">
+    {story.image && (
+      <div class="shop-story__media">
+        <img
+          src={urlFor(story.image).width(900).height(1100).fit('crop').url()}
+          srcset={srcSetFor(story.image)}
+          sizes="(max-width: 900px) 100vw, 42vw"
+          alt={story.image.alt ?? ''}
+          width="900"
+          height="1100"
+          loading="lazy"
+          decoding="async"
+          style={lqip ? `background-image:url(${lqip});background-size:cover` : undefined}
+        />
+      </div>
+    )}
+    <div class="shop-story__copy">
+      {story.heading && <h2 class="tr-h2">{story.heading}</h2>}
+      <PortableText value={story.body as any} />
+    </div>
+  </div>
+</section>

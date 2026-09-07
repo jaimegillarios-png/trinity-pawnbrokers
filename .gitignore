@@ -11,3 +11,6 @@ trinity-pawn-brokers-rebranding/
 
 # Local Pages runtime secrets — same rules as .env
 .dev.vars
+
+# Scraped source imagery — 27MB, and it lives in Sanity once imported.
+scripts/data/unbolted/images/

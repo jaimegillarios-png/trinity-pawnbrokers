@@ -1,7 +1,6 @@
 ---
 import '../../styles/shop.css';
 import Base from '../../layouts/Base.astro';
-import ShopNav from '../../components/shop/ShopNav.astro';
 import { getLegalPages, getSiteSettings } from '../../lib/sanity/queries';
 
 /* Prerendered, like every other page here. The order itself is fetched from
@@ -19,8 +18,7 @@ const seo = {
   noIndex: true,
 };
 ---
-<Base seo={seo} site={site}>
-  <ShopNav />
+<Base seo={seo} site={site} nav="shop">
 
   <section class="tr-band tr-band--white">
     <div class="tr-inner confirm">

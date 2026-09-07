@@ -249,8 +249,11 @@ export const getProduct = (slug: string) =>
 
 export const getShopPage = async (): Promise<ShopPage> => {
   const shop = await query<ShopPage | null>(`*[_type == "shopPage"][0]{
+    hero { ..., image ${IMAGE} },
+    featured ${SECTION_INTRO},
     intro ${SECTION_INTRO},
     assurances[],
+    story { ..., image ${IMAGE} },
     closing,
     ${SEO}
   }`);

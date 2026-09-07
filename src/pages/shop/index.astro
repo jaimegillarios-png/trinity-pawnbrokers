@@ -1,10 +1,12 @@
 ---
 import '../../styles/shop.css';
 import Base from '../../layouts/Base.astro';
-import ShopNav from '../../components/shop/ShopNav.astro';
+import ShopHero from '../../components/shop/ShopHero.astro';
 import ProductCard from '../../components/shop/ProductCard.astro';
 import CardGrid from '../../components/CardGrid.astro';
 import ClosingBand from '../../components/ClosingBand.astro';
+import SectionOpener from '../../components/SectionOpener.astro';
+import ShopStory from '../../components/shop/ShopStory.astro';
 import { getShopPage, getProducts, getSiteSettings } from '../../lib/sanity/queries';
 import { breadcrumbSchema } from '../../lib/seo';
 
@@ -15,9 +17,11 @@ const [shop, products, site] = await Promise.all([
 ]);
 const origin = Astro.site?.origin ?? '';
 
-/* The front page shows what is actually buyable. Sold pieces belong on the
-   full list, where they read as a record rather than as disappointment. */
+/* Three, because the copy promises three — the team's picks for the month.
+   Only what is actually buyable: a sold piece here would be a shop window
+   full of things you cannot have. */
 const featured = products.filter((p) => p.status === 'available').slice(0, 3);
+const forSale = products.filter((p) => p.status === 'available').length;
 
 const schemas = [
   breadcrumbSchema([
@@ -26,36 +30,41 @@ const schemas = [
   ]),
 ];
 
-const reveal = '.product-card, .shop-assurances .tr-card';
+const reveal = '.product-card, .shop-assurances .tr-card, .shop-story__copy > *';
 ---
-<Base seo={shop.seo} site={site} schemas={schemas} reveal={reveal}>
-  <ShopNav />
+<Base seo={shop.seo} site={site} schemas={schemas} reveal={reveal} nav="shop">
+  {shop.hero && <ShopHero hero={shop.hero} />}
 
   <section class="tr-band tr-band--white">
     <div class="tr-inner">
-      <header class="shop-head">
-        {shop.intro?.eyebrow && <p class="tr-eyebrow">{shop.intro.eyebrow}</p>}
-        <h1 class="shop-head__title">{shop.intro?.heading}</h1>
-        {shop.intro?.intro && <p class="shop-head__intro">{shop.intro.intro}</p>}
-      </header>
+      <SectionOpener intro={shop.featured} />
 
-      {featured.length > 0 && (
+      {featured.length > 0 ? (
         <>
-          <p class="shop-strip__label">Available now</p>
           <div class="product-grid">
             {featured.map((product) => <ProductCard product={product} />)}
           </div>
-          <a class="shop-head__all" href="/shop/items">See everything →</a>
+          <a class="shop-head__all" href="/shop/items">
+            See all {forSale > 3 ? `${forSale} watches` : 'watches'} →
+          </a>
         </>
+      ) : (
+        <p class="shop-empty">
+          Everything is currently sold. Pieces arrive as loans end —
+          {' '}<a class="tr-inline-link" href="/contact">tell us what you are looking for</a>.
+        </p>
       )}
     </div>
   </section>
 
   <section class="tr-band tr-band--grey">
     <div class="tr-inner shop-assurances">
+      <SectionOpener intro={shop.intro} />
       <CardGrid cards={shop.assurances} class="shop-assurances__grid" />
     </div>
   </section>
+
+  {shop.story && <ShopStory story={shop.story} />}
 
   <ClosingBand closing={shop.closing} site={site} />
 

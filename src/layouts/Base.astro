@@ -13,11 +13,13 @@ interface Props {
   /** Extra JSON-LD for this page — breadcrumbs, FAQs, the service offered. */
   schemas?: Array<Record<string, unknown>>;
   bodyClass?: string;
+  /** 'shop' swaps the masthead's links and cart in place of the phone number. */
+  nav?: 'site' | 'shop';
   /** Selectors the entrance animation should reveal on scroll. */
   reveal?: string;
 }
 
-const { seo, site, schemas = [], bodyClass, reveal } = Astro.props;
+const { seo, site, schemas = [], bodyClass, reveal, nav = 'site' } = Astro.props;
 
 const origin = Astro.site?.origin ?? 'https://trinitypawnbrokers.co.uk';
 const href = canonical(Astro.url.pathname, origin);
@@ -85,7 +87,7 @@ const allSchemas = [organisationSchema(site, origin), ...schemas];
     data-reveal={reveal}
   >
     <RuleBar site={site} />
-    <Masthead site={site} />
+    <Masthead site={site} variant={nav} />
     <main id="main">
       <slot />
     </main>

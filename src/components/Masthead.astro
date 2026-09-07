@@ -1,14 +1,40 @@
 ---
 import type { SiteSettings } from '../lib/types';
-interface Props { site: SiteSettings }
-const { site } = Astro.props;
+
+interface Props {
+  site: SiteSettings;
+  /**
+   * The shop replaces this bar rather than adding a second one beneath it: two
+   * navigations stacked is two things to read before reaching the page. So the
+   * shop passes its own links, its own cart, and a way back out.
+   */
+  variant?: 'site' | 'shop';
+}
+const { site, variant = 'site' } = Astro.props;
+const { pathname } = Astro.url;
+const here = (href: string) => pathname === href || pathname === `${href}/`;
+
+const siteLinks = [
+  { href: '/what-we-lend-against', label: 'What we lend against' },
+  { href: '/how-it-works', label: 'How it works' },
+  { href: '/trust-and-security', label: 'Trust & security' },
+  { href: '/shop', label: 'Shop' },
+];
+
+const shopLinks = [
+  { href: '/shop', label: 'Shop' },
+  { href: '/shop/items', label: 'All watches' },
+  { href: '/shop/about', label: 'About the shop' },
+];
+
+const links = variant === 'shop' ? shopLinks : siteLinks;
 ---
 {/* Wordmark first in the DOM as well as on screen: the mobile menu orders
-    these three with `order`, and matching the source order keeps the reading
-    and tab order the same as the visual one. */}
-<header class="masthead">
+    these with `order`, and matching the source order keeps the reading and tab
+    order the same as the visual one. */}
+<header class="masthead" data-variant={variant}>
   <div class="masthead-grid">
-    <a href="/" class="tr-wordmark" aria-label={`${site.name} — home`}>
+    <a href={variant === 'shop' ? '/shop' : '/'} class="tr-wordmark" aria-label={`${site.name} — home`}>
       <img
         class="tr-logo"
         src="/brand/trinity-logo.svg"
@@ -17,31 +43,61 @@ const { site } = Astro.props;
         height="20"
         decoding="async"
       />
+      {variant === 'shop' && <span class="tr-wordmark__sub">Shop</span>}
     </a>
 
-    {/* One nav, not two. The pair was an artefact of the old three-column bar
-        with the wordmark between them; with the logo on the left they are a
-        single run of links, and the mobile menu's stagger no longer has to
-        guess which group an item is in. */}
-    <nav aria-label="Main">
+    <nav aria-label={variant === 'shop' ? 'Shop' : 'Main'}>
       <div class="nav-panel">
-        <a href="/what-we-lend-against" class="tr-navlink">What we lend against</a>
-        <a href="/how-it-works" class="tr-navlink">How it works</a>
-        <a href="/trust-and-security" class="tr-navlink">Trust &amp; security</a>
-        <a href="/shop" class="tr-navlink">Shop</a>
-        <a href={`tel:${site.phoneHref}`} class="tr-phone-btn">{site.phone}</a>
+        {links.map((link) => (
+          <a href={link.href} class="tr-navlink" aria-current={here(link.href) ? 'page' : undefined}>
+            {link.label}
+          </a>
+        ))}
+
+        {variant === 'shop' ? (
+          <>
+            {/* The way back. Someone who arrived at a watch from a search should
+                not have to guess that Trinity does anything else. */}
+            <a href="/" class="tr-navlink tr-navlink--out">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" class="tr-navlink__arrow">
+                <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6"
+                  stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Pawnbroking
+            </a>
+            <a class="tr-cart-btn" href="/shop/cart" aria-current={here('/shop/cart') ? 'page' : undefined}>
+              Cart
+              {/* Filled by the cart script; starts empty so no-JS shows no false count. */}
+              <span class="tr-cart-btn__count" data-cart-count hidden></span>
+            </a>
+          </>
+        ) : (
+          <a href={`tel:${site.phoneHref}`} class="tr-phone-btn">{site.phone}</a>
+        )}
       </div>
     </nav>
 
-    <a
-      class="tr-call"
-      href={`tel:${site.phoneHref}`}
-      aria-label={`Call ${site.name} on ${site.phone}`}
-    >
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M6.8 3.5h2.6a1 1 0 0 1 1 .79l.66 3.05a1 1 0 0 1-.5 1.1L8.9 9.6a12.6 12.6 0 0 0 5.5 5.5l1.16-1.66a1 1 0 0 1 1.1-.5l3.05.66a1 1 0 0 1 .79 1v2.6a2 2 0 0 1-2.16 2C10.7 18.65 5.35 13.3 4.8 5.66a2 2 0 0 1 2-2.16z"></path>
-      </svg>
-    </a>
+    {variant === 'shop' ? (
+      <a class="tr-call tr-call--cart" href="/shop/cart" aria-label="Your cart">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M4 5h2l2.2 9.6a1.6 1.6 0 0 0 1.56 1.24h7.5a1.6 1.6 0 0 0 1.56-1.2L20.5 8H7"
+            fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <circle cx="10" cy="19.5" r="1.4" /><circle cx="17.5" cy="19.5" r="1.4" />
+        </svg>
+        <span class="tr-call__count" data-cart-count hidden></span>
+      </a>
+    ) : (
+      <a
+        class="tr-call"
+        href={`tel:${site.phoneHref}`}
+        aria-label={`Call ${site.name} on ${site.phone}`}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M6.8 3.5h2.6a1 1 0 0 1 1 .79l.66 3.05a1 1 0 0 1-.5 1.1L8.9 9.6a12.6 12.6 0 0 0 5.5 5.5l1.16-1.66a1 1 0 0 1 1.1-.5l3.05.66a1 1 0 0 1 .79 1v2.6a2 2 0 0 1-2.16 2C10.7 18.65 5.35 13.3 4.8 5.66a2 2 0 0 1 2-2.16z"></path>
+        </svg>
+      </a>
+    )}
 
     <button class="tr-burger" type="button" aria-label="Menu" aria-expanded="false" hidden>
       <span></span><span></span>

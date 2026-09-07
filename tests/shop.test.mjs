@@ -1,17 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { dist, page, home, text, count, structuredData } from './helpers.mjs';
 
-const SLUGS = [
-  'rolex-air-king-placeholder',
-  'omega-speedmaster-placeholder',
-  'cartier-santos-placeholder',
-  'tudor-black-bay-placeholder',
-  'jaeger-lecoultre-reverso-placeholder',
-  'breitling-navitimer-placeholder',
-];
+/* Read off the build rather than listed here. The catalogue is real stock now
+   — pieces sell, new ones arrive — so any hardcoded list is a test that fails
+   the first time the client uses the Studio. */
+const PAGES = ['items', 'cart', 'about', 'order-confirmed'];
+const SLUGS = readdirSync(resolve(dist, 'shop'), { withFileTypes: true })
+  .filter((e) => e.isDirectory() && !PAGES.includes(e.name))
+  .map((e) => e.name);
 
 
 /* Which piece is in which state is live CMS data — a real sale moves a slug
@@ -44,11 +43,17 @@ test('the shop is reachable from the site nav and the footer', () => {
   assert.ok(footer.includes('href="/shop"'), 'no shop link in the footer');
 });
 
-test('the shop carries its own nav, with the cart in it', () => {
-  for (const p of ['shop', 'shop/items', 'shop/cart', `shop/${SLUGS[0]}`]) {
+test('the shop replaces the site nav rather than stacking a second one', () => {
+  for (const p of ['shop', 'shop/items', 'shop/cart', 'shop/about', `shop/${SLUGS[0]}`]) {
     const html = page(p);
-    assert.ok(html.includes('class="shop-nav"'), `${p}: no shop nav`);
-    assert.ok(html.includes('href="/shop/cart"'), `${p}: no cart link`);
+    const head = html.slice(0, html.indexOf('</header>'));
+    assert.match(head, /data-variant="shop"/, `${p}: masthead is not in shop dress`);
+    assert.match(head, /href="\/shop\/cart"/, `${p}: no cart in the bar`);
+    // The way back out, so a visitor who landed on a watch can find the firm.
+    assert.match(head, /class="tr-navlink tr-navlink--out"/, `${p}: no way back to the main site`);
+    // And only one navigation, not two stacked.
+    assert.equal(count(html, '<header class="masthead"'), 1, `${p}: more than one masthead`);
+    assert.ok(!html.includes('class="shop-nav"'), `${p}: the old second bar is still there`);
   }
 });
 
@@ -101,12 +106,25 @@ test('each piece is published as a Product with the right availability', () => {
   for (const slug of available) assert.ok(page(`shop/${slug}`).includes('data-add-to-cart'), slug);
 });
 
-test('placeholder stock is kept out of search', () => {
-  // Invented prices and references must not be indexed.
-  for (const slug of SLUGS) {
-    assert.match(page(`shop/${slug}`), /name="robots" content="noindex/, `${slug} is indexable`);
+test('the cart and the confirmation page stay out of search', () => {
+  /* The catalogue itself is real stock and should be findable once the site
+     goes live; a cart and a receipt never should be. */
+  for (const p of ['shop/cart', 'shop/order-confirmed']) {
+    assert.match(page(p), /name="robots" content="noindex/, `${p} is indexable`);
   }
-  assert.match(page('shop/cart'), /name="robots" content="noindex/, 'the cart is indexable');
+});
+
+test('the catalogue is real stock, not placeholders', () => {
+  assert.ok(SLUGS.length >= 5, `only ${SLUGS.length} products built`);
+  for (const slug of SLUGS) {
+    assert.ok(!/placeholder/i.test(slug), `${slug} is still a placeholder`);
+    const html = page(`shop/${slug}`);
+    assert.ok(!/placeholder/i.test(text(html)), `${slug} says "placeholder" on the page`);
+    // Squarespace slugs described the wrong watch on several of these.
+    const product = structuredData(html).find((b) => b['@type'] === 'Product');
+    const brand = product.brand.name.toLowerCase().split(' ')[0];
+    assert.ok(slug.startsWith(brand), `${slug} does not start with its brand (${brand})`);
+  }
 });
 
 test('the cart page states the delivery and cancellation terms', () => {

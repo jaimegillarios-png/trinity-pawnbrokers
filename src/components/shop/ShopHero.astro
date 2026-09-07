@@ -1,0 +1,45 @@
+---
+import { urlFor, srcSetFor, lqipFor } from '../../lib/sanity/image';
+import { splitEmphasis } from '../../lib/text';
+import type { HeroSection } from '../../lib/types';
+
+interface Props { hero: HeroSection }
+const { hero } = Astro.props;
+const parts = splitEmphasis(hero.heading);
+const lqip = lqipFor(hero.image);
+---
+{/* Split rather than full-bleed, and deliberately so: the shop's photography
+    is packshots on white, which a scrim cannot rescue — white text over a
+    white background is unreadable however it is tinted. So the copy gets its
+    own dark ground and the photograph gets the other half, uncropped by any
+    text sitting on top of it. */}
+<section class="shop-hero" aria-labelledby="shop-hero-title">
+  <div class="shop-hero__copy" data-reveal-hero>
+    {hero.eyebrow && <p class="tr-eyebrow shop-hero__eyebrow">{hero.eyebrow}</p>}
+    <h1 id="shop-hero-title" class="shop-hero__title">
+      {parts.map((p) => (p.emphasis ? <span>{p.text}</span> : p.text))}
+    </h1>
+    <p class="shop-hero__intro">{hero.intro}</p>
+    <div class="shop-hero__actions">
+      <a href={hero.ctaPrimary.href} class="tr-cta tr-cta--gold">{hero.ctaPrimary.label}</a>
+      {hero.ctaGhost && (
+        <a href={hero.ctaGhost.href} class="tr-cta tr-cta--ghost-light">{hero.ctaGhost.label}</a>
+      )}
+    </div>
+    {hero.reassurance && <p class="shop-hero__reassure">{hero.reassurance}</p>}
+  </div>
+
+  <div class="shop-hero__media">
+    <img
+      src={urlFor(hero.image).width(1200).height(1100).fit('crop').url()}
+      srcset={srcSetFor(hero.image)}
+      sizes="(max-width: 900px) 100vw, 56vw"
+      alt={hero.image.alt ?? ''}
+      width="1200"
+      height="1100"
+      fetchpriority="high"
+      decoding="async"
+      style={lqip ? `background-image:url(${lqip});background-size:cover` : undefined}
+    />
+  </div>
+</section>
