@@ -5,15 +5,15 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && node scripts/routes.mjs",
     "preview": "wrangler pages dev ./dist",
-    "deploy": "SITE_URL=${SITE_URL:-https://trinity-pawnbrokers.pages.dev} astro build && node scripts/strip-worker.mjs && wrangler pages deploy ./dist --project-name trinity-pawnbrokers --branch main --commit-dirty=true",
+    "deploy": "SITE_URL=${SITE_URL:-https://trinity-pawnbrokers.pages.dev} astro build && node scripts/routes.mjs && wrangler pages deploy ./dist --project-name trinity-pawnbrokers --branch main --commit-dirty=true",
     "studio": "npm --prefix studio run dev",
     "studio:deploy": "npm --prefix studio run deploy",
     "astro": "astro",
     "test": "node --test tests/*.test.mjs",
-    "test:build": "astro build && node --test tests/*.test.mjs",
-    "verify": "astro check && astro build && node --test tests/*.test.mjs"
+    "test:build": "astro build && node scripts/routes.mjs && node --test tests/*.test.mjs",
+    "verify": "astro check && astro build && node scripts/routes.mjs && node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
@@ -23,6 +23,7 @@
     "@sanity/image-url": "^1.2.0",
     "astro": "^5.18.2",
     "astro-portabletext": "^0.13.0",
+    "stripe": "^22.6.1",
     "typescript": "^5.9.3"
   },
   "devDependencies": {

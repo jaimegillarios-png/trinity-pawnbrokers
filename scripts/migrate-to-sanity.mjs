@@ -25,6 +25,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 import { PRIVACY, TERMS, COMPLAINTS, COOKIES, TRUST } from './legal-content.mjs';
 import { FAQ_GROUPS } from './faq-content.mjs';
 import { PRODUCTS } from './shop-content.mjs';
+import { SHIPPING, TERMS_OF_SALE } from './shop-legal.mjs';
 
 const DRY = process.argv.includes('--dry-run');
 
@@ -1027,6 +1028,27 @@ function legalPages() {
       updatedAt: TODAY,
       body: COOKIES,
       noIndex: true,
+    },
+    /* The two the shop cannot take money without. Unlike the placeholders
+       above these are publishable as they stand for everything the law fixes;
+       what only the client can answer is marked [TO CONFIRM: …] in the body. */
+    {
+      slug: 'shipping-and-returns',
+      title: 'Shipping & returns',
+      description:
+        'How a piece is despatched and insured, your fourteen-day right to cancel, and how refunds are paid.',
+      updatedAt: TODAY,
+      body: SHIPPING
+        .replace(/\[PHONE\]/g, '020 3567 1300')
+        .replace(/\[EMAIL\]/g, 'support@unbolted.com'),
+    },
+    {
+      slug: 'terms-of-sale',
+      title: 'Terms of sale',
+      description:
+        'The terms on which Trinity sells a piece from the shop. Buying is a sale of goods, not a pawnbroking loan.',
+      updatedAt: TODAY,
+      body: TERMS_OF_SALE,
     },
     {
       slug: 'trust-and-security',

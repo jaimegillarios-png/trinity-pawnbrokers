@@ -18,6 +18,7 @@
 
   /* Support / status */
   --tr-success:       #5FA982; /* confirm/tick colour (comparison ticks, reassurance) */
+  --tr-alert:         #8C3A2E; /* the one red on the site — checkout refusals only */
 
   /* Text on dark green (ivory ramp) */
   --tr-on-green-strong: rgba(245,241,230,0.85);

@@ -93,6 +93,22 @@ export const product = defineType({
     defineField({ name: 'boxAndPapers', title: 'Box and papers', type: 'string', group: 'detail' }),
     defineField({ name: 'warranty', type: 'string', group: 'detail' }),
 
+    /* Set by the checkout route, not by a person. A unique piece is held for
+       the length of one Stripe session so two buyers cannot pay for the same
+       watch. The Studio shows it read-only so staff can see why an item is
+       briefly unbuyable; it clears itself when the session expires. */
+    defineField({
+      name: 'hold',
+      title: 'Checkout hold',
+      type: 'object',
+      group: 'item',
+      readOnly: true,
+      fields: [
+        defineField({ name: 'sessionId', title: 'Stripe session', type: 'string' }),
+        defineField({ name: 'expiresAt', title: 'Held until', type: 'datetime' }),
+      ],
+    }),
+
     defineField({ name: 'seo', type: 'seo', group: 'seo' }),
   ],
   orderings: [

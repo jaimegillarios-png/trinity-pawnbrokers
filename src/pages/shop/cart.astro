@@ -4,9 +4,18 @@ import Base from '../../layouts/Base.astro';
 import ShopNav from '../../components/shop/ShopNav.astro';
 import { urlFor } from '../../lib/sanity/image';
 import { money } from '../../lib/money';
-import { getProducts, getSiteSettings } from '../../lib/sanity/queries';
+import { getLegalPages, getProducts, getSiteSettings } from '../../lib/sanity/queries';
 
-const [products, site] = await Promise.all([getProducts(), getSiteSettings()]);
+const [products, site, legals] = await Promise.all([
+  getProducts(),
+  getSiteSettings(),
+  getLegalPages(),
+]);
+
+/* The sale policies are CMS documents and may not be seeded yet. Where one is
+   missing the sentence still reads — it just stops being a link, rather than
+   sending a buyer to a 404 on the page where they part with money. */
+const has = (slug: string) => legals.some((page) => page.slug === slug);
 
 /* Every product is rendered and then hidden. The cart lives in the browser,
    and this page is prerendered like the rest of the site — so the server
@@ -72,17 +81,23 @@ const seo = {
             <strong data-cart-total>—</strong>
           </div>
           <p class="cart__note">
-            Delivery is insured and included. You have fourteen days from receipt to change
-            your mind.
+            Delivery within the UK is insured and included. You have fourteen days from
+            receipt to change your mind{has('shipping-and-returns') && (
+              <> — <a href="/shipping-and-returns">how returns work</a></>
+            )}.
           </p>
-          {/* Checkout is not wired yet — the button says so rather than
-              failing after a click. See the note in the README. */}
-          <button type="button" class="tr-cta tr-cta--gold cart__checkout" disabled>
-            Checkout — coming soon
+
+          <button type="button" class="tr-cta tr-cta--gold cart__checkout" data-checkout>
+            Checkout
           </button>
+          {/* Filled by the script when the server refuses — most often because
+              a piece sold while this cart sat open. */}
+          <p class="cart__error" data-checkout-error hidden role="alert"></p>
+
           <p class="cart__pending">
-            Card payment is being connected. Until it is, call us on
-            {' '}<a href={`tel:${site.phoneHref}`}>{site.phone}</a> and we will take it from there.
+            Payment is taken securely by Stripe; we never see your card details. Prefer to
+            speak to someone? Call <a href={`tel:${site.phoneHref}`}>{site.phone}</a>.
+            {has('terms-of-sale') && <> <a href="/terms-of-sale">Terms of sale</a>.</>}
           </p>
         </div>
       </div>

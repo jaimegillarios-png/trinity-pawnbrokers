@@ -1,6 +1,6 @@
 ---
 import type { SiteSettings } from '../lib/types';
-import { getAssetPageCards } from '../lib/sanity/queries';
+import { getAssetPageCards, getLegalPages } from '../lib/sanity/queries';
 
 interface Props { site: SiteSettings }
 const { site } = Astro.props;
@@ -8,6 +8,12 @@ const { site } = Astro.props;
 /* Driven off the CMS so a new item page appears here without anyone
    remembering to add it. */
 const items = await getAssetPageCards();
+
+/* The legal bar links only to policies that exist. These are CMS documents, so
+   the set can differ between environments — and a footer that promises a terms
+   of sale page and delivers a 404 is worse on a regulated site than anywhere
+   else. Ordered here, filtered by what Sanity actually holds. */
+const published = new Set((await getLegalPages()).map((page) => page.slug));
 
 /* Pages the sitemap calls for but that do not exist yet. They are listed so
    the structure is visible, but deliberately not linked — a footer link to a
@@ -24,12 +30,14 @@ const house: Entry[] = [
   { label: 'Contact us', href: '/contact' },
 ];
 
-const legal: Entry[] = [
-  { label: 'Terms of business', href: '/terms' },
-  { label: 'Privacy policy', href: '/privacy' },
-  { label: 'Cookie policy', href: '/cookies' },
-  { label: 'Complaints procedure', href: '/complaints' },
-];
+const legal = [
+  { label: 'Terms of business', slug: 'terms' },
+  { label: 'Terms of sale', slug: 'terms-of-sale' },
+  { label: 'Shipping & returns', slug: 'shipping-and-returns' },
+  { label: 'Privacy policy', slug: 'privacy' },
+  { label: 'Cookie policy', slug: 'cookies' },
+  { label: 'Complaints procedure', slug: 'complaints' },
+].filter((entry) => published.has(entry.slug));
 
 const addr = site.address;
 const addressLines = [
@@ -96,7 +104,7 @@ const year = new Date().getFullYear();
     <div class="tr-footer__bar-inner">
       <p class="tr-footer__copy">© {year} {site.name}</p>
       <nav class="tr-footer__legal-nav" aria-label="Legal">
-        {legal.map((entry) => <a href={entry.href}>{entry.label}</a>)}
+        {legal.map((entry) => <a href={`/${entry.slug}`}>{entry.label}</a>)}
       </nav>
     </div>
   </div>

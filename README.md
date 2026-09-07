@@ -37,13 +37,48 @@ serving whatever was there before.
 
 Two things worth knowing:
 
-- **Every route is prerendered.** The Cloudflare adapter emits a Worker and a
-  `_routes.json` anyway, and Pages then routes most requests through it to be
-  handed a file that was already on disk — which caused intermittent 522s.
-  `scripts/strip-worker.mjs` removes both, and refuses to run the moment any
-  route sets `export const prerender = false`.
+- **Almost every route is prerendered.** The three that are not — the checkout
+  API, the Stripe webhook and the order confirmation page — are the whole
+  reason a Worker ships at all. The adapter's own `_routes.json` sends most
+  requests through that Worker to be handed a file already on disk, which
+  caused intermittent 522s. `scripts/routes.mjs` runs on every build and
+  rewrites it as an allow-list of just those three routes; if nothing sets
+  `export const prerender = false` it deletes the Worker outright.
 - **The pages.dev host is noindexed** by `public/_headers`, scoped to that host
   so a real domain added later is unaffected.
+
+## The shop
+
+Six placeholder pieces, priced in pence because that is what Stripe charges in.
+Stock is unique — an item is available or it is gone — so the checkout does two
+things a normal cart does not:
+
+- **Prices come from Sanity at request time**, never from the browser. The cart
+  stores slugs only, so an edited price cannot reach Stripe.
+- **A piece is held for 30 minutes** while its buyer is on the payment page, and
+  the hold is written under the revision the availability check read. Two people
+  clicking Checkout on the same watch at the same moment: one gets a session,
+  the other gets told. The webhook marks it sold on payment and releases it if
+  the session lapses.
+
+Four secrets, all request-time (see `.env.example`):
+
+| | |
+|---|---|
+| `STRIPE_SECRET_KEY` | Dashboard → Developers → API keys |
+| `STRIPE_WEBHOOK_SECRET` | The signing secret for the endpoint below |
+| `SANITY_API_WRITE_TOKEN` | Editor permission. Holds and sells stock |
+| `PUBLIC_SANITY_PROJECT_ID` | Already set; the shop reuses it |
+
+Point a Stripe webhook at `https://<host>/api/stripe-webhook` and subscribe to
+`checkout.session.completed`, `checkout.session.expired`,
+`checkout.session.async_payment_succeeded` and
+`checkout.session.async_payment_failed`. Without it nothing is ever marked sold.
+
+Locally: `stripe listen --forward-to localhost:4321/api/stripe-webhook`.
+
+Missing either secret, the checkout returns 503 and says to call instead — it
+will not create a session it cannot back with a hold.
 
 ## Content
 
@@ -87,3 +122,18 @@ now — the item pages, the FAQ accordion, and the closing band.
 - [ ] Five blog articles are placeholders
 - [ ] The valuation form posts to `/api/valuation`, which does not exist
 - [ ] Confirm the domain, then rebuild with the real `SITE_URL`
+
+### The shop specifically
+
+- [ ] Six commercial answers are outstanding: what the shop sells beyond
+      watches, the carrier/cost/timescale, VAT treatment (margin scheme?),
+      returns address and who pays return postage, warranty terms and who
+      honours them, and whether delivery is really included
+- [ ] `/shipping-and-returns` and `/terms-of-sale` are written and seedable, but
+      carry `[TO CONFIRM: …]` markers for exactly those answers. Search for
+      `TO CONFIRM` in `scripts/shop-legal.mjs` — none may survive launch
+- [ ] Both pages need seeding: `SANITY_API_WRITE_TOKEN=… node
+      scripts/migrate-to-sanity.mjs`. Until then the footer and cart simply do
+      not link to them
+- [ ] Six products are placeholders, all titled "(placeholder)" and noindexed
+- [ ] Stripe is in test mode until real keys are set

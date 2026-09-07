@@ -305,3 +305,99 @@
   .product__spec { flex-direction: column; align-items: flex-start; gap: 4px; }
   .product__spec dd { text-align: left; }
 }
+
+/* ---- checkout refusal ----
+   The only red on the site. It appears when the server turns a basket down,
+   which nearly always means a one-of-a-kind piece sold while the cart sat
+   open — so it has to read as news, not as decoration. */
+.cart__error {
+  font: 400 var(--tr-body-sm) var(--tr-font-body);
+  color: var(--tr-alert);
+  border-left: 2px solid var(--tr-alert);
+  padding-left: 14px;
+  margin: 18px 0 0;
+  max-width: 52ch;
+}
+
+/* ---- order confirmed ----
+   A receipt, so it is set like one: the pieces listed against their amounts,
+   ruled off, and the total sitting where the eye already is. */
+.confirm { max-width: var(--tr-reading); }
+.confirm__head { margin-bottom: 44px; }
+
+.confirm__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--tr-line);
+}
+.confirm__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--tr-line-soft);
+}
+.confirm__name { font: 400 var(--tr-body) var(--tr-font-body); color: var(--tr-ink); }
+.confirm__amount {
+  font: 500 17px/1.3 var(--tr-font-display);
+  color: var(--tr-ink);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.confirm__total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 0 0;
+  margin-bottom: 52px;
+}
+.confirm__total span {
+  font: 500 var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
+  text-transform: uppercase;
+  color: var(--tr-ink-62);
+}
+.confirm__total strong {
+  font: 500 26px/1.2 var(--tr-font-display);
+  color: var(--tr-green-vault);
+  font-variant-numeric: tabular-nums;
+}
+
+.confirm__next {
+  background: var(--tr-neutral);
+  padding: 34px 36px 36px;
+  margin-bottom: 34px;
+}
+.confirm__next-title {
+  font: 600 var(--tr-h4) var(--tr-font-display);
+  color: var(--tr-green-vault);
+  margin: 0 0 20px;
+}
+.confirm__steps {
+  margin: 0;
+  padding: 0 0 0 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.confirm__steps li {
+  font: 400 var(--tr-body-sm) var(--tr-font-body);
+  color: var(--tr-ink-72);
+  padding-left: 6px;
+}
+.confirm__steps a { color: var(--tr-gold-deep); }
+
+.confirm__help {
+  font: 400 var(--tr-body-sm) var(--tr-font-body);
+  color: var(--tr-ink-72);
+  margin: 0 0 30px;
+}
+.confirm__help a { color: var(--tr-gold-deep); }
+
+@media (max-width: 640px) {
+  .confirm__next { padding: 26px 22px 28px; }
+}
