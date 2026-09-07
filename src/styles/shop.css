@@ -620,3 +620,16 @@
 }
 .shop-visit__value a { color: var(--tr-green-leaf); }
 .shop-visit__note { color: var(--tr-ink-45); font-size: var(--tr-caption); }
+
+/* SectionOpener renders a bare eyebrow/heading/intro with no wrapper and no
+   trailing space — every call site sets its own, the way .lend-criteria__grid
+   does. Without it the assurance cards butted straight against the heading
+   with a gap of exactly zero, and the featured grid sat 17px under its intro.
+   46px matches the item pages. */
+.shop-section__grid { margin-top: 46px; }
+.shop-assurances__grid { margin-top: 46px; }
+
+@media (max-width: 900px) {
+  .shop-section__grid,
+  .shop-assurances__grid { margin-top: 34px; }
+}
