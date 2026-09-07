@@ -192,3 +192,40 @@ test('the webhook does not trust the API version the event arrived in', () => {
   );
   assert.match(branch, /session\.payment_status === 'paid'/);
 });
+
+test('the buyer is sent back to the site they bought from', () => {
+  /* SITE_URL is the canonical origin for sitemaps and Open Graph — a real
+     domain that may not be serving yet. Preferring it here sent everyone
+     paying on localhost to a site that does not resolve, so the purchase
+     succeeded and the buyer saw nothing. */
+  const route = readFileSync(resolve(root, 'src/pages/api/checkout.ts'), 'utf8');
+  assert.match(route, /const origin = url\.origin;/);
+  assert.ok(!/origin = env\.SITE_URL/.test(route), 'SITE_URL must not drive the return URL');
+});
+
+test('a line item does not repeat the brand', () => {
+  const route = readFileSync(resolve(root, 'src/pages/api/checkout.ts'), 'utf8');
+  assert.match(route, /startsWith\(item\.brand\.toLowerCase\(\)\)/);
+
+  // The same rule the route applies, checked against the real catalogue.
+  const name = (brand, title) =>
+    title.toLowerCase().startsWith(brand.toLowerCase()) ? title : `${brand} ${title}`;
+  assert.equal(name('Cartier', 'Cartier Santos de Cartier'), 'Cartier Santos de Cartier');
+  assert.equal(name('Rolex', 'Air-King'), 'Rolex Air-King');
+  for (const slug of ['cartier-santos-placeholder', 'rolex-air-king-placeholder']) {
+    const html = page(`shop/${slug}`);
+    const brand = html.match(/"brand":\s*\{\s*"@type":\s*"Brand",\s*"name":\s*"([^"]+)"/)?.[1];
+    const title = html.match(/<h1[^>]*>([^<]+)</)?.[1]?.trim();
+    if (!brand || !title) continue;
+    assert.ok(!name(brand, title).match(new RegExp(`^${brand}\\s+${brand}\\b`, 'i')),
+      `${slug} would show the brand twice`);
+  }
+});
+
+test('prices are shown in pounds, not converted', () => {
+  /* Adaptive Pricing was showing a £4,980 watch as €6,018.47. Trinity settles
+     in sterling regardless, and we only ship to UK addresses. */
+  const route = readFileSync(resolve(root, 'src/pages/api/checkout.ts'), 'utf8');
+  assert.match(route, /adaptive_pricing: \{ enabled: false \}/);
+  assert.match(route, /allowed_countries: \['GB'\]/);
+});

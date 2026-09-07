@@ -66,7 +66,12 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
 
     const expiresAt = new Date(Date.now() + HOLD_MINUTES * 60_000);
     const stripe = stripeFor(env);
-    const origin = env.SITE_URL || url.origin;
+    /* Where the buyer came from, not where we wish they were. SITE_URL is the
+       canonical origin for sitemaps and Open Graph — it is a real domain that
+       may not be serving yet, and using it here sent everyone paying on
+       localhost to a site that does not resolve. Stripe only ever redirects to
+       the URL we hand it, so echoing the request origin is safe. */
+    const origin = url.origin;
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
@@ -77,7 +82,12 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
           currency: 'gbp',
           unit_amount: item.price,
           product_data: {
-            name: `${item.brand} ${item.title}`,
+            /* Most titles already open with the brand — "Cartier Santos de
+               Cartier" — so prefixing it unconditionally read "Cartier Cartier
+               Santos de Cartier" on the payment page. */
+            name: item.title.toLowerCase().startsWith(item.brand.toLowerCase())
+              ? item.title
+              : `${item.brand} ${item.title}`,
             // Stripe rejects relative URLs, and rejects the whole session if an
             // image 404s, so only send one we know Sanity is serving.
             ...(item.image ? { images: [item.image] } : {}),
@@ -93,6 +103,12 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
       // A courier delivering a five-figure watch will want to call ahead.
       phone_number_collection: { enabled: true },
       billing_address_collection: 'required',
+      /* Stripe's Adaptive Pricing converts the display price into whatever
+         currency it thinks the buyer is in — a £4,980 watch was being shown as
+         €6,018.47. Trinity settles in sterling either way, so all the customer
+         gets is an unfamiliar number and an exchange rate they did not ask for,
+         on a purchase we will only ship to a UK address anyway. */
+      adaptive_pricing: { enabled: false },
       // The webhook re-derives everything from the hold, so this is for the
       // humans reading the Stripe dashboard.
       metadata: { slugs: slugs.join(',') },
