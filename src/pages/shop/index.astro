@@ -1,0 +1,65 @@
+---
+import '../../styles/shop.css';
+import Base from '../../layouts/Base.astro';
+import ShopNav from '../../components/shop/ShopNav.astro';
+import ProductCard from '../../components/shop/ProductCard.astro';
+import CardGrid from '../../components/CardGrid.astro';
+import ClosingBand from '../../components/ClosingBand.astro';
+import { getShopPage, getProducts, getSiteSettings } from '../../lib/sanity/queries';
+import { breadcrumbSchema } from '../../lib/seo';
+
+const [shop, products, site] = await Promise.all([
+  getShopPage(),
+  getProducts(),
+  getSiteSettings(),
+]);
+const origin = Astro.site?.origin ?? '';
+
+/* The front page shows what is actually buyable. Sold pieces belong on the
+   full list, where they read as a record rather than as disappointment. */
+const featured = products.filter((p) => p.status === 'available').slice(0, 3);
+
+const schemas = [
+  breadcrumbSchema([
+    { name: 'Home', url: `${origin}/` },
+    { name: 'Shop', url: `${origin}/shop` },
+  ]),
+];
+
+const reveal = '.product-card, .shop-assurances .tr-card';
+---
+<Base seo={shop.seo} site={site} schemas={schemas} reveal={reveal}>
+  <ShopNav />
+
+  <section class="tr-band tr-band--white">
+    <div class="tr-inner">
+      <header class="shop-head">
+        {shop.intro?.eyebrow && <p class="tr-eyebrow">{shop.intro.eyebrow}</p>}
+        <h1 class="shop-head__title">{shop.intro?.heading}</h1>
+        {shop.intro?.intro && <p class="shop-head__intro">{shop.intro.intro}</p>}
+      </header>
+
+      {featured.length > 0 && (
+        <>
+          <p class="shop-strip__label">Available now</p>
+          <div class="product-grid">
+            {featured.map((product) => <ProductCard product={product} />)}
+          </div>
+          <a class="shop-head__all" href="/shop/items">See everything →</a>
+        </>
+      )}
+    </div>
+  </section>
+
+  <section class="tr-band tr-band--grey">
+    <div class="tr-inner shop-assurances">
+      <CardGrid cards={shop.assurances} class="shop-assurances__grid" />
+    </div>
+  </section>
+
+  <ClosingBand closing={shop.closing} site={site} />
+
+  <script>
+    import '../../scripts/cart.js';
+  </script>
+</Base>

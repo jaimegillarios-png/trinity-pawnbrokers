@@ -1,0 +1,96 @@
+---
+import '../../styles/shop.css';
+import Base from '../../layouts/Base.astro';
+import ShopNav from '../../components/shop/ShopNav.astro';
+import { urlFor } from '../../lib/sanity/image';
+import { money } from '../../lib/money';
+import { getProducts, getSiteSettings } from '../../lib/sanity/queries';
+
+const [products, site] = await Promise.all([getProducts(), getSiteSettings()]);
+
+/* Every product is rendered and then hidden. The cart lives in the browser,
+   and this page is prerendered like the rest of the site — so the server
+   cannot know what is in it. Six products is nothing to ship; if the
+   catalogue grew into the hundreds this would become a server route. */
+const buyable = products.filter((p) => p.status === 'available');
+
+const seo = {
+  title: 'Your cart | Trinity Pawnbrokers',
+  description: 'The pieces you are considering.',
+  noIndex: true,
+};
+---
+<Base seo={seo} site={site}>
+  <ShopNav />
+
+  <section class="tr-band tr-band--white">
+    <div class="tr-inner cart">
+      <header class="shop-head">
+        <p class="tr-eyebrow">Your cart</p>
+        <h1 class="shop-head__title">What you are considering</h1>
+      </header>
+
+      {/* Shown until the script has read the cart, so the page never flashes
+          "empty" at someone who has something in it. */}
+      <p class="cart__loading" data-cart-loading>Reading your cart…</p>
+
+      <div class="cart__empty" data-cart-empty hidden>
+        <p>There is nothing in your cart yet.</p>
+        <a class="tr-cta tr-cta--gold" href="/shop/items">See what we have</a>
+      </div>
+
+      <div class="cart__full" data-cart-full hidden>
+        <ul class="cart__list">
+          {buyable.map((product) => (
+            <li class="cart__row" data-cart-item={product.slug} data-price={product.price} hidden>
+              <a class="cart__media" href={`/shop/${product.slug}`} tabindex="-1" aria-hidden="true">
+                <img
+                  src={urlFor(product.images[0]).width(280).height(280).fit('crop').url()}
+                  alt=""
+                  width="140"
+                  height="140"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+              <div class="cart__detail">
+                <p class="cart__brand">{product.brand}</p>
+                <h2 class="cart__title"><a href={`/shop/${product.slug}`}>{product.title}</a></h2>
+                {product.reference && <p class="cart__ref">Ref. {product.reference}</p>}
+                <button type="button" class="cart__remove" data-remove-from-cart={product.slug}>
+                  Remove
+                </button>
+              </div>
+              <p class="cart__price">{money(product.price)}</p>
+            </li>
+          ))}
+        </ul>
+
+        <div class="cart__foot">
+          <div class="cart__total">
+            <span>Total</span>
+            <strong data-cart-total>—</strong>
+          </div>
+          <p class="cart__note">
+            Delivery is insured and included. You have fourteen days from receipt to change
+            your mind.
+          </p>
+          {/* Checkout is not wired yet — the button says so rather than
+              failing after a click. See the note in the README. */}
+          <button type="button" class="tr-cta tr-cta--gold cart__checkout" disabled>
+            Checkout — coming soon
+          </button>
+          <p class="cart__pending">
+            Card payment is being connected. Until it is, call us on
+            {' '}<a href={`tel:${site.phoneHref}`}>{site.phone}</a> and we will take it from there.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    import '../../scripts/cart.js';
+    import '../../scripts/cart-page.js';
+  </script>
+</Base>

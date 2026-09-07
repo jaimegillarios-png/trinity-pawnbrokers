@@ -1,0 +1,80 @@
+---
+import '../../styles/shop.css';
+import Base from '../../layouts/Base.astro';
+import ShopNav from '../../components/shop/ShopNav.astro';
+import ProductCard from '../../components/shop/ProductCard.astro';
+import { getProducts, getSiteSettings } from '../../lib/sanity/queries';
+import { breadcrumbSchema } from '../../lib/seo';
+
+const [products, site] = await Promise.all([getProducts(), getSiteSettings()]);
+const origin = Astro.site?.origin ?? '';
+
+const available = products.filter((p) => p.status !== 'sold');
+const sold = products.filter((p) => p.status === 'sold');
+
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': `${origin}/shop/items#page`,
+    url: `${origin}/shop/items`,
+    name: 'Every piece in the shop',
+    isPartOf: { '@id': `${origin}/#website` },
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: products.map((p, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: p.title,
+        url: `${origin}/shop/${p.slug}`,
+      })),
+    },
+  },
+  breadcrumbSchema([
+    { name: 'Home', url: `${origin}/` },
+    { name: 'Shop', url: `${origin}/shop` },
+    { name: 'All items', url: `${origin}/shop/items` },
+  ]),
+];
+
+const seo = {
+  title: 'Every piece in the shop | Trinity Pawnbrokers',
+  description:
+    'Authenticated pre-owned watches, described as they are and photographed as they are. Insured delivery, fourteen days to change your mind.',
+};
+---
+<Base seo={seo} site={site} schemas={schemas} reveal=".product-card">
+  <ShopNav />
+
+  <section class="tr-band tr-band--white">
+    <div class="tr-inner">
+      <header class="shop-head">
+        <p class="tr-eyebrow">All items</p>
+        <h1 class="shop-head__title">Everything we have</h1>
+        <p class="shop-head__intro">
+          {available.length} available now.
+          {sold.length > 0 && ` ${sold.length} sold, kept below as a record of what has passed through.`}
+        </p>
+      </header>
+
+      {available.length > 0 && (
+        <div class="product-grid">
+          {available.map((product) => <ProductCard product={product} />)}
+        </div>
+      )}
+
+      {sold.length > 0 && (
+        <section class="shop-sold">
+          <p class="shop-strip__label">Sold</p>
+          <div class="product-grid">
+            {sold.map((product) => <ProductCard product={product} />)}
+          </div>
+        </section>
+      )}
+    </div>
+  </section>
+
+  <script>
+    import '../../scripts/cart.js';
+  </script>
+</Base>

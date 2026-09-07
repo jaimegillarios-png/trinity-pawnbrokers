@@ -26,6 +26,8 @@ import { faqPage } from './documents/faqPage';
 import { contactPage } from './documents/contactPage';
 import { lendPage } from './documents/lendPage';
 import { howPage } from './documents/howPage';
+import { product } from './documents/product';
+import { shopPage } from './documents/shopPage';
 import { post } from './documents/post';
 import { blogIndex } from './documents/blogIndex';
 
@@ -39,6 +41,8 @@ export const schemaTypes = [
   contactPage,
   lendPage,
   howPage,
+  shopPage,
+  product,
   post,
   blogIndex,
   legalPage,

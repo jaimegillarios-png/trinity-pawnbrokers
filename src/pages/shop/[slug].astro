@@ -1,0 +1,148 @@
+---
+import '../../styles/shop.css';
+import Base from '../../layouts/Base.astro';
+import ShopNav from '../../components/shop/ShopNav.astro';
+import { urlFor, srcSetFor } from '../../lib/sanity/image';
+import { money } from '../../lib/money';
+import { getProducts, getSiteSettings } from '../../lib/sanity/queries';
+import { breadcrumbSchema } from '../../lib/seo';
+import type { Product, SiteSettings } from '../../lib/types';
+
+export async function getStaticPaths() {
+  const [products, site] = await Promise.all([getProducts(), getSiteSettings()]);
+  return products.map((product) => ({ params: { slug: product.slug }, props: { product, site } }));
+}
+
+interface Props { product: Product; site: SiteSettings }
+const { product, site } = Astro.props;
+const origin = Astro.site?.origin ?? '';
+const available = product.status === 'available';
+
+/* Offer.availability is the field a shopping result reads. Getting it wrong
+   advertises a piece that has already gone. */
+const availability =
+  product.status === 'available' ? 'InStock'
+  : product.status === 'reserved' ? 'LimitedAvailability'
+  : 'SoldOut';
+
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    '@id': `${origin}/shop/${product.slug}#product`,
+    name: product.title,
+    brand: { '@type': 'Brand', name: product.brand },
+    description: product.summary,
+    ...(product.reference ? { mpn: product.reference } : {}),
+    image: product.images.map((image) => urlFor(image).width(1200).height(1200).fit('crop').url()),
+    offers: {
+      '@type': 'Offer',
+      url: `${origin}/shop/${product.slug}`,
+      priceCurrency: 'GBP',
+      price: (product.price / 100).toFixed(2),
+      availability: `https://schema.org/${availability}`,
+      itemCondition: 'https://schema.org/UsedCondition',
+      seller: { '@id': `${origin}/#organisation` },
+    },
+  },
+  breadcrumbSchema([
+    { name: 'Home', url: `${origin}/` },
+    { name: 'Shop', url: `${origin}/shop` },
+    { name: product.title, url: `${origin}/shop/${product.slug}` },
+  ]),
+];
+
+const seo = product.seo ?? {
+  title: `${product.title} | Trinity Pawnbrokers`,
+  description: product.summary,
+};
+---
+<Base seo={seo} site={site} schemas={schemas}>
+  <ShopNav />
+
+  <section class="tr-band tr-band--white">
+    <div class="tr-inner product">
+      <div class="product__media">
+        {product.images.map((image, i) => (
+          <img
+            src={urlFor(image).width(1100).height(1100).fit('crop').url()}
+            srcset={srcSetFor(image)}
+            sizes="(max-width: 900px) 100vw, 46vw"
+            alt={image.alt ?? `${product.title}, photograph ${i + 1}`}
+            width="1100"
+            height="1100"
+            loading={i === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        ))}
+      </div>
+
+      <div class="product__body">
+        <p class="product__brand">{product.brand}</p>
+        <h1 class="product__title">{product.title}</h1>
+
+        <p class="product__price">
+          {available || product.status === 'reserved' ? money(product.price) : <span class="product__gone">Sold</span>}
+          {product.rrp && product.rrp > product.price && product.status !== 'sold' && (
+            <span class="product__rrp">{money(product.rrp)} new</span>
+          )}
+        </p>
+
+        <p class="product__summary">{product.summary}</p>
+
+        {available ? (
+          <button
+            type="button"
+            class="tr-cta tr-cta--gold product__add"
+            data-add-to-cart={product.slug}
+            data-label-idle="Add to cart"
+          >
+            <span data-add-label>Add to cart</span>
+          </button>
+        ) : (
+          <p class="product__unavailable">
+            {product.status === 'reserved'
+              ? 'Reserved for another buyer. Tell us if you would like to know should it become available again.'
+              : 'This piece has been sold. Stock changes as loans end — tell us what you are looking for.'}
+            {' '}
+            <a class="tr-inline-link" href="/contact">Get in touch</a>
+          </p>
+        )}
+
+        {(product.reference || product.year || product.specs?.length) && (
+          <dl class="product__specs">
+            {product.reference && (
+              <div class="product__spec"><dt>Reference</dt><dd>{product.reference}</dd></div>
+            )}
+            {product.year && <div class="product__spec"><dt>Year</dt><dd>{product.year}</dd></div>}
+            {product.specs?.map((row) => (
+              <div class="product__spec"><dt>{row.label}</dt><dd>{row.value}</dd></div>
+            ))}
+            {product.boxAndPapers && (
+              <div class="product__spec"><dt>Box and papers</dt><dd>{product.boxAndPapers}</dd></div>
+            )}
+            {product.warranty && (
+              <div class="product__spec"><dt>Warranty</dt><dd>{product.warranty}</dd></div>
+            )}
+          </dl>
+        )}
+
+        {product.condition && (
+          <div class="product__condition">
+            <h2 class="product__condition-title">Condition</h2>
+            <p>{product.condition}</p>
+          </div>
+        )}
+
+        <p class="product__assurance">
+          Authenticated by our own specialists · insured delivery, signed for ·
+          fourteen days to change your mind
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    import '../../scripts/cart.js';
+  </script>
+</Base>

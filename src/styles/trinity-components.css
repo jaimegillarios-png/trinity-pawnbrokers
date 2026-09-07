@@ -498,6 +498,18 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
 }
 
 
+/* ========================= hidden =========================
+   The UA's `[hidden] { display: none }` is a plain attribute selector, so any
+   class that sets display beats it — the cart badge showed "0" while carrying
+   the attribute, and the cart rows would all have shown at once. Two bugs from
+   one gap, so make it non-negotiable.
+
+   Everything here that uses `hidden` means it: the burger is revealed by the
+   nav script, the form's second pane by the form script, the cart's rows by
+   the cart script. None of them wants a class to override it. */
+[hidden] { display: none !important; }
+
+
 /* ========================= trust strip ========================= */
 /* TrustStrip.astro is shared, so its styles live with the shared components.
    The translucent ground only reads over a hero image — the strip has to sit

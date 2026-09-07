@@ -1,6 +1,6 @@
 import { query } from './client';
 import type {
-  AssetPage, AssetLendEntry, HomePage, AboutPage, FaqPage, ContactPage, LendPage, HowPage, LegalPage, SiteSettings, AssetPageCard, Post, BlogIndex,
+  AssetPage, AssetLendEntry, HomePage, AboutPage, FaqPage, ContactPage, LendPage, HowPage, LegalPage, Product, ShopPage, SiteSettings, AssetPageCard, Post, BlogIndex,
 } from '../types';
 
 /** Images always carry their metadata so we can emit dimensions and an LQIP. */
@@ -217,6 +217,52 @@ export const getHowPage = async (): Promise<HowPage> => {
     );
   }
   return how;
+};
+
+/* ---------- shop ---------- */
+
+const PRODUCT = `{
+  title,
+  "slug": slug.current,
+  brand,
+  status,
+  price,
+  rrp,
+  images[] ${IMAGE},
+  summary,
+  reference,
+  year,
+  specs[],
+  condition,
+  boxAndPapers,
+  warranty,
+  ${SEO}
+}`;
+
+/** Sold pieces stay listed — the catalogue is the record of what has passed
+ *  through, and an empty shop reads worse than an honest one. */
+export const getProducts = () =>
+  query<Product[]>(`*[_type == "product"] | order(status asc, price desc) ${PRODUCT}`);
+
+export const getProduct = (slug: string) =>
+  query<Product | null>(`*[_type == "product" && slug.current == $slug][0] ${PRODUCT}`, { slug });
+
+export const getShopPage = async (): Promise<ShopPage> => {
+  const shop = await query<ShopPage | null>(`*[_type == "shopPage"][0]{
+    intro ${SECTION_INTRO},
+    assurances[],
+    closing,
+    ${SEO}
+  }`);
+
+  if (!shop) {
+    throw new Error(
+      'No "Shop" document found in Sanity.\n' +
+        '  Open the Studio (npm run studio) and fill it in,\n' +
+        '  or run: node scripts/migrate-to-sanity.mjs',
+    );
+  }
+  return shop;
 };
 
 export const getLegalPages = () =>

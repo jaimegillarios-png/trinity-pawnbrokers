@@ -1,0 +1,35 @@
+---
+import type { Product } from '../../lib/types';
+import { urlFor } from '../../lib/sanity/image';
+import { money } from '../../lib/money';
+
+interface Props { product: Product }
+const { product } = Astro.props;
+const sold = product.status === 'sold';
+---
+<article class={`product-card${sold ? ' product-card--sold' : ''}`}>
+  <a class="product-card__media" href={`/shop/${product.slug}`} tabindex="-1" aria-hidden="true">
+    <img
+      src={urlFor(product.images[0]).width(720).height(720).fit('crop').url()}
+      alt=""
+      width="720"
+      height="720"
+      loading="lazy"
+      decoding="async"
+    />
+    {product.status !== 'available' && (
+      <span class="product-card__flag">{product.status === 'sold' ? 'Sold' : 'Reserved'}</span>
+    )}
+  </a>
+
+  <p class="product-card__brand">{product.brand}</p>
+  <h3 class="product-card__title">
+    <a href={`/shop/${product.slug}`}>{product.title}</a>
+  </h3>
+  <p class="product-card__price">
+    {sold ? <span class="product-card__gone">Sold</span> : money(product.price)}
+    {!sold && product.rrp && product.rrp > product.price && (
+      <span class="product-card__rrp">{money(product.rrp)} new</span>
+    )}
+  </p>
+</article>

@@ -243,6 +243,36 @@ export interface SiteSettings {
   organisationLogo?: SanityImage;
 }
 
+/* ---------- shop ---------- */
+
+export type ProductStatus = 'available' | 'reserved' | 'sold';
+
+export interface Product {
+  title: string;
+  slug: string;
+  brand: string;
+  status: ProductStatus;
+  /** Pence. Stripe charges in the smallest unit, so the CMS stores it that way. */
+  price: number;
+  rrp?: number;
+  images: SanityImage[];
+  summary: string;
+  reference?: string;
+  year?: string;
+  specs?: SpecRow[];
+  condition?: string;
+  boxAndPapers?: string;
+  warranty?: string;
+  seo?: Seo;
+}
+
+export interface ShopPage {
+  intro?: SectionIntro;
+  assurances?: IconCard[];
+  closing?: ClosingSection;
+  seo: Seo;
+}
+
 /* ---------- blog ---------- */
 
 export interface Post {
