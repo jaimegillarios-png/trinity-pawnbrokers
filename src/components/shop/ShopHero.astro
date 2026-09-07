@@ -1,5 +1,5 @@
 ---
-import { urlFor, srcSetFor, lqipFor } from '../../lib/sanity/image';
+import { urlFor, croppedSrcSetFor, lqipFor } from '../../lib/sanity/image';
 import { splitEmphasis } from '../../lib/text';
 import type { HeroSection } from '../../lib/types';
 
@@ -32,7 +32,7 @@ const lqip = lqipFor(hero.image);
   <div class="shop-hero__media">
     <img
       src={urlFor(hero.image).width(1200).height(1100).fit('crop').url()}
-      srcset={srcSetFor(hero.image)}
+      srcset={croppedSrcSetFor(hero.image, 1200 / 1100)}
       sizes="(max-width: 900px) 100vw, 56vw"
       alt={hero.image.alt ?? ''}
       width="1200"

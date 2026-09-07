@@ -162,3 +162,38 @@ test('the film is in the gallery, and costs nothing to not watch', () => {
   const script = readFileSync(resolve(root, 'src/scripts/gallery.js'), 'utf8');
   assert.match(script, /playing\.pause\(\)/, 'the film keeps playing after you flick past it');
 });
+
+test('the gallery thumbnails sit under the frame, and all of them fit', () => {
+  /* A rail beside the frame either ran taller than the photograph or scrolled
+     inside its own window; a scrolling strip underneath showed seven of
+     seventeen. Wrapped, every thumbnail is visible without a gesture. */
+  const css = readFileSync(resolve(root, 'src/styles/shop.css'), 'utf8');
+  /* Read the whole declaration block rather than a fixed slice — a comment
+     inside the rule pushed the property past the window and failed this for
+     the wrong reason. */
+  const ruleFrom = (selector) => {
+    const start = css.indexOf(selector);
+    assert.ok(start > -1, `no rule for ${selector}`);
+    return css.slice(start, css.indexOf('}', start));
+  };
+
+  const rail = ruleFrom('.gallery[data-ready] .gallery__rail');
+  assert.match(rail, /order: 2/, 'the rail must come after the frame');
+  assert.match(rail, /repeat\(auto-fill/, 'the rail should wrap, not scroll');
+  assert.ok(!/overflow-x: auto/.test(rail), 'the rail still scrolls sideways');
+  assert.match(ruleFrom('.gallery__stage {'), /order: 1/);
+});
+
+test('a cropped image is served cropped at every width', () => {
+  /* src asked for a square and srcset served the photograph uncropped, so the
+     browser took the srcset candidate and object-fit had to scale a 4:3 image
+     up to fill the square. Soft photographs on a shop is the one thing not to
+     get wrong. */
+  const helper = readFileSync(resolve(root, 'src/lib/sanity/image.ts'), 'utf8');
+  assert.match(helper, /export function croppedSrcSetFor/);
+  for (const file of ['shop/ProductGallery.astro', 'shop/ShopHero.astro', 'shop/ShopStory.astro']) {
+    const src = readFileSync(resolve(root, 'src/components', file), 'utf8');
+    if (!src.includes('srcset')) continue;
+    assert.match(src, /croppedSrcSetFor\(/, `${file} pairs a cropped src with an uncropped srcset`);
+  }
+});

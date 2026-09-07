@@ -366,25 +366,26 @@
 
    Everything below only applies once the script has set data-ready. Without
    it the frames stay stacked and every photograph is still on the page. */
-.gallery { display: grid; gap: 16px; }
+.gallery { display: grid; gap: 14px; }
 
-.gallery[data-ready] {
-  grid-template-columns: 76px minmax(0, 1fr);
-  align-items: start;
-}
+.gallery[data-ready] { grid-template-columns: minmax(0, 1fr); }
 
+/* The rail sits under the frame. Beside it, a vertical strip of eighteen
+   thumbnails either ran taller than the photograph or scrolled inside its own
+   little window; underneath, the full width takes most sets in one row and the
+   photograph gets the space it was cropped for. */
 .gallery__rail { display: none; }
 .gallery[data-ready] .gallery__rail {
-  display: flex;
-  flex-direction: column;
+  order: 2;
+  /* Wrapped, not scrolled. A strip that scrolls showed seven of seventeen and
+     hid the rest behind a gesture — the same fault as the vertical rail, just
+     rotated. auto-fill lets the thumbnails size themselves to the row so the
+     last one lands flush with the edge instead of trailing off. */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
   gap: 8px;
-  max-height: 620px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  overscroll-behavior: contain;
 }
 .gallery__thumb {
-  flex: none;
   padding: 0;
   border: 1px solid var(--tr-line-soft);
   background: none;
@@ -398,7 +399,7 @@
 .gallery__thumb[aria-selected='true'] { opacity: 1; border-color: var(--tr-gold-deep); }
 .gallery__thumb:focus-visible { outline: 2px solid var(--tr-gold-deep); outline-offset: 2px; }
 
-.gallery__stage { position: relative; min-width: 0; }
+.gallery__stage { order: 1; position: relative; min-width: 0; }
 .gallery__frame { margin: 0; }
 .gallery__frame + .gallery__frame { margin-top: 12px; }
 .gallery[data-ready] .gallery__frame + .gallery__frame { margin-top: 0; }
@@ -450,32 +451,28 @@
 }
 
 @media (max-width: 900px) {
-  /* The rail goes under the frame and scrolls sideways — a vertical rail on a
-     phone would eat the width the photograph needs. */
-  .gallery[data-ready] { grid-template-columns: minmax(0, 1fr); }
-  .gallery[data-ready] .gallery__rail {
-    flex-direction: row;
-    order: 2;
-    max-height: none;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-  .gallery__thumb { width: 64px; }
+  /* Smaller cells so a phone still gets two rows rather than six. */
+  .gallery[data-ready] .gallery__rail { grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); }
   .gallery__nav { opacity: 1; }
 }
 
-/* ---- breadcrumb over the piece ---- */
-.product-crumbs { padding: 22px 0 0; }
+/* ---- breadcrumb over the piece ----
+   The section padding lives on .tr-inner, not on .tr-band — setting it on the
+   band does nothing, which is how a one-line breadcrumb came to be 259px tall
+   with 104px of section padding above it and 110px below. */
 .product-crumbs .tr-inner {
+  padding-top: 24px;
+  padding-bottom: 0;
   display: flex;
-  gap: 9px;
+  flex-wrap: wrap;
+  gap: 4px 9px;
   align-items: baseline;
   font: 400 var(--tr-caption) var(--tr-font-body);
   color: var(--tr-ink-45);
 }
 .product-crumbs a { color: var(--tr-ink-62); text-decoration: none; }
 .product-crumbs a:hover { color: var(--tr-green-leaf); text-decoration: underline; text-underline-offset: 4px; }
-.product-band { padding-top: 30px; }
+.product-band .tr-inner { padding-top: 30px; }
 
 /* ---- the shop's account of itself ---- */
 .shop-story__inner {

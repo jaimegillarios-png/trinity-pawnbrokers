@@ -1,6 +1,6 @@
 ---
 import { PortableText } from 'astro-portabletext';
-import { urlFor, srcSetFor, lqipFor } from '../../lib/sanity/image';
+import { urlFor, croppedSrcSetFor, lqipFor } from '../../lib/sanity/image';
 import type { ShopPage } from '../../lib/types';
 
 interface Props { story: NonNullable<ShopPage['story']> }
@@ -17,7 +17,7 @@ const lqip = story.image ? lqipFor(story.image) : undefined;
       <div class="shop-story__media">
         <img
           src={urlFor(story.image).width(900).height(1100).fit('crop').url()}
-          srcset={srcSetFor(story.image)}
+          srcset={croppedSrcSetFor(story.image, 9 / 11)}
           sizes="(max-width: 900px) 100vw, 42vw"
           alt={story.image.alt ?? ''}
           width="900"

@@ -1,5 +1,5 @@
 ---
-import { urlFor, srcSetFor, lqipFor } from '../../lib/sanity/image';
+import { urlFor, croppedSrcSetFor, lqipFor } from '../../lib/sanity/image';
 import type { Product } from '../../lib/types';
 
 interface Props { product: Product }
@@ -74,7 +74,7 @@ const slides = images.length + (video ? 1 : 0);
       <figure class="gallery__frame" data-gallery-frame={i}>
         <img
           src={urlFor(image).width(1200).height(1200).fit('crop').url()}
-          srcset={srcSetFor(image)}
+          srcset={croppedSrcSetFor(image, 1)}
           sizes="(max-width: 900px) 100vw, 46vw"
           alt={image.alt ?? `${product.title}, photograph ${i + 1}`}
           width="1200"
