@@ -577,83 +577,99 @@
    Shop hero
    ============================================================ */
 
-/* Two halves, not a scrim. The catalogue photography is packshots on white,
-   and no amount of tinting makes white text legible over that — so the words
-   get their own dark ground and the watch gets the rest. */
-.shop-hero {
+/* A sibling of .about-masthead, and deliberately the same treatment: split
+   panel on warm ground, statement in the first column, square plate in the
+   second, both inside the container rather than bleeding to the edges.
+
+   It suits the shop for a practical reason as well as a visual one. The
+   catalogue is photographed on white, and no scrim over that makes white text
+   legible — which is what the previous dark hero was fighting. Dark type on a
+   warm panel sits beside a packshot happily.
+
+   The values are repeated from about.css rather than shared because these are
+   the only two. If a third appears, lift the common part into a .split-hero in
+   trinity-components.css rather than copying it again. */
+.shop-hero { background: var(--tr-warm-panel); }
+.shop-hero__inner {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 84px var(--tr-pad-side) 88px;
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  align-items: stretch;
-  background: var(--tr-green-vault);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--tr-gap-col);
+  align-items: center;
 }
-.shop-hero__copy {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 96px clamp(32px, 5vw, 78px) 96px max(var(--tr-pad-side), calc((100vw - var(--tr-container)) / 2 + var(--tr-pad-side)));
-  color: var(--tr-on-green-strong);
-}
-.shop-hero__eyebrow { color: var(--tr-gold-mid); margin: 0 0 20px; }
+
+/* .tr-eyebrow is a <p>, so the UA's 1em top margin would push the band open
+   by an amount nobody wrote. */
+.shop-hero__eyebrow { margin-top: 0; }
 .shop-hero__title {
   font: 500 var(--tr-h1) var(--tr-font-display);
-  color: var(--tr-neutral);
-  margin: 0 0 22px;
+  color: var(--tr-ink);
+  margin: 0;
+  max-width: 15ch;
   text-wrap: balance;
 }
-.shop-hero__title span {
-  color: var(--tr-gold-bright);
-  font-style: italic;
+.shop-hero__title em {
+  font-style: normal;
+  color: var(--tr-gold-deep);
+  text-decoration: underline;
+  text-decoration-color: var(--tr-line-gold);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 10px;
 }
 .shop-hero__intro {
-  font: 400 var(--tr-body) var(--tr-font-body);
-  color: var(--tr-on-green);
-  margin: 0 0 32px;
+  font: 400 var(--tr-body-lg) var(--tr-font-body);
+  color: var(--tr-ink-72);
   max-width: 46ch;
+  margin: 26px 0 0;
 }
-.shop-hero__actions { display: flex; flex-wrap: wrap; gap: 14px; }
+
+/* Where this parts company with About, which deliberately carries no buttons:
+   someone arriving at a shop is ready to act. */
+.shop-hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+/* .tr-cta sets `border: none`, ties on specificity and wins on stylesheet
+   order, so an outlined CTA needs its parent in the selector to get a border. */
+.shop-hero__actions .shop-hero__ghost {
+  border: 1px solid var(--tr-line-strong);
+  color: var(--tr-green-vault);
+  background: none;
+}
+.shop-hero__actions .shop-hero__ghost:hover {
+  border-color: var(--tr-green-vault);
+  background: rgba(16, 39, 28, 0.05);
+}
 .shop-hero__reassure {
   font: 400 var(--tr-caption) var(--tr-font-body);
-  color: var(--tr-on-green-faint);
+  color: var(--tr-ink-45);
   margin: 22px 0 0;
   max-width: 44ch;
 }
 
-/* Outlined, on green. The site's ghost CTA is drawn for light grounds. */
-.tr-cta--ghost-light {
-  border: 1px solid rgba(245, 241, 230, 0.34);
-  color: var(--tr-neutral);
-  background: none;
-}
-.tr-cta--ghost-light:hover {
-  border-color: var(--tr-neutral);
-  background: rgba(245, 241, 230, 0.08);
-}
-
-.shop-hero__media { position: relative; min-height: 460px; }
-.shop-hero__media img {
-  position: absolute;
-  inset: 0;
+/* A square plate, as on About. */
+.shop-hero__figure { margin: 0; overflow: hidden; }
+.shop-hero__figure img {
+  display: block;
   width: 100%;
-  height: 100%;
+  /* height:auto is load-bearing: the img carries width/height attributes,
+     which give it a used height that aspect-ratio does not override alone. */
+  height: auto;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
+  background: var(--tr-white);
+  animation: shopFigure 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
+@keyframes shopFigure { from { transform: scale(1.05); } to { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .shop-hero__figure img { animation: none; } }
 
 @media (max-width: 900px) {
-  .shop-hero { grid-template-columns: minmax(0, 1fr); }
-  .shop-hero__copy { padding: 62px var(--tr-pad-side) 58px; order: 2; }
-  .shop-hero__media { min-height: 300px; height: 46vh; order: 1; }
-}
-
-
-/* .tr-cta sets `border: none`, ties on specificity and wins on stylesheet
-   order, so an outlined CTA has to be scoped to its parent to get a border at
-   all. Third time this has bitten in this project. */
-.shop-hero__actions .tr-cta--ghost-light {
-  border: 1px solid rgba(245, 241, 230, 0.34);
-}
-.shop-hero__actions .tr-cta--ghost-light:hover {
-  border-color: var(--tr-neutral);
+  .shop-hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 54px var(--tr-pad-side) 58px;
+    gap: 34px;
+  }
+  /* Photograph first on a phone, as About does. */
+  .shop-hero__figure { order: -1; }
 }
 
 /* ---- visit us ---- */

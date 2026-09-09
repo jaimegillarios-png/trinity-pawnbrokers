@@ -1,5 +1,5 @@
 ---
-import { urlFor, croppedSrcSetFor, lqipFor } from '../../lib/sanity/image';
+import { urlFor, srcSetFor, lqipFor } from '../../lib/sanity/image';
 import { splitEmphasis } from '../../lib/text';
 import type { HeroSection } from '../../lib/types';
 
@@ -8,38 +8,49 @@ const { hero } = Astro.props;
 const parts = splitEmphasis(hero.heading);
 const lqip = lqipFor(hero.image);
 ---
-{/* Split rather than full-bleed, and deliberately so: the shop's photography
-    is packshots on white, which a scrim cannot rescue — white text over a
-    white background is unreadable however it is tinted. So the copy gets its
-    own dark ground and the photograph gets the other half, uncropped by any
-    text sitting on top of it. */}
-<section class="shop-hero" aria-labelledby="shop-hero-title">
-  <div class="shop-hero__copy" data-reveal-hero>
-    {hero.eyebrow && <p class="tr-eyebrow shop-hero__eyebrow">{hero.eyebrow}</p>}
-    <h1 id="shop-hero-title" class="shop-hero__title">
-      {parts.map((p) => (p.emphasis ? <span>{p.text}</span> : p.text))}
-    </h1>
-    <p class="shop-hero__intro">{hero.intro}</p>
-    <div class="shop-hero__actions">
-      <a href={hero.ctaPrimary.href} class="tr-cta tr-cta--gold">{hero.ctaPrimary.label}</a>
-      {hero.ctaGhost && (
-        <a href={hero.ctaGhost.href} class="tr-cta tr-cta--ghost-light">{hero.ctaGhost.label}</a>
-      )}
-    </div>
-    {hero.reassurance && <p class="shop-hero__reassure">{hero.reassurance}</p>}
-  </div>
+{/*
+  The same treatment as the About masthead, and a sibling of it: a split panel
+  on warm ground with the statement in the first column and a square plate in
+  the second, both inside the container rather than bleeding to the edges.
 
-  <div class="shop-hero__media">
-    <img
-      src={urlFor(hero.image).width(1200).height(1100).fit('crop').url()}
-      srcset={croppedSrcSetFor(hero.image, 1200 / 1100)}
-      sizes="(max-width: 900px) 100vw, 56vw"
-      alt={hero.image.alt ?? ''}
-      width="1200"
-      height="1100"
-      fetchpriority="high"
-      decoding="async"
-      style={lqip ? `background-image:url(${lqip});background-size:cover` : undefined}
-    />
+  It suits the shop for a practical reason as well as a visual one — the
+  catalogue is photographed on white, and a scrim over that cannot make white
+  text legible. Dark type on a warm panel can sit beside a packshot happily.
+
+  Where it parts company with About: this one keeps its buttons. Someone
+  arriving at a shop is ready to act, where someone arriving at About is not.
+*/}
+<section class="shop-hero" aria-labelledby="shop-hero-title">
+  <div class="shop-hero__inner">
+    <div class="shop-hero__copy">
+      {hero.eyebrow && <p class="tr-eyebrow shop-hero__eyebrow">{hero.eyebrow}</p>}
+      <h1 id="shop-hero-title" class="shop-hero__title">
+        {parts.map((p) => (p.emphasis ? <em>{p.text}</em> : p.text))}
+      </h1>
+      <p class="shop-hero__intro">{hero.intro}</p>
+
+      <div class="shop-hero__actions">
+        <a href={hero.ctaPrimary.href} class="tr-cta tr-cta--gold">{hero.ctaPrimary.label}</a>
+        {hero.ctaGhost && (
+          <a href={hero.ctaGhost.href} class="tr-cta shop-hero__ghost">{hero.ctaGhost.label}</a>
+        )}
+      </div>
+
+      {hero.reassurance && <p class="shop-hero__reassure">{hero.reassurance}</p>}
+    </div>
+
+    <figure class="shop-hero__figure">
+      <img
+        src={urlFor(hero.image).width(1100).url()}
+        srcset={srcSetFor(hero.image)}
+        sizes="(max-width: 900px) 100vw, 45vw"
+        alt={hero.image.alt ?? ''}
+        width={hero.image.asset?.metadata?.dimensions?.width}
+        height={hero.image.asset?.metadata?.dimensions?.height}
+        style={lqip ? `background-image:url(${lqip});background-size:cover` : undefined}
+        fetchpriority="high"
+        decoding="async"
+      />
+    </figure>
   </div>
 </section>

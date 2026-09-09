@@ -212,16 +212,25 @@ test('the thumbnails are one sliding row, and absent on a phone', () => {
 });
 
 test('a cropped image is served cropped at every width', () => {
-  /* src asked for a square and srcset served the photograph uncropped, so the
-     browser took the srcset candidate and object-fit had to scale a 4:3 image
-     up to fill the square. Soft photographs on a shop is the one thing not to
-     get wrong. */
+  /* The defect is a mismatch, not the absence of a helper: when `src` asks
+     Sanity for a crop but `srcset` serves the photograph uncropped, the
+     browser takes the srcset candidate, so the crop never applies and
+     object-fit has to scale the image up to fill the frame. Serving both
+     uncropped and letting CSS crop is equally consistent — it is what the
+     About masthead does, and now what the shop hero does. */
   const helper = readFileSync(resolve(root, 'src/lib/sanity/image.ts'), 'utf8');
   assert.match(helper, /export function croppedSrcSetFor/);
+
   for (const file of ['shop/ProductGallery.astro', 'shop/ShopHero.astro', 'shop/ShopStory.astro']) {
     const src = readFileSync(resolve(root, 'src/components', file), 'utf8');
     if (!src.includes('srcset')) continue;
-    assert.match(src, /croppedSrcSetFor\(/, `${file} pairs a cropped src with an uncropped srcset`);
+    const cropsInSrc = /\.fit\('crop'\)/.test(src);
+    const cropsInSrcSet = src.includes('croppedSrcSetFor(');
+    assert.equal(
+      cropsInSrc,
+      cropsInSrcSet,
+      `${file}: src ${cropsInSrc ? 'crops' : 'does not crop'} but srcset ${cropsInSrcSet ? 'does' : 'does not'}`,
+    );
   }
 });
 
@@ -253,4 +262,41 @@ test('the breadcrumb does not sit in a band of its own', () => {
   assert.equal(bands.length, 1, `the product page has ${bands.length} bands: ${bands.join(', ')}`);
   assert.match(main, /class="product-crumbs"/, 'no breadcrumb');
   assert.ok(!/tr-band[^"]*product-crumbs/.test(main), 'the breadcrumb is still its own band');
+});
+
+test('the shop hero is built like the About masthead', () => {
+  /* A split panel on warm ground, not a photograph with the headline laid over
+     it. Practical as well as visual: the catalogue is shot on white, and no
+     scrim over that makes white text legible — which is what the dark hero it
+     replaced was fighting. */
+  const shop = readFileSync(resolve(root, 'src/styles/shop.css'), 'utf8');
+  const about = readFileSync(resolve(root, 'src/styles/about.css'), 'utf8');
+  const rule = (css, selector) => {
+    const start = css.indexOf(selector);
+    assert.ok(start > -1, `no rule for ${selector}`);
+    return css.slice(start, css.indexOf('}', start));
+  };
+
+  // The two must agree on the things that make it the same treatment.
+  for (const [shopSel, aboutSel, props] of [
+    ['.shop-hero {', '.about-masthead {', ['background']],
+    ['.shop-hero__inner {', '.about-masthead__inner {', ['padding', 'grid-template-columns', 'gap']],
+    ['.shop-hero__title {', '.about-masthead__title {', ['font', 'color', 'max-width']],
+  ]) {
+    const a = rule(shop, shopSel);
+    const b = rule(about, aboutSel);
+    for (const prop of props) {
+      const grab = (css) => css.match(new RegExp(`${prop}:\\\\s*([^;]+);`))?.[1].trim();
+      assert.equal(grab(a), grab(b), `${shopSel} and ${aboutSel} disagree on ${prop}`);
+    }
+  }
+
+  // The emphasis is the gold underline, not the old gold italic.
+  assert.match(rule(shop, '.shop-hero__title em'), /text-decoration: underline/);
+
+  const html = page('shop');
+  assert.match(html, /class="shop-hero__figure"/, 'no square plate');
+  assert.ok(!/shop-hero__media/.test(html), 'the full-bleed hero is still being served');
+  // Unlike About, the shop keeps its buttons.
+  assert.match(html, /shop-hero__actions/);
 });
