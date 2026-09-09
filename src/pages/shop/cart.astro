@@ -33,8 +33,11 @@ const seo = {
   <section class="tr-band tr-band--white">
     <div class="tr-inner cart">
       <header class="shop-head">
-        <p class="tr-eyebrow">Your cart</p>
-        <h1 class="shop-head__title">What you are considering</h1>
+        {/* Plainly what it is. "What you are considering" was writing where a
+            label was wanted — and it read oddly above an empty cart, which is
+            the state most visitors see it in. */}
+        <p class="tr-eyebrow">Shop</p>
+        <h1 class="shop-head__title">Your cart</h1>
       </header>
 
       {/* Shown until the script has read the cart, so the page never flashes
