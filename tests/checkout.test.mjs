@@ -131,11 +131,17 @@ test('no page is server-rendered, because Pages cannot serve one', () => {
 
 test('the confirmation page asks an API route for the order', () => {
   const html = page('shop/order-confirmed');
-  for (const hook of ['data-order-loading', 'data-order-missing', 'data-order-found']) {
+
+  /* One heading for all three states. Three headers each carrying an h1 — two
+     of them hidden — still put three h1s in the document, and the page has one
+     subject however it turns out. */
+  assert.equal((html.match(/<h1[\s>]/g) ?? []).length, 1, 'more than one h1');
+  assert.match(html, /data-order-heading>Confirming your order…</,
+    'it must not open blank, nor on a "not found" that may be wrong');
+
+  for (const hook of ['data-order-missing', 'data-order-found']) {
     assert.match(html, new RegExp(hook), `no ${hook} state`);
   }
-  // It must not sit blank: the loading state is the only one visible on arrival.
-  assert.ok(!/data-order-loading[^>]*hidden/.test(html), 'the loading state starts hidden');
   assert.match(html, /data-order-missing hidden/);
   assert.match(html, /data-order-found hidden/);
 
@@ -143,7 +149,7 @@ test('the confirmation page asks an API route for the order', () => {
   assert.match(script, /\/api\/order\?session_id=/);
   // A stale link must not empty a cart — clear only on an order we found.
   const clearAt = script.indexOf('TrinityCart.clear()');
-  assert.ok(clearAt > script.indexOf("show('found')"), 'the cart is cleared before the order is confirmed');
+  assert.ok(clearAt > script.indexOf("show(\n        'found'"), 'the cart is cleared before the order is confirmed');
 });
 
 test('the order route refuses anything that is not a session id', () => {
@@ -204,10 +210,9 @@ test('a bad confirmation link does not empty a cart', () => {
      often just a stale link. Clearing regardless would throw away a cart for a
      purchase that never happened. */
   const script = readFileSync(resolve(root, 'src/scripts/order-confirmed.js'), 'utf8');
-  const missing = script.slice(script.indexOf("state === 'unknown'"));
-  assert.match(missing.slice(0, 60), /return show\('missing'\)/);
+  assert.match(script, /state === 'unknown'\) return show\('missing'/);
   assert.ok(
-    script.indexOf('TrinityCart.clear()') > script.indexOf("show('found')"),
+    script.indexOf('TrinityCart.clear()') > script.indexOf("show(\n        'found'"),
     'the cart is cleared on a path that does not know the order is real',
   );
 });

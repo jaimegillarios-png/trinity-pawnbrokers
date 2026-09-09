@@ -27,7 +27,9 @@ const seo = {
 };
 ---
 <Base seo={seo} site={site} schemas={schemas} nav="shop" reveal=".shop-assurances .tr-card">
-  {shop.story && <ShopStory story={shop.story} />}
+  {/* The page's own heading, not a section heading — this is what /shop/about
+      opens with. */}
+  {shop.story && <ShopStory story={shop.story} as="h1" />}
 
   <section class="tr-band tr-band--grey">
     <div class="tr-inner shop-assurances">

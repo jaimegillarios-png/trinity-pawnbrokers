@@ -9,11 +9,17 @@
   var params = new URLSearchParams(window.location.search);
   var id = params.get('session_id');
 
-  function show(name) {
-    ['loading', 'missing', 'found'].forEach(function (key) {
+  /* The heading is always in the page and always the same element — the
+     states below it swap, and it swaps its text. Three headers each with an
+     h1 would put three h1s in the document however few are visible. */
+  function show(name, heading) {
+    document.querySelector('[data-order-heading]').textContent = heading;
+    ['missing', 'found'].forEach(function (key) {
       var el = document.querySelector('[data-order-' + key + ']');
       if (el) el.hidden = key !== name;
     });
+    var intro = document.querySelector('[data-order-intro]');
+    if (intro) intro.hidden = name !== 'found';
   }
 
   function money(pence) {
@@ -38,13 +44,9 @@
   fetch('/api/order?session_id=' + encodeURIComponent(id), { headers: { accept: 'application/json' } })
     .then(function (r) { return r.json(); })
     .then(function (order) {
-      if (!order || order.state === 'unknown') return show('missing');
+      if (!order || order.state === 'unknown') return show('missing', 'We could not find that order');
 
       set('[data-order-ref]', order.reference);
-      set(
-        '[data-order-heading]',
-        order.state === 'paid' ? 'Thank you — that is yours' : 'Thank you — payment is clearing',
-      );
 
       var intro =
         order.state === 'paid'
@@ -70,11 +72,14 @@
       });
 
       set('[data-order-total]', money(order.total || 0));
-      show('found');
+      show(
+        'found',
+        order.state === 'paid' ? 'Thank you — that is yours' : 'Thank you — payment is clearing',
+      );
 
       /* Paid for, so it is no longer "being considered". Only on an order we
          actually found, so a stale link does not empty someone's cart. */
       if (window.TrinityCart) window.TrinityCart.clear();
     })
-    .catch(function () { show('missing'); });
+    .catch(function () { show('missing', 'We could not find that order'); });
 })();

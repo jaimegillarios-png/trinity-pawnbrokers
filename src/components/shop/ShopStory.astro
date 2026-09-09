@@ -3,16 +3,28 @@ import { PortableText } from 'astro-portabletext';
 import { urlFor, croppedSrcSetFor, lqipFor } from '../../lib/sanity/image';
 import type { ShopPage } from '../../lib/types';
 
-interface Props { story: NonNullable<ShopPage['story']> }
-const { story } = Astro.props;
+interface Props {
+  story: NonNullable<ShopPage['story']>;
+  /**
+   * The heading level. h2 by default, because this reads as a section; h1
+   * where it opens a page of its own, as on /shop/about — which had no h1 at
+   * all until this was configurable.
+   */
+  as?: 'h1' | 'h2';
+}
+const { story, as: Heading = 'h2' } = Astro.props;
 const lqip = story.image ? lqipFor(story.image) : undefined;
 ---
-{/* Two columns, image left. The shop's own account of itself, which on the
-    source site is a separate About page — it earns a place on the home page
-    because "who is selling me a five-figure watch" is the question a first
-    visitor actually has. */}
+{/* Built like the shop hero — equal columns, the same 56px gutter, the same
+    square plate — so the shop's two split sections read as a pair rather than
+    as two attempts at the same idea. Copy first for the same reason it is
+    first there. */}
 <section class="tr-band tr-band--white shop-story">
   <div class="tr-inner shop-story__inner">
+    <div class="shop-story__copy">
+      {story.heading && <Heading class="tr-h2">{story.heading}</Heading>}
+      <PortableText value={story.body as any} />
+    </div>
     {story.image && (
       <div class="shop-story__media">
         <img
@@ -28,9 +40,5 @@ const lqip = story.image ? lqipFor(story.image) : undefined;
         />
       </div>
     )}
-    <div class="shop-story__copy">
-      {story.heading && <h2 class="tr-h2">{story.heading}</h2>}
-      <PortableText value={story.body as any} />
-    </div>
   </div>
 </section>

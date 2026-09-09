@@ -1,8 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { page, home, ASSET_SLUGS, count, root } from './helpers.mjs';
+import { page, home, ASSET_SLUGS, count, root, dist } from './helpers.mjs';
 
 /**
  * Each section of the item page, asserted by the markup that makes it that
@@ -93,12 +93,29 @@ test('no markup leaks into rendered copy', () => {
 });
 
 test('every page has exactly one h1', () => {
-  // /faq shipped with none: its heading went through SectionOpener, which
-  // renders an h2 because it is built for sections, not pages.
-  for (const slug of ['index', 'faq', 'about', 'blog', ...ASSET_SLUGS,
-                      'privacy', 'terms', 'cookies', 'complaints', 'trust-and-security']) {
-    const html = slug === 'index' ? home() : page(slug);
-    const count = (html.match(/<h1[\s>]/g) || []).length;
-    assert.equal(count, 1, `${slug} has ${count} h1 elements`);
+  /* Walks the build rather than naming pages. The old list was written before
+     the shop existed and never grew with it, so /shop/about shipped with no h1
+     at all — it opened on a section heading, because the component it uses
+     renders an h2 by default. A named list only checks the pages someone
+     remembered.
+
+     /faq is the reason this test exists: its heading went through
+     SectionOpener, which renders an h2 because it is built for sections. */
+  const pages = [];
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const path = resolve(dir, entry.name);
+      if (entry.isDirectory()) walk(path);
+      else if (entry.name === 'index.html') pages.push(path);
+    }
+  };
+  walk(dist);
+  assert.ok(pages.length > 20, `only ${pages.length} pages found`);
+
+  for (const path of pages) {
+    const html = readFileSync(path, 'utf8');
+    const found = (html.match(/<h1[\s>]/g) || []).length;
+    const name = path.replace(dist, '').replace('/index.html', '') || '/';
+    assert.equal(found, 1, `${name} has ${found} h1 elements`);
   }
 });

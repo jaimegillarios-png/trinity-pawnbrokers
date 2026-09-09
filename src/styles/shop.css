@@ -545,11 +545,17 @@
 .product-band .product { padding-top: 26px; }
 
 /* ---- the shop's account of itself ---- */
-.shop-story__inner {
+/* The shop hero's measurements exactly: equal columns, the same gutter, the
+   same 84/88 band. Scoped to the section because .tr-inner sets the padding
+   too — at equal specificity that is decided by stylesheet order, and
+   trinity-components.css wins. */
+.shop-story .shop-story__inner {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: 72px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--tr-gap-col);
   align-items: center;
+  padding-top: 84px;
+  padding-bottom: 88px;
 }
 .shop-story__media img {
   display: block;

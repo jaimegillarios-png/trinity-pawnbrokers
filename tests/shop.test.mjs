@@ -346,3 +346,35 @@ test('the shop bar collapses cleanly on a phone', () => {
   const html = page('shop');
   assert.match(html, /class="tr-wordmark__sub"/, 'the Shop label has gone from the markup');
 });
+
+test('the story section is built to the hero\'s measurements', () => {
+  /* The shop has two split sections. They should read as a pair rather than as
+     two attempts at the same idea, so the story takes the hero's columns,
+     gutter, band and square plate exactly. */
+  const css = readFileSync(resolve(root, 'src/styles/shop.css'), 'utf8');
+  const rule = (selector) => {
+    const start = css.indexOf(selector);
+    assert.ok(start > -1, `no rule for ${selector}`);
+    return css.slice(start, css.indexOf('}', start));
+  };
+  const hero = rule('.shop-hero__inner {');
+  const story = rule('.shop-story .shop-story__inner {');
+  for (const prop of ['grid-template-columns', 'gap']) {
+    const grab = (block) => block.match(new RegExp(`${prop}:\\s*([^;]+);`))?.[1].trim();
+    assert.equal(grab(story), grab(hero), `the two split sections disagree on ${prop}`);
+  }
+  /* Scoped to the section: .tr-inner sets padding too, and at equal
+     specificity trinity-components.css wins on order. */
+  assert.match(story, /padding-top: 84px/);
+  assert.match(css, /\.shop-story \.shop-story__inner \{/, 'the padding override is unscoped');
+
+  const img = rule('.shop-story__media img');
+  assert.match(img, /aspect-ratio: 1 \/ 1/, 'the plate is not square');
+
+  // Copy first, as in the hero.
+  const html = page('shop/about');
+  assert.ok(
+    html.indexOf('shop-story__copy') < html.indexOf('shop-story__media'),
+    'the image comes before the copy',
+  );
+});

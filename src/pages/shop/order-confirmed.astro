@@ -22,32 +22,28 @@ const seo = {
 
   <section class="tr-band tr-band--white">
     <div class="tr-inner confirm">
-      {/* Shown while the order is fetched. Someone who has just paid should
-          never see an empty page, nor a "not found" that turns out to be
-          wrong a moment later. */}
-      <header class="shop-head" data-order-loading>
-        <p class="tr-eyebrow">Order</p>
-        <h1 class="shop-head__title">Confirming your order…</h1>
+      {/* One heading, whatever the state. Three headers each with their own
+          h1 — two of them hidden — still put three h1s in the document, and
+          the page has one subject however it turns out.
+
+          It opens on "Confirming your order…" because someone who has just
+          paid should never see an empty page, nor a "not found" that turns
+          out to be wrong a moment later. */}
+      <header class="shop-head confirm__head">
+        <p class="tr-eyebrow">Order <span data-order-ref></span></p>
+        <h1 class="shop-head__title" data-order-heading>Confirming your order…</h1>
+        <p class="shop-head__intro" data-order-intro hidden></p>
       </header>
 
       <div data-order-missing hidden>
-        <header class="shop-head">
-          <p class="tr-eyebrow">Order</p>
-          <h1 class="shop-head__title">We could not find that order</h1>
-          <p class="shop-head__intro">
-            If you have just paid, your card has not been charged twice by reloading this
-            page. Call us on <a href={`tel:${site.phoneHref}`}>{site.phone}</a> with the email
-            address you used and we will find it.
-          </p>
-        </header>
+        <p class="shop-head__intro">
+          If you have just paid, your card has not been charged twice by reloading this
+          page. Call us on <a href={`tel:${site.phoneHref}`}>{site.phone}</a> with the email
+          address you used and we will find it.
+        </p>
       </div>
 
       <div data-order-found hidden>
-        <header class="shop-head confirm__head">
-          <p class="tr-eyebrow">Order <span data-order-ref></span></p>
-          <h1 class="shop-head__title" data-order-heading></h1>
-          <p class="shop-head__intro" data-order-intro></p>
-        </header>
 
         <ul class="confirm__list" data-order-lines></ul>
 
