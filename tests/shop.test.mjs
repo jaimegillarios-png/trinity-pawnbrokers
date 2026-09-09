@@ -378,3 +378,27 @@ test('the story section is built to the hero\'s measurements', () => {
     'the image comes before the copy',
   );
 });
+
+test('a page heading is sized like one, whichever component draws it', () => {
+  /* /shop/about was given an <h1> but left at .tr-h2's flat 38px, so it still
+     read as a section heading beside every other page title on the site. The
+     size keys off the element now, which is why the two cannot drift apart. */
+  const css = readFileSync(resolve(root, 'src/styles/shop.css'), 'utf8');
+  const rule = (selector) => {
+    const start = css.indexOf(selector);
+    assert.ok(start > -1, `no rule for ${selector}`);
+    return css.slice(start, css.indexOf('}', start));
+  };
+  assert.match(rule('h1.shop-story__title {'), /var\(--tr-h1\)/, 'the page heading is not on the h1 scale');
+  assert.match(rule('.shop-story__title {'), /var\(--tr-h2\)/, 'the section heading is not on the h2 scale');
+
+  // Every shop page's h1 comes from the same scale.
+  const heading = /<h1[^>]*class="([^"]*)"/;
+  for (const p of ['shop/about', 'shop/items', 'shop/cart']) {
+    const cls = page(p).match(heading)?.[1] ?? '';
+    assert.ok(
+      /shop-head__title|shop-story__title|shop-hero__title/.test(cls),
+      `${p}: its h1 uses "${cls}", which is not one of the page-heading styles`,
+    );
+  }
+});

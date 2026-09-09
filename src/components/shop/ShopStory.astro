@@ -8,7 +8,8 @@ interface Props {
   /**
    * The heading level. h2 by default, because this reads as a section; h1
    * where it opens a page of its own, as on /shop/about — which had no h1 at
-   * all until this was configurable.
+   * all until this was configurable. The size follows the level: the CSS keys
+   * off the element, so changing one cannot leave the other behind.
    */
   as?: 'h1' | 'h2';
 }
@@ -22,7 +23,7 @@ const lqip = story.image ? lqipFor(story.image) : undefined;
 <section class="tr-band tr-band--white shop-story">
   <div class="tr-inner shop-story__inner">
     <div class="shop-story__copy">
-      {story.heading && <Heading class="tr-h2">{story.heading}</Heading>}
+      {story.heading && <Heading class="shop-story__title">{story.heading}</Heading>}
       <PortableText value={story.body as any} />
     </div>
     {story.image && (

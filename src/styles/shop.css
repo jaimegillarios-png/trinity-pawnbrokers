@@ -565,7 +565,20 @@
   object-fit: cover;
   background: var(--tr-neutral);
 }
-.shop-story__copy .tr-h2 { margin: 0 0 24px; }
+/* The size follows the heading level rather than a second class, so setting
+   one cannot leave the other behind: as a section heading it is 38px like
+   every other; as the page's own heading it takes the same scale as the title
+   on /shop/items, /shop/cart and the shop hero. */
+.shop-story__title {
+  font: 500 var(--tr-h2) var(--tr-font-display);
+  color: var(--tr-green-vault);
+  margin: 0 0 24px;
+  text-wrap: balance;
+}
+h1.shop-story__title {
+  font: 500 var(--tr-h1) var(--tr-font-display);
+  color: var(--tr-ink);
+}
 .shop-story__copy p {
   font: 400 var(--tr-body) var(--tr-font-body);
   color: var(--tr-ink-72);
