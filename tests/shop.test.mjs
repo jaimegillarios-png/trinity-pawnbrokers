@@ -328,3 +328,21 @@ test('the shop home offers one action, and the story lives on its own page', () 
   const css = readFileSync(resolve(root, 'src/styles/shop.css'), 'utf8');
   assert.match(css, /\.tr-inner \.shop-featured__all \{/, 'the secondary button is not scoped');
 });
+
+test('the shop bar collapses cleanly on a phone', () => {
+  /* Below the burger breakpoint the bar centres the wordmark between an
+     absolutely-placed cart and burger, so the "Shop" label had nowhere to go
+     but into them — with the menu open it sat under the close button. And in
+     a stacked list the back link's arrow pulled that one item out of line
+     with the rest. Both come off; the desktop bar keeps them. */
+  const css = readFileSync(resolve(root, 'src/styles/trinity-components.css'), 'utf8');
+  const mobile = css.slice(css.lastIndexOf('@media (max-width: 1024px)'));
+  assert.match(mobile, /\.tr-wordmark__sub \{ display: none; \}/, 'the Shop label still collides with the burger');
+  assert.match(mobile, /\.tr-navlink__arrow \{ display: none; \}/, 'the back link keeps its arrow in the stack');
+  assert.match(mobile, /\.tr-navlink--out \{[^}]*justify-content: center/, 'the back link is not centred');
+
+  // Desktop keeps both — they work in a horizontal bar.
+  assert.match(css, /\.tr-navlink__arrow \{ width: 13px/, 'the desktop arrow has gone');
+  const html = page('shop');
+  assert.match(html, /class="tr-wordmark__sub"/, 'the Shop label has gone from the markup');
+});

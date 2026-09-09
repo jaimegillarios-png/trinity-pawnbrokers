@@ -1007,8 +1007,18 @@ section[id], [id].hero-form-card { scroll-margin-top: calc(var(--tr-mast-h, 0px)
   /* In the stacked menu the cart is a full-width row like everything else, and
      the icon in the bar takes over the count. */
   .tr-cart-btn { justify-content: center; width: 100%; box-sizing: border-box; }
-  /* Centred as a pair, so the lockup sits on the same axis as the logo does on
-     every other page rather than being shunted left by its own label. */
-  .masthead[data-variant='shop'] .tr-wordmark { justify-content: center; }
-  .tr-wordmark__sub { font-size: 14px; margin-left: 8px; padding-left: 9px; }
+
+  /* The "Shop" label comes off entirely below the burger breakpoint. The bar
+     centres the wordmark between an absolutely-placed cart and burger, so the
+     label had nowhere to go but into them — it was sitting under the close
+     button with the menu open. The cart icon and the shop's own links already
+     say where you are, and without it the logo centres exactly as it does on
+     every other page. */
+  .tr-wordmark__sub { display: none; }
+
+  /* Centred and unadorned, like the links above it. The arrow reads as an
+     affordance in a horizontal bar; in a stacked list it just pulled this one
+     item out of line with the rest. */
+  .tr-navlink--out { justify-content: center; color: var(--tr-ink); }
+  .tr-navlink__arrow { display: none; }
 }
