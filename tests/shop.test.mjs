@@ -300,3 +300,25 @@ test('the shop hero is built like the About masthead', () => {
   // Unlike About, the shop keeps its buttons.
   assert.match(html, /shop-hero__actions/);
 });
+
+test('the shop home offers one action, and the story lives on its own page', () => {
+  const home = page('shop');
+  const about = page('shop/about');
+
+  /* One button in the hero. The second offered a different errand — selling
+     rather than buying — to someone who had just arrived to look at watches. */
+  const hero = home.slice(home.indexOf('shop-hero__actions'), home.indexOf('</section>', home.indexOf('shop-hero__actions')));
+  assert.equal((hero.match(/class="tr-cta/g) ?? []).length, 1, 'the hero has more than one button');
+
+  // The story belongs on /shop/about, not on the front page as well.
+  assert.ok(!/class="[^"]*\bshop-story\b/.test(home), 'the story is still on the shop home');
+  assert.match(about, /class="[^"]*\bshop-story\b/, 'the story has gone missing from /shop/about');
+
+  /* The way through to the rest of the catalogue is a button now, and it needs
+     its parent in the selector: .tr-cta sets `border: none`, ties on
+     specificity and wins on stylesheet order. Unscoped, it rendered with the
+     padding and no border at all. */
+  assert.match(home, /class="tr-cta shop-featured__all"/);
+  const css = readFileSync(resolve(root, 'src/styles/shop.css'), 'utf8');
+  assert.match(css, /\.tr-inner \.shop-featured__all \{/, 'the secondary button is not scoped');
+});

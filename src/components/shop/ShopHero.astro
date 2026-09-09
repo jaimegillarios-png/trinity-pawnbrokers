@@ -9,13 +9,14 @@ const parts = splitEmphasis(hero.heading);
 const lqip = lqipFor(hero.image);
 ---
 {/*
-  The same treatment as the About masthead, and a sibling of it: a split panel
-  on warm ground with the statement in the first column and a square plate in
-  the second, both inside the container rather than bleeding to the edges.
+  The About masthead's structure — statement in the first column, square plate
+  in the second, both inside the container rather than bleeding to the edges —
+  set on the dark ground instead of the warm one.
 
-  It suits the shop for a practical reason as well as a visual one — the
-  catalogue is photographed on white, and a scrim over that cannot make white
-  text legible. Dark type on a warm panel can sit beside a packshot happily.
+  The photography makes the case for it. The catalogue is shot on white, so on
+  a dark ground each plate reads as a lit square rather than a picture blending
+  into the page. It is also why the copy never sits *over* the photograph here:
+  no scrim over white makes white text legible.
 
   Where it parts company with About: this one keeps its buttons. Someone
   arriving at a shop is ready to act, where someone arriving at About is not.
@@ -23,17 +24,21 @@ const lqip = lqipFor(hero.image);
 <section class="shop-hero" aria-labelledby="shop-hero-title">
   <div class="shop-hero__inner">
     <div class="shop-hero__copy">
-      {hero.eyebrow && <p class="tr-eyebrow shop-hero__eyebrow">{hero.eyebrow}</p>}
+      {hero.eyebrow && (
+        <p class="tr-eyebrow tr-eyebrow--on-green shop-hero__eyebrow">{hero.eyebrow}</p>
+      )}
       <h1 id="shop-hero-title" class="shop-hero__title">
         {parts.map((p) => (p.emphasis ? <em>{p.text}</em> : p.text))}
       </h1>
       <p class="shop-hero__intro">{hero.intro}</p>
 
+      {/* One button. The second offered a different errand — selling, rather
+          than buying — to someone who has just arrived to look at watches, and
+          split the attention of the only action on the screen. The ctaGhost
+          field stays in the CMS because heroSection is shared with the item
+          pages, which do use it. */}
       <div class="shop-hero__actions">
         <a href={hero.ctaPrimary.href} class="tr-cta tr-cta--gold">{hero.ctaPrimary.label}</a>
-        {hero.ctaGhost && (
-          <a href={hero.ctaGhost.href} class="tr-cta shop-hero__ghost">{hero.ctaGhost.label}</a>
-        )}
       </div>
 
       {hero.reassurance && <p class="shop-hero__reassure">{hero.reassurance}</p>}

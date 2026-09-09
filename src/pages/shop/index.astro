@@ -6,7 +6,6 @@ import ProductCard from '../../components/shop/ProductCard.astro';
 import CardGrid from '../../components/CardGrid.astro';
 import ClosingBand from '../../components/ClosingBand.astro';
 import SectionOpener from '../../components/SectionOpener.astro';
-import ShopStory from '../../components/shop/ShopStory.astro';
 import { getShopPage, getProducts, getSiteSettings } from '../../lib/sanity/queries';
 import { breadcrumbSchema } from '../../lib/seo';
 
@@ -30,7 +29,7 @@ const schemas = [
   ]),
 ];
 
-const reveal = '.product-card, .shop-assurances .tr-card, .shop-story__copy > *';
+const reveal = '.product-card, .shop-assurances .tr-card';
 ---
 <Base seo={shop.seo} site={site} schemas={schemas} reveal={reveal} nav="shop">
   {shop.hero && <ShopHero hero={shop.hero} />}
@@ -44,8 +43,8 @@ const reveal = '.product-card, .shop-assurances .tr-card, .shop-story__copy > *'
           <div class="product-grid shop-section__grid">
             {featured.map((product) => <ProductCard product={product} />)}
           </div>
-          <a class="shop-head__all" href="/shop/items">
-            See all {forSale > 3 ? `${forSale} watches` : 'watches'} →
+          <a class="tr-cta shop-featured__all" href="/shop/items">
+            See all {forSale > 3 ? `${forSale} watches` : 'watches'}
           </a>
         </>
       ) : (
@@ -64,7 +63,6 @@ const reveal = '.product-card, .shop-assurances .tr-card, .shop-story__copy > *'
     </div>
   </section>
 
-  {shop.story && <ShopStory story={shop.story} />}
 
   <ClosingBand closing={shop.closing} site={site} />
 

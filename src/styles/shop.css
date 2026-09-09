@@ -15,23 +15,23 @@
   color: var(--tr-ink-72);
   margin: 24px 0 0;
 }
-.shop-head__all {
+/* Secondary to the gold CTA and to the watches above it, but a button rather
+   than a link: it is the one way out of a page of three pieces into the other
+   ten. Scoped because .tr-cta sets `border: none` — a bare class ties on
+   specificity and then loses on stylesheet order, the same reason the FAQ,
+   home and item pages each scope their own. */
+.tr-inner .shop-featured__all {
   display: inline-block;
   margin-top: 40px;
-  font: 500 12px/1 var(--tr-font-caps);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--tr-gold-deep);
-  text-decoration: underline;
-  text-underline-offset: 5px;
+  color: var(--tr-ink);
+  background: transparent;
+  border: 1px solid var(--tr-line-strong);
+  padding: 15px 26px;
 }
-.shop-head__all:hover { color: var(--tr-green-vault); }
-.shop-strip__label {
-  font: 500 var(--tr-microcaps-size)/1 var(--tr-font-caps);
-  letter-spacing: var(--tr-microcaps-track);
-  text-transform: uppercase;
-  color: var(--tr-ink-45);
-  margin: 0 0 20px;
+.tr-inner .shop-featured__all:hover {
+  border-color: var(--tr-green-vault);
+  background: var(--tr-green-vault);
+  color: var(--tr-neutral);
 }
 
 /* ---- the grid ---- */
@@ -577,19 +577,19 @@
    Shop hero
    ============================================================ */
 
-/* A sibling of .about-masthead, and deliberately the same treatment: split
-   panel on warm ground, statement in the first column, square plate in the
-   second, both inside the container rather than bleeding to the edges.
+/* The About masthead's structure on the dark ground: same split, same square
+   plate, same measurements — only the palette differs, and it comes from the
+   --tr-on-green tokens the rest of the site already uses for this.
 
-   It suits the shop for a practical reason as well as a visual one. The
-   catalogue is photographed on white, and no scrim over that makes white text
-   legible — which is what the previous dark hero was fighting. Dark type on a
-   warm panel sits beside a packshot happily.
+   The photography argues for it. The catalogue is shot on white, so against
+   dark green each plate reads as a lit square rather than a picture fading
+   into the page. It is also why the copy never sits over the photograph here:
+   no scrim over white makes white text legible.
 
-   The values are repeated from about.css rather than shared because these are
-   the only two. If a third appears, lift the common part into a .split-hero in
-   trinity-components.css rather than copying it again. */
-.shop-hero { background: var(--tr-warm-panel); }
+   Measurements are repeated from about.css rather than shared because these
+   are the only two. If a third appears, lift the common part into a
+   .split-hero in trinity-components.css rather than copying it again. */
+.shop-hero { background: var(--tr-green-vault); }
 .shop-hero__inner {
   max-width: var(--tr-container);
   margin: 0 auto;
@@ -605,48 +605,40 @@
 .shop-hero__eyebrow { margin-top: 0; }
 .shop-hero__title {
   font: 500 var(--tr-h1) var(--tr-font-display);
-  color: var(--tr-ink);
+  color: var(--tr-neutral);
   margin: 0;
   max-width: 15ch;
   text-wrap: balance;
 }
+/* Gold-mid, not the deep gold About uses: #8A6B26 on #10271C is barely a
+   colour. The underline lifts with it. */
 .shop-hero__title em {
   font-style: normal;
-  color: var(--tr-gold-deep);
+  color: var(--tr-gold-mid);
   text-decoration: underline;
-  text-decoration-color: var(--tr-line-gold);
+  text-decoration-color: rgba(201, 168, 87, 0.5);
   text-decoration-thickness: 2px;
   text-underline-offset: 10px;
 }
 .shop-hero__intro {
   font: 400 var(--tr-body-lg) var(--tr-font-body);
-  color: var(--tr-ink-72);
+  color: var(--tr-on-green);
   max-width: 46ch;
   margin: 26px 0 0;
 }
 
-/* Where this parts company with About, which deliberately carries no buttons:
-   someone arriving at a shop is ready to act. */
-.shop-hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
-/* .tr-cta sets `border: none`, ties on specificity and wins on stylesheet
-   order, so an outlined CTA needs its parent in the selector to get a border. */
-.shop-hero__actions .shop-hero__ghost {
-  border: 1px solid var(--tr-line-strong);
-  color: var(--tr-green-vault);
-  background: none;
-}
-.shop-hero__actions .shop-hero__ghost:hover {
-  border-color: var(--tr-green-vault);
-  background: rgba(16, 39, 28, 0.05);
-}
+/* One button, where About carries none: someone arriving at a shop is ready
+   to act, but only at one thing. */
+.shop-hero__actions { margin-top: 34px; }
 .shop-hero__reassure {
   font: 400 var(--tr-caption) var(--tr-font-body);
-  color: var(--tr-ink-45);
+  color: var(--tr-on-green-faint);
   margin: 22px 0 0;
   max-width: 44ch;
 }
 
-/* A square plate, as on About. */
+/* A square plate, as on About. White behind it, so a packshot keeps its own
+   ground rather than being cut out against the green. */
 .shop-hero__figure { margin: 0; overflow: hidden; }
 .shop-hero__figure img {
   display: block;
