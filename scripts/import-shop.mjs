@@ -128,6 +128,8 @@ async function upload(file) {
 }
 
 const products = JSON.parse(await readFile(resolve(data, 'products.json'), 'utf8'));
+const allImages = new Set(products.flatMap((p) => p.images.map((i) => i.file)));
+const haveImage = (file) => allImages.has(file);
 
 if (process.argv.includes('--replace')) {
   const old = await client.fetch(`*[_type == "product" && title match "*placeholder*"]._id`);
@@ -210,8 +212,14 @@ for (const product of products) {
  * the photographs that came down with it.
  */
 const heroImage = await upload(products.find((p) => !p.sold)?.images?.[0]?.file ?? products[0].images[0].file);
+/* Named rather than picked by index. "the fourth image of the first product
+   with more than six" landed on a caseback on a white sweep — accurate, but a
+   catalogue shot, and it is doing no other job on the site. This one is the
+   Patek on its stand: three-quarter, angled, with room around it, and not the
+   card thumbnail for its own product. */
+const STORY_IMAGE = 'patek7041r-09.jpg';
 const storyImage = await upload(
-  products.find((p) => p.images.length > 6)?.images?.[3]?.file ?? products[0].images[0].file,
+  haveImage(STORY_IMAGE) ? STORY_IMAGE : products[0].images[0].file,
 );
 
 const block = (text) => ({

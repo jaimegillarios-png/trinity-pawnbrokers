@@ -16,12 +16,12 @@ const lqip = story.image ? lqipFor(story.image) : undefined;
     {story.image && (
       <div class="shop-story__media">
         <img
-          src={urlFor(story.image).width(900).height(1100).fit('crop').url()}
-          srcset={croppedSrcSetFor(story.image, 9 / 11)}
+          src={urlFor(story.image).width(1000).height(1000).fit('crop').url()}
+          srcset={croppedSrcSetFor(story.image, 1)}
           sizes="(max-width: 900px) 100vw, 42vw"
           alt={story.image.alt ?? ''}
-          width="900"
-          height="1100"
+          width="1000"
+          height="1000"
           loading="lazy"
           decoding="async"
           style={lqip ? `background-image:url(${lqip});background-size:cover` : undefined}
