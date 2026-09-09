@@ -249,6 +249,12 @@ test('the product column is ruled once per spec row and nowhere else', () => {
   assert.ok(!/border/.test(rule('.product__assurance {')), 'the closing line still draws a rule');
   assert.match(rule('.product__spec {'), /border-top: 1px solid var\(--tr-line-soft\)/);
   assert.ok(!/border-bottom/.test(rule('.product__spec {')), 'rows must not rule both edges');
+
+  /* One column, value under its label. Set as two, the values were ranged
+     right against a ragged left edge, so a long one wrapped into a shape that
+     had nothing to do with its label and the eye crossed the gap every row. */
+  assert.ok(!/justify-content: space-between/.test(rule('.product__spec {')), 'the row is two columns again');
+  assert.ok(!/text-align: right/.test(rule('.product__spec dd {')), 'the value is ranged right again');
 });
 
 test('the breadcrumb does not sit in a band of its own', () => {

@@ -149,12 +149,15 @@
    line to the top of each row gives the table its opening rule for free and
    lets it end on white. */
 .product__specs { margin: 40px 0 0; }
+/* One column: the value under its label, both ranged left. Set as two columns
+   the values were right-aligned against a ragged left edge, so a long one
+   ("Tudor Box, Tudor Tag, Booklet and papers / card") wrapped into a shape
+   that had nothing to do with the label beside it, and the eye had to cross
+   the gap for every row. Stacked, each pair reads as one thing. */
 .product__spec {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 28px;
-  padding: 13px 0;
+  display: grid;
+  gap: 6px;
+  padding: 14px 0;
   border-top: 1px solid var(--tr-line-soft);
 }
 .product__spec dt {
@@ -162,13 +165,11 @@
   letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-ink-45);
-  white-space: nowrap;
 }
 .product__spec dd {
   font: 400 var(--tr-body-sm) var(--tr-font-body);
   color: var(--tr-ink-80);
   margin: 0;
-  text-align: right;
 }
 
 .product__condition { margin-top: 38px; }
