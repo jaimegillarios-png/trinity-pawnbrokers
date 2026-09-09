@@ -193,6 +193,10 @@
 
 /* ---- cart ---- */
 .cart { max-width: 900px; }
+/* .shop-head's 52px is sized for the pages where a grid of watches follows.
+   Here what follows is one sentence and a button, or a list that opens with a
+   rule, and 52px left the heading stranded above both. */
+.cart .shop-head { margin-bottom: 32px; }
 .cart__loading { font: 400 var(--tr-body-sm) var(--tr-font-body); color: var(--tr-ink-45); }
 .cart__empty p { font: 400 var(--tr-body-lg) var(--tr-font-body); color: var(--tr-ink-72); margin: 0 0 26px; }
 
