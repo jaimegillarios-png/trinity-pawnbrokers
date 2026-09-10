@@ -193,8 +193,8 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
 .tr-ledger__row--last { border-bottom: 1px solid var(--tr-line-ledger); }
 .tr-ledger__row--total { border-top: 1px solid var(--tr-line-gold-firm); padding: 17px 0 0; }
 .tr-ledger__label {
-  font: 500 12.5px/1 var(--tr-font-caps);
-  letter-spacing: 0.16em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-ink-62);
 }
@@ -207,8 +207,8 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
 .rule-bar {
   background: var(--tr-green-footer);
   color: var(--tr-on-green);
-  font: 500 11px/1 var(--tr-font-caps);
-  letter-spacing: 0.22em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
 }
 .rule-bar-inner {
@@ -286,11 +286,11 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
   display: flex;
   gap: 24px;
   align-items: center;
-  font: 500 12.5px/1 var(--tr-font-body);
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-body);
   /* 1px, against 0.14em (1.75px) everywhere else caps are used. The nav is
      read at a glance rather than as a label, and the wider tracking was
      pulling five links apart into five separate objects. */
-  letter-spacing: 1px;
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
 }
 
@@ -532,8 +532,8 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
   gap: 22px;
   flex-wrap: wrap;
   justify-content: space-between;
-  font: 500 12.5px/1.5 var(--tr-font-caps);
-  letter-spacing: 0.12em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1.5 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-on-green);
 }
@@ -620,8 +620,8 @@ h1, h2, h3, h4 { font-family: var(--tr-font-display); font-weight: 500; margin: 
 
 /* ---- link columns ---- */
 .tr-footer__col-title {
-  font: 500 10.5px/1 var(--tr-font-caps);
-  letter-spacing: 0.18em;
+  font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-caps-sm-track);
   text-transform: uppercase;
   color: var(--tr-on-green-strong);
   margin: 0 0 18px;
@@ -920,8 +920,8 @@ section[id], [id].hero-form-card { scroll-margin-top: calc(var(--tr-mast-h, 0px)
   justify-content: center;
   gap: 8px 22px;
   margin: 20px 0 18px;
-  font: 500 12px/1 var(--tr-font-body);
-  letter-spacing: 0.1em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-body);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
 }
 .tr-footer__nav a { color: var(--tr-on-green); text-decoration: none; }

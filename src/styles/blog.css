@@ -105,8 +105,8 @@
   color: var(--tr-on-green-muted);
 }
 .blog-featured__more {
-  font: 700 12px/1 var(--tr-font-body);
-  letter-spacing: 0.18em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-body);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-gold-bright);
   border-bottom: 1px solid var(--tr-line-gold-mid);

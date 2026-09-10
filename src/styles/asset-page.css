@@ -9,8 +9,8 @@
 .tr-specs > div { padding: 18px 0 20px; border-top: 1px solid var(--tr-line-card); }
 .tr-specs > div:nth-child(n+3) { padding-bottom: 0; }
 .tr-spec__label {
-  font: 500 12.5px/1.4 var(--tr-font-caps);
-  letter-spacing: 0.18em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1.4 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-gold-deep);
   margin-bottom: 8px;
@@ -71,8 +71,8 @@
 .hero__intro { max-width: 52ch; color: var(--tr-on-green-strong); margin: 0 0 30px; }
 .hero__actions { display: flex; gap: 12px; flex-wrap: wrap; }
 .hero__reassure {
-  font: 500 11.5px/1.6 var(--tr-font-caps);
-  letter-spacing: 0.12em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1.6 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-on-green);
   margin: 22px 0 0;
@@ -95,8 +95,8 @@
 .step-divider { display: flex; align-items: center; gap: 12px; margin: 0 0 22px; }
 .step-divider::before, .step-divider::after { content: ""; flex: 1; height: 1px; background: var(--tr-line); }
 .step-divider span {
-  font: 500 11px/1 var(--tr-font-caps);
-  letter-spacing: 0.22em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-gold-deep);
   white-space: nowrap;
@@ -134,8 +134,8 @@
 }
 .tr-field__label {
   display: block;
-  font: 500 10.5px/1 var(--tr-font-caps);
-  letter-spacing: 0.14em;
+  font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-caps-sm-track);
   text-transform: uppercase;
   color: var(--tr-ink-62);
   margin: 0 0 5px;
@@ -175,8 +175,8 @@
 /* standalone label (e.g. "Add photos", which labels a drop zone, not a field) */
 .tr-label {
   display: block;
-  font: 500 10.5px/1 var(--tr-font-caps);
-  letter-spacing: 0.14em;
+  font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-caps-sm-track);
   text-transform: uppercase;
   color: var(--tr-ink-62);
   margin: 0 0 7px;
@@ -196,8 +196,8 @@
 .tr-dropzone:hover { border-color: var(--tr-gold-deep); }
 .tr-form-note { font: 400 12.5px/1.6 var(--tr-font-body); color: var(--tr-ink-62); margin: 2px 0 0; text-align: center; text-wrap: pretty; }
 .tr-back-btn {
-  font: 600 12px/1 var(--tr-font-body);
-  letter-spacing: 0.14em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-body);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-ink-62);
   background: none;
@@ -271,8 +271,8 @@
 .how-num__glyph .ph-fill { color: var(--tr-white); }
 .how-num__glyph .ph-light { color: var(--tr-gold-deep); }
 .how-step__label {
-  font: 600 11px/1 var(--tr-font-body);
-  letter-spacing: 0.2em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-body);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-gold-deep);
   margin: 26px 0 12px;
@@ -297,8 +297,8 @@
 }
 .cmp-head-hs { padding: 22px 24px 20px; }
 .cmp-head-tri > div, .cmp-head-hs > div {
-  font: 600 12px/1 var(--tr-font-body);
-  letter-spacing: 0.16em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-body);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
 }
 .cmp-head-tri > div { color: var(--tr-gold-mid); }
@@ -306,8 +306,8 @@
 .cmp-row {
   padding: 20px 0;
   border-top: 1px solid var(--tr-line-soft);
-  font: 500 12px/1.5 var(--tr-font-caps);
-  letter-spacing: 0.14em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1.5 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-gold-deep);
   display: flex;
@@ -369,8 +369,8 @@
   bottom: 0; left: 0; right: 0;
   background: var(--tr-green-vault);
   color: var(--tr-gold-mid);
-  font: 600 10px/1 var(--tr-font-body);
-  letter-spacing: 0.18em;
+  font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1 var(--tr-font-body);
+  letter-spacing: var(--tr-caps-sm-track);
   text-transform: uppercase;
   text-align: center;
   padding: 7px;

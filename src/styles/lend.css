@@ -74,8 +74,8 @@
   margin: 0;
 }
 .lend-item__label {
-  font: 500 10.5px/1 var(--tr-font-caps);
-  letter-spacing: 0.14em;
+  font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-caps-sm-track);
   text-transform: uppercase;
   color: var(--tr-ink-45);
   margin: 22px 0 12px;
@@ -103,8 +103,8 @@
   align-self: start;
   margin-top: auto;
   padding-top: 26px;
-  font: 500 12px/1 var(--tr-font-caps);
-  letter-spacing: 0.14em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-gold-deep);
   text-decoration: underline;

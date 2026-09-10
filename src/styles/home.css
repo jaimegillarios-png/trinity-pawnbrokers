@@ -126,8 +126,8 @@
   justify-content: center;
 }
 .home-hero__eyebrow {
-  font: 500 13px/1.9 var(--tr-font-caps);
-  letter-spacing: 0.28em;
+  font: var(--tr-eyebrow-weight) var(--tr-eyebrow-size)/1.9 var(--tr-font-caps);
+  letter-spacing: var(--tr-eyebrow-track);
   text-transform: uppercase;
   color: var(--tr-gold-bright);
 }
@@ -180,8 +180,8 @@
   gap: 22px;
   flex-wrap: wrap;
   justify-content: space-between;
-  font: 500 12.5px/1.5 var(--tr-font-caps);
-  letter-spacing: 0.12em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1.5 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-on-green);
 }
@@ -196,8 +196,8 @@
 .home-inner { max-width: 1240px; margin: 0 auto; padding: 104px 28px 110px; }
 .home-inner--tight { padding: 104px 28px 56px; }
 .home-eyebrow {
-  font: 500 13px/1 var(--tr-font-caps);
-  letter-spacing: 0.28em;
+  font: var(--tr-eyebrow-weight) var(--tr-eyebrow-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-eyebrow-track);
   text-transform: uppercase;
   color: var(--tr-gold-deep);
   margin-bottom: 14px;
@@ -243,8 +243,8 @@
 .ix-card__teaser { font-size: 14.5px; line-height: 1.6; color: var(--tr-ink-68); }
 .ix-card__more {
   margin-top: auto;
-  font: 700 12px/1 'Archivo', sans-serif;
-  letter-spacing: 0.18em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 'Archivo', sans-serif;
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-gold-deep);
 }
@@ -258,8 +258,8 @@
   color: var(--tr-neutral);
 }
 .ix-dark__eyebrow {
-  font: 500 13px/1 var(--tr-font-caps);
-  letter-spacing: 0.24em;
+  font: var(--tr-eyebrow-weight) var(--tr-eyebrow-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-eyebrow-track);
   text-transform: uppercase;
   color: var(--tr-gold-mid);
 }
@@ -271,8 +271,8 @@
 .ix-dark__body { font-size: 14.5px; line-height: 1.6; color: var(--tr-on-green); }
 .ix-dark__more {
   margin-top: 6px;
-  font: 700 12px/1 'Archivo', sans-serif;
-  letter-spacing: 0.18em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 'Archivo', sans-serif;
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-gold-mid);
 }
@@ -341,8 +341,8 @@
 .custody-link {
   display: inline-block;
   margin-top: 26px;
-  font: 700 12px/1 'Archivo', sans-serif;
-  letter-spacing: 0.18em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 'Archivo', sans-serif;
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-gold-mid);
 }
@@ -354,8 +354,8 @@
 .rates-grid > div:first-child { padding-left: 0; }
 .rates-grid > div:last-child { padding-right: 0; border-right: 0; }
 .rates-label {
-  font: 500 12.5px/1 var(--tr-font-caps);
-  letter-spacing: 0.2em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-gold-deep);
   margin-bottom: 14px;
@@ -386,8 +386,8 @@
 .visit-lede { color: var(--tr-ink-72); font-size: 16px; line-height: 1.7; margin: 0 0 28px; max-width: 44ch; }
 .visit-block { border-top: 1px solid var(--v4-rule-gold); padding-top: 24px; }
 .visit-label {
-  font: 500 12.5px/1 var(--tr-font-caps);
-  letter-spacing: 0.2em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-gold-deep);
   margin-bottom: 10px;
@@ -396,8 +396,8 @@
 .visit-link {
   display: inline-block;
   margin-top: 26px;
-  font: 700 12px/1 'Archivo', sans-serif;
-  letter-spacing: 0.18em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 'Archivo', sans-serif;
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-green-leaf);
 }
@@ -422,8 +422,8 @@
   flex-wrap: wrap;
 }
 .press-label {
-  font: 500 13px/1 var(--tr-font-caps);
-  letter-spacing: 0.28em;
+  font: var(--tr-eyebrow-weight) var(--tr-eyebrow-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-eyebrow-track);
   text-transform: uppercase;
   color: var(--tr-gold-deep);
   white-space: nowrap;

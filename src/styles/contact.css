@@ -74,8 +74,8 @@
 .contact-pointer__title { font: 600 var(--tr-h4) var(--tr-font-display); color: var(--tr-green-vault); margin: 0 0 8px; }
 .contact-pointer__body { font: 400 var(--tr-body-sm) var(--tr-font-body); color: var(--tr-ink-72); margin: 0 0 14px; }
 .contact-pointer__link {
-  font: 500 12px/1 var(--tr-font-caps);
-  letter-spacing: 0.14em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-gold-deep);
   text-decoration: underline;

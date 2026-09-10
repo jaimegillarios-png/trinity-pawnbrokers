@@ -59,8 +59,22 @@
   --tr-body-sm: 14.5px/1.6;                     /* Archivo 400 — card body */
   --tr-label:   15px/1.45;                      /* Archivo 400 — form labels */
   --tr-caption: 13.5px/1.6;                     /* Archivo 400 — legal, footnotes */
-  --tr-eyebrow-size: 13px;  --tr-eyebrow-track: 0.28em; /* Archivo 500 caps, deep gold */
-  --tr-microcaps-size: 12.5px; --tr-microcaps-track: 0.14em; /* Archivo 500 caps */
+  /* ---- small caps ----
+     Four roles, and only four. There were twenty-five distinct combinations of
+     size, weight and tracking doing this one job — eight tracking values alone
+     between 0.10em and 0.42em — which is why the caps read as noise rather
+     than as a system. Anything set in caps should be one of these.
+
+       eyebrow    a section's label, used sparingly
+       microcaps  meta: table heads, card labels, captions
+       caps-sm    the smallest: ledger labels, footnotes
+       button     .tr-cta only
+
+     The logotype and its Shop lockup are deliberately outside this: they are
+     drawn letterforms, not text. */
+  --tr-eyebrow-size: 13px;  --tr-eyebrow-track: 0.28em; --tr-eyebrow-weight: 500;
+  --tr-microcaps-size: 12.5px; --tr-microcaps-track: 0.14em; --tr-microcaps-weight: 500;
+  --tr-caps-sm-size: 10.5px; --tr-caps-sm-track: 0.18em; --tr-caps-sm-weight: 600;
 
   /* ============ SPACE & SHAPE ============ */
   --tr-container: 1240px;   /* max content width */

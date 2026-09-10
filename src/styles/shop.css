@@ -69,13 +69,13 @@
   padding: 6px 10px 5px;
   background: var(--tr-green-vault);
   color: var(--tr-gold-mid);
-  font: 500 10.5px/1 var(--tr-font-caps);
-  letter-spacing: 0.14em;
+  font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-caps-sm-track);
   text-transform: uppercase;
 }
 .product-card__brand {
-  font: 500 10.5px/1 var(--tr-font-caps);
-  letter-spacing: 0.14em;
+  font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-caps-sm-track);
   text-transform: uppercase;
   color: var(--tr-ink-45);
   margin: 0 0 8px;
@@ -211,8 +211,8 @@
 }
 .cart__media img { display: block; width: 140px; height: 140px; object-fit: cover; }
 .cart__brand {
-  font: 500 10.5px/1 var(--tr-font-caps);
-  letter-spacing: 0.14em;
+  font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-caps-sm-track);
   text-transform: uppercase;
   color: var(--tr-ink-45);
   margin: 0 0 8px;

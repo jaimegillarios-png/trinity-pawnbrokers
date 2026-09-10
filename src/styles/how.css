@@ -276,8 +276,8 @@
   margin: 24px 0 0;
 }
 .how-custody__link {
-  font: 500 12.5px/1 var(--tr-font-caps);
-  letter-spacing: 0.14em;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-gold-bright);
   text-decoration: underline;
