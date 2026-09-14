@@ -45,6 +45,9 @@ export interface FormField {
 export interface FormRow { fields: FormField[] }
 
 export interface ValuationForm {
+  /** Shown once a request is stored. Defaults deliberately make no time promise. */
+  confirmHeading?: string;
+  confirmBody?: string;
   heading: string;
   intro?: string;
   stepOneLabel?: string;

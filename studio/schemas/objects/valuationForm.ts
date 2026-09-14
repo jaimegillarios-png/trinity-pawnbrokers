@@ -50,5 +50,19 @@ export const valuationForm = defineType({
     defineField({ name: 'submitLabel', type: 'string', initialValue: 'Get my valuation' }),
     defineField({ name: 'noteStep1', title: 'Note under step 1', type: 'text', rows: 2 }),
     defineField({ name: 'noteStep2', title: 'Note under step 2', type: 'text', rows: 2 }),
+    defineField({
+      name: 'confirmHeading',
+      title: 'Confirmation heading',
+      type: 'string',
+      description: 'Shown once a request is sent. Leave empty for "Thank you — we have it".',
+    }),
+    defineField({
+      name: 'confirmBody',
+      title: 'Confirmation text',
+      type: 'text',
+      rows: 3,
+      description:
+        'What happens next. Only promise a timeframe once the site agrees on one — it currently says same-day, 1 business day and 3 hours in different places.',
+    }),
   ],
 });

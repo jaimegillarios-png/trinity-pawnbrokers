@@ -23,6 +23,12 @@
     } catch (e) { /* keep defaults */ }
 
     function show(step, dir) {
+      /* Refuse a step that does not exist rather than hiding every pane. An
+         unvalued data-step-next did exactly that and blanked the form. */
+      var exists = Array.prototype.some.call(panes, function (pane) {
+        return pane.getAttribute('data-step') === String(step);
+      });
+      if (!exists) return;
       panes.forEach(function (pane) {
         var isTarget = pane.getAttribute('data-step') === String(step);
         pane.hidden = !isTarget;

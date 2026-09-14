@@ -40,7 +40,8 @@ export default defineConfig({
   schema: {
     types: schemaTypes,
     // Singletons should not be creatable or deletable from the global menus.
-    templates: (prev) => prev.filter((t) => !SINGLETONS.includes(t.schemaType)),
+    templates: (prev) =>
+      prev.filter((t) => !SINGLETONS.includes(t.schemaType) && t.schemaType !== 'valuationRequest'),
   },
   document: {
     actions: (prev, { schemaType }) =>

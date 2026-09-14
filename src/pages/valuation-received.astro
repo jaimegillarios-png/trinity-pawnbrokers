@@ -1,0 +1,48 @@
+---
+import '../styles/asset-page.css';
+import Base from '../layouts/Base.astro';
+import { getSiteSettings } from '../lib/sanity/queries';
+
+/* Where /api/valuation sends a browser that posted the form without
+   JavaScript. With JavaScript the confirmation replaces the form in place and
+   nobody sees this page. Prerendered; the reference arrives in the query and
+   a small script writes it in, so the page still reads correctly without it. */
+const site = await getSiteSettings();
+const seo = {
+  title: 'Valuation request received | Trinity Pawnbrokers',
+  description: 'We have your valuation request.',
+  noIndex: true,
+};
+---
+<Base seo={seo} site={site}>
+  <section class="tr-band tr-band--white">
+    <div class="tr-inner tr-inner--narrow valuation-received">
+      <div class="tr-form-done">
+        <p class="tr-form-done__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+        </p>
+        <h1 class="tr-form-done__title">Thank you — we have it</h1>
+        <p class="tr-form-done__body">
+          A specialist will look over your details and contact you on the email or phone number
+          you gave us. Nothing is recorded on your credit file, and nothing moves until you have
+          an offer you are happy with.
+        </p>
+        <dl class="tr-form-done__ledger" data-ref-row hidden>
+          <div><dt>Reference</dt><dd data-ref>—</dd></div>
+        </dl>
+        <p class="tr-form-done__note">
+          Any questions, call us on <a href={`tel:${site.phoneHref}`}>{site.phone}</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Only ever the six characters the server generated.
+    const ref = new URLSearchParams(location.search).get('ref');
+    if (ref && /^[A-Z2-9]{6}$/.test(ref)) {
+      document.querySelector('[data-ref]')!.textContent = ref;
+      (document.querySelector('[data-ref-row]') as HTMLElement).hidden = false;
+    }
+  </script>
+</Base>

@@ -20,7 +20,7 @@ const whyHeading = page.why?.intro?.heading ? splitEmphasis(page.why.intro.headi
 ---
 
 <Hero hero={page.hero}>
-  <Fragment slot="aside"><ValuationForm form={page.form} /></Fragment>
+  <Fragment slot="aside"><ValuationForm form={page.form} item={page.slug} /></Fragment>
 
   <Fragment slot="below">
     {page.trust && page.trust.length > 0 && (
@@ -282,5 +282,6 @@ const whyHeading = page.why?.intro?.heading ? splitEmphasis(page.why.intro.headi
 
 <script>
   import '../scripts/asset-page.js';
+  import '../scripts/valuation.js';
   import '../scripts/faqs.js';
 </script>

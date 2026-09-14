@@ -21,6 +21,42 @@ export const structure: StructureResolver = (S) =>
   S.list()
     .title('Trinity')
     .items([
+      /* First, because it is the only thing in here that is somebody waiting
+         for an answer. */
+      S.listItem()
+        .title('Valuation requests')
+        .child(
+          S.list()
+            .title('Valuation requests')
+            .items([
+              S.listItem()
+                .title('New')
+                .child(
+                  S.documentList()
+                    .title('New')
+                    .filter('_type == "valuationRequest" && status == "new"')
+                    .defaultOrdering([{ field: 'receivedAt', direction: 'desc' }]),
+                ),
+              S.listItem()
+                .title('In progress')
+                .child(
+                  S.documentList()
+                    .title('In progress')
+                    .filter('_type == "valuationRequest" && status in ["contacted", "offered"]')
+                    .defaultOrdering([{ field: 'receivedAt', direction: 'desc' }]),
+                ),
+              S.listItem()
+                .title('All')
+                .schemaType('valuationRequest')
+                .child(
+                  S.documentTypeList('valuationRequest')
+                    .title('All requests')
+                    .defaultOrdering([{ field: 'receivedAt', direction: 'desc' }]),
+                ),
+            ]),
+        ),
+      S.divider(),
+
       single(S, 'Homepage', 'homePage'),
 
       S.listItem()

@@ -1,8 +1,21 @@
 ---
 import type { ValuationForm } from '../lib/types';
 
-interface Props { form: ValuationForm }
-const { form } = Astro.props;
+interface Props {
+  form: ValuationForm;
+  /** Which item page this sits on, so a request arrives saying what it is. */
+  item: string;
+}
+const { form, item } = Astro.props;
+
+/* No timeframe in the defaults, deliberately. The site currently promises a
+   "same-day offer" here, "1 business day" on the homepage and "3 hours" in the
+   FAQ; until that is settled a confirmation screen should not add a fourth.
+   Both lines are editable in the CMS for when it is. */
+const confirmHeading = form.confirmHeading ?? 'Thank you — we have it';
+const confirmBody =
+  form.confirmBody ??
+  'A specialist will look over your photos and details and contact you on the email or phone number you gave us. Nothing is recorded on your credit file, and nothing moves until you have an offer you are happy with.';
 const stepLabels = { 1: form.stepOneLabel ?? 'Step 1 of 2', 2: form.stepTwoLabel ?? 'Step 2 of 2' };
 ---
 <div
@@ -17,7 +30,16 @@ const stepLabels = { 1: form.stepOneLabel ?? 'Step 1 of 2', 2: form.stepTwoLabel
 
   <p class="step-divider"><span data-step-label>{stepLabels[1]}</span></p>
 
-  <form method="post" action="/api/valuation" novalidate>
+  {/* multipart, or a browser without JavaScript sends the photo input's
+      filenames and none of the photos. */}
+  <form method="post" action="/api/valuation" enctype="multipart/form-data" novalidate data-valuation>
+    <input type="hidden" name="item" value={item} />
+    <input type="hidden" name="page" value={Astro.url.pathname} />
+    {/* Nobody sees this; bots fill every field they find. */}
+    <div class="tr-honeypot" aria-hidden="true">
+      <label for="wf-website">Leave this empty</label>
+      <input id="wf-website" name="wf-website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
     <div class="step-pane" data-step="1">
       {form.stepOneRows.map((row) => (
         <div class={row.fields.length > 1 ? 'field-row' : undefined}>
@@ -51,14 +73,31 @@ const stepLabels = { 1: form.stepOneLabel ?? 'Step 1 of 2', 2: form.stepTwoLabel
       {form.photosLabel && (
         <>
           <p class="tr-label">{form.photosLabel}</p>
-          <label class="tr-dropzone" for="wf-photos">
-            {form.photosHint}
-            <input id="wf-photos" name="photos" type="file" accept="image/*" multiple hidden />
+          {/* The label is the drop target and the button; the input stays in
+              the form so a browser without JavaScript can still send files.
+              With it, the script takes over: previews, removal, and shrinking
+              each photo before it is sent. */}
+          <label class="tr-dropzone" for="wf-photos" data-dropzone>
+            <span class="tr-dropzone__lead">Choose photos</span>
+            <span class="tr-dropzone__hint">{form.photosHint}</span>
+            <span class="tr-dropzone__meta" data-photo-meta>Up to 6 · JPEG, PNG or HEIC</span>
+            <input
+              id="wf-photos"
+              class="tr-dropzone__input"
+              name="photos"
+              type="file"
+              accept="image/*"
+              multiple
+            />
           </label>
+          <ul class="tr-photos" data-photo-list hidden></ul>
         </>
       )}
 
-      <button type="button" class="tr-cta tr-cta--gold tr-cta--block" data-step-next>
+      {/* The value is the step to go to. It was an empty attribute, which the
+          stepper read as step "" — matching no pane, so Continue hid both and
+          left an empty card. Nobody could reach the second step. */}
+      <button type="button" class="tr-cta tr-cta--gold tr-cta--block" data-step-next="2">
         {form.continueLabel ?? 'Continue'}
       </button>
       {form.noteStep1 && <p class="tr-form-note">{form.noteStep1}</p>}
@@ -95,12 +134,29 @@ const stepLabels = { 1: form.stepOneLabel ?? 'Step 1 of 2', 2: form.stepTwoLabel
           </div>
         ))}
 
-        <button type="submit" class="tr-cta tr-cta--gold tr-cta--block">
+        <button type="submit" class="tr-cta tr-cta--gold tr-cta--block" data-submit>
           {form.submitLabel ?? 'Get my valuation'}
         </button>
-        <button type="button" class="tr-back-btn" data-step-back>{form.backLabel ?? 'Back'}</button>
+        <p class="tr-form-error" data-form-error role="alert" hidden></p>
+        <button type="button" class="tr-back-btn" data-step-back="1">{form.backLabel ?? 'Back'}</button>
         {form.noteStep2 && <p class="tr-form-note">{form.noteStep2}</p>}
       </div>
     )}
   </form>
+
+  {/* Replaces the form once the request is stored. Focus moves to the heading
+      so a screen reader announces it rather than falling silent where the
+      submit button used to be. */}
+  <div class="tr-form-done" data-form-done hidden>
+    <p class="tr-form-done__mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+    </p>
+    <h2 class="tr-form-done__title" tabindex="-1" data-done-title>{confirmHeading}</h2>
+    <p class="tr-form-done__body">{confirmBody}</p>
+    <dl class="tr-form-done__ledger">
+      <div><dt>Reference</dt><dd data-done-ref>—</dd></div>
+      <div><dt>Photos received</dt><dd data-done-photos>—</dd></div>
+    </dl>
+    <p class="tr-form-done__note" data-done-skipped hidden></p>
+  </div>
 </div>

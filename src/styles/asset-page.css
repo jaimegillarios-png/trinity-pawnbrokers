@@ -182,18 +182,162 @@
   margin: 0 0 7px;
 }
 .tr-label__opt { text-transform: none; letter-spacing: 0; color: var(--tr-ink-45); }
+/* ---- photos ----
+   The label is the drop target and the button. The input sits inside it,
+   visually hidden rather than `hidden`: the attribute took it out of the tab
+   order, so a keyboard user could reach every field on the form except the
+   one that matters most. Focus shows on the zone instead. */
 .tr-dropzone {
+  position: relative;
+  display: grid;
+  gap: 4px;
   border: 1.5px dashed var(--tr-dashed);
   border-radius: var(--tr-radius);
-  padding: 16px;
+  padding: 18px 16px 16px;
   text-align: center;
-  font: 400 var(--tr-caption) var(--tr-font-body);
-  color: var(--tr-ink-62);
   background: var(--tr-white);
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
-.tr-dropzone:hover { border-color: var(--tr-gold-deep); }
+.tr-dropzone:hover,
+.tr-dropzone.is-over { border-color: var(--tr-gold-deep); background: var(--tr-warm-panel); }
+.tr-dropzone:focus-within { outline: 2px solid var(--tr-gold-deep); outline-offset: 2px; }
+.tr-dropzone.is-full { cursor: default; opacity: 0.55; }
+.tr-dropzone__lead {
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1.3 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
+  text-transform: uppercase;
+  color: var(--tr-green-vault);
+}
+.tr-dropzone__hint { font: 400 var(--tr-caption) var(--tr-font-body); color: var(--tr-ink-62); }
+.tr-dropzone__meta {
+  font: 400 12px/1.4 var(--tr-font-body);
+  color: var(--tr-ink-45);
+  font-variant-numeric: tabular-nums;
+}
+.tr-dropzone__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.tr-photos {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.tr-photos__item { position: relative; margin: 0; }
+.tr-photos__item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--tr-radius);
+  background: var(--tr-neutral);
+}
+.tr-photos__remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(16, 39, 28, 0.78);
+  color: var(--tr-neutral);
+  cursor: pointer;
+}
+.tr-photos__remove svg { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; fill: none; }
+.tr-photos__remove:hover { background: var(--tr-green-vault); }
+.tr-photos__remove:focus-visible { outline: 2px solid var(--tr-gold-bright); outline-offset: 1px; }
+
+/* Off-screen rather than hidden, or bots that skip hidden inputs skip it too. */
+.tr-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.tr-form-error {
+  font: 400 var(--tr-body-sm) var(--tr-font-body);
+  color: var(--tr-alert);
+  border-left: 2px solid var(--tr-alert);
+  padding-left: 12px;
+  margin: 4px 0 0;
+  text-align: left;
+}
+
+/* ---- sent ----
+   Set as the site's ledger — label, figure, hairline — because a reference
+   number is exactly the kind of thing a pawnbroker writes in a book. */
+.tr-form-done { text-align: center; padding: 6px 0 2px; }
+.tr-form-done__mark { margin: 0 auto 18px; width: 52px; height: 52px; }
+.tr-form-done__mark svg {
+  width: 52px;
+  height: 52px;
+  fill: none;
+  stroke: var(--tr-gold-deep);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  border: 1px solid var(--tr-line-gold);
+  border-radius: 50%;
+  padding: 13px;
+  box-sizing: border-box;
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: doneTick 0.7s 0.15s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+@keyframes doneTick { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .tr-form-done__mark svg { animation: none; stroke-dashoffset: 0; }
+}
+.tr-form-done__title {
+  font: 600 var(--tr-h3) var(--tr-font-display);
+  color: var(--tr-green-vault);
+  margin: 0 0 12px;
+  outline: none;
+}
+.tr-form-done__body {
+  font: 400 var(--tr-body-sm) var(--tr-font-body);
+  color: var(--tr-ink-72);
+  margin: 0 auto 22px;
+  max-width: 38ch;
+  text-wrap: pretty;
+}
+.tr-form-done__ledger { margin: 0; text-align: left; border-top: 1px solid var(--tr-line); }
+.tr-form-done__ledger > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--tr-line-soft);
+}
+.tr-form-done__ledger dt {
+  font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-caps-sm-track);
+  text-transform: uppercase;
+  color: var(--tr-ink-62);
+}
+.tr-form-done__ledger dd {
+  margin: 0;
+  font: 500 20px/1.2 var(--tr-font-display);
+  color: var(--tr-green-vault);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+.tr-form-done__note {
+  font: 400 var(--tr-caption) var(--tr-font-body);
+  color: var(--tr-ink-62);
+  margin: 14px 0 0;
+}
 .tr-form-note { font: 400 12.5px/1.6 var(--tr-font-body); color: var(--tr-ink-62); margin: 2px 0 0; text-align: center; text-wrap: pretty; }
 .tr-back-btn {
   font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-body);
@@ -542,3 +686,7 @@
 .rep-card__note { margin: 20px 0 0; color: var(--tr-ink-62); text-wrap: pretty; }
 
 .closing__eyebrow { margin-bottom: 18px; }
+
+/* The no-JavaScript landing page borrows the in-card confirmation. */
+.valuation-received { max-width: 460px; }
+.valuation-received .tr-form-done__title { font-size: var(--tr-h2); }

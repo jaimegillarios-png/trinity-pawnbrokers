@@ -30,9 +30,11 @@ import { product } from './documents/product';
 import { shopPage } from './documents/shopPage';
 import { post } from './documents/post';
 import { blogIndex } from './documents/blogIndex';
+import { valuationRequest } from './documents/valuationRequest';
 
 export const schemaTypes = [
   // documents
+  valuationRequest,
   siteSettings,
   homePage,
   assetPage,

@@ -16,7 +16,10 @@ const types = readdirSync(docsDir)
     const src = readFileSync(resolve(docsDir, f), 'utf8');
     const name = src.match(/name:\s*'([^']+)'/)?.[1];
     assert.ok(name, `${f} has no name`);
-    return { file: f, name, isSingleton: !/name:\s*'slug'/.test(src) };
+    /* Singleton means "opened as one document by single(S, …, type)" in the
+       structure — not "has no slug". A valuation request has no slug and is
+       very much a list, which is what broke the old guess. */
+    return { file: f, name, isSingleton: new RegExp(`single\\(S,[^)]*'${name}'\\)`).test(structure) };
   });
 
 test('every document schema is registered', () => {
