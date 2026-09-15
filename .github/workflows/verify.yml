@@ -21,8 +21,12 @@ jobs:
 
       # The build reads content from Sanity, so it needs the project ID. The
       # dataset is public-readable; no token is required for published content.
+      # routes.mjs is part of the build, not an optional extra: it rewrites
+      # _routes.json so only the API routes reach the Worker. Leaving it out
+      # made CI test a dist that is not the one deployed, and the routing test
+      # rightly failed on the adapter's raw exclude list.
       - name: Build
-        run: npx astro build
+        run: npx astro build && node scripts/routes.mjs
         env:
           PUBLIC_SANITY_PROJECT_ID: ${{ vars.SANITY_PROJECT_ID }}
           PUBLIC_SANITY_DATASET: ${{ vars.SANITY_DATASET }}
