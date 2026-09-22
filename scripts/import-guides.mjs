@@ -28,7 +28,7 @@
  */
 import { createClient } from '@sanity/client';
 import { readFile } from 'node:fs/promises';
-import { resolve, dirname } from 'node:path';
+import { resolve, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -51,6 +51,8 @@ const GUIDES = [
     file: 'Guide to Pawnbroking.md',
     slug: 'pawnbroking',
     order: 1,
+    // Card image on /guides. See images/guides/CREDITS.md.
+    cover: ['images/guides/pawnbroking.jpg', 'A silver magnifying glass on a black surface'],
     from: /^#+\s*H1:/,
     to: /^## Diagrams and imagery/,
     seo: {
@@ -76,6 +78,7 @@ const GUIDES = [
     file: 'Trinity_Copy_Guide_TypesOfGold.md',
     slug: 'types-of-gold',
     order: 2,
+    cover: ['images/guides/types-of-gold.jpg', 'A stack of ornate 22-carat gold bangles'],
     from: /^#+\s*H1:/,
     to: /^# 4\. Notes/,
     seo: {
@@ -367,6 +370,21 @@ const env = Object.fromEntries(
     .map((m) => [m[1], m[2].trim()]),
 );
 
+const client = createClient({
+  projectId: env.PUBLIC_SANITY_PROJECT_ID,
+  dataset: env.PUBLIC_SANITY_DATASET || 'production',
+  apiVersion: '2024-10-01',
+  token: env.SANITY_API_WRITE_TOKEN,
+  useCdn: false,
+});
+
+/** Uploads a local image (Sanity dedupes by content) and returns the field. */
+async function image([relPath, alt]) {
+  if (DRY) return { _type: 'image', alt, asset: { _type: 'reference', _ref: 'image-DRYRUN' } };
+  const asset = await client.assets.upload('image', await readFile(resolve(root, relPath)), { filename: basename(relPath) });
+  return { _type: 'image', alt, asset: { _type: 'reference', _ref: asset._id } };
+}
+
 const docs = [];
 for (const guide of GUIDES) {
   const md = await readFile(resolve(SOURCE, guide.file), 'utf8').catch(() => null);
@@ -382,6 +400,7 @@ for (const guide of GUIDES) {
     order: guide.order,
     standfirst: p.standfirst,
     summary: guide.summary,
+    ...(guide.cover ? { coverImage: await image(guide.cover) } : {}),
     body: p.body,
     signature: p.signature,
     sources: p.sources,
@@ -404,13 +423,6 @@ if (DRY) {
   console.log('\n--dry-run: nothing written.');
   if (process.argv.includes('--print')) console.log(JSON.stringify(docs, null, 2));
 } else {
-  const client = createClient({
-    projectId: env.PUBLIC_SANITY_PROJECT_ID,
-    dataset: env.PUBLIC_SANITY_DATASET || 'production',
-    apiVersion: '2024-10-01',
-    token: env.SANITY_API_WRITE_TOKEN,
-    useCdn: false,
-  });
   const tx = client.transaction().createOrReplace(INDEX);
   for (const d of docs) tx.createOrReplace(d);
   await tx.commit();

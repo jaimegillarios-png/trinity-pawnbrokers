@@ -5,6 +5,7 @@ import ClosingBand from '../../components/ClosingBand.astro';
 import { getGuides, getGuidesIndex, getSiteSettings } from '../../lib/sanity/queries';
 import { breadcrumbSchema } from '../../lib/seo';
 import { readingMinutes } from '../../lib/guides';
+import { urlFor, croppedSrcSetFor } from '../../lib/sanity/image';
 
 const [guides, index, site] = await Promise.all([getGuides(), getGuidesIndex(), getSiteSettings()]);
 const origin = Astro.site?.origin ?? '';
@@ -53,11 +54,29 @@ const schemas = [
         {guides.map((guide) => (
           <li class="guide-card">
             <a href={`/guides/${guide.slug}`} class="guide-card__link">
-              <p class="guide-card__meta">{readingMinutes(guide.body)} min read</p>
-              <h2 class="guide-card__title">{guide.title}</h2>
-              {/* The description written for this page, not the article's opening. */}
-              <p class="guide-card__summary">{guide.summary ?? guide.standfirst}</p>
-              <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
+              {guide.coverImage?.asset && (
+                <span class="guide-card__media">
+                  {/* Cropped to the frame's 3:2 at every width, so the srcset
+                      and the CSS agree on what is shown. */}
+                  <img
+                    src={urlFor(guide.coverImage).width(800).height(533).fit('crop').url()}
+                    srcset={croppedSrcSetFor(guide.coverImage, 3 / 2, [480, 800, 1200])}
+                    sizes="(max-width: 760px) 100vw, 50vw"
+                    alt=""
+                    width="800"
+                    height="533"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </span>
+              )}
+              <span class="guide-card__body">
+                <span class="guide-card__meta">{readingMinutes(guide.body)} min read</span>
+                <h2 class="guide-card__title">{guide.title}</h2>
+                {/* The description written for this page, not the article's opening. */}
+                <span class="guide-card__summary">{guide.summary ?? guide.standfirst}</span>
+                <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
+              </span>
             </a>
           </li>
         ))}
