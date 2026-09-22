@@ -1,0 +1,9 @@
+---
+import { PortableText } from 'astro-portabletext';
+/* "verbatim" is the compliance box: wording set elsewhere and shown word for
+   word, so it is set apart in its own box. */
+const { node } = Astro.props as { node: { tone?: string; body?: unknown[] } };
+---
+<aside class={`guide-callout guide-callout--${node.tone === 'verbatim' ? 'verbatim' : 'highlight'}`}>
+  <PortableText value={(node.body ?? []) as any} />
+</aside>

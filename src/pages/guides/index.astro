@@ -19,7 +19,15 @@ const schemas = [
     '@type': 'CollectionPage',
     name: index?.title ?? 'Guides',
     url: `${origin}/guides`,
-    hasPart: guides.map((g) => ({ '@type': 'Article', headline: g.title, url: `${origin}/guides/${g.slug}` })),
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: guides.map((g, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${origin}/guides/${g.slug}`,
+        name: g.title,
+      })),
+    },
   },
   breadcrumbSchema([
     { name: 'Home', url: `${origin}/` },
@@ -45,12 +53,20 @@ const schemas = [
           <li class="guide-entry">
             <a href={`/guides/${guide.slug}`} class="guide-entry__link">
               <h2 class="guide-entry__title">{guide.title}</h2>
-              <p class="guide-entry__standfirst">{guide.standfirst}</p>
+              {/* The description written for this page, not the article's opening. */}
+              <p class="guide-entry__standfirst">{guide.summary ?? guide.standfirst}</p>
               <p class="guide-entry__meta">{readingMinutes(guide.body)} min read <span aria-hidden="true">→</span></p>
             </a>
           </li>
         ))}
       </ol>
     )}
+
+    <div class="guides-foot">
+      {index?.cta?.label && index.cta.href && (
+        <a class="tr-cta tr-cta--gold" href={index.cta.href}>{index.cta.label}</a>
+      )}
+      <a class="guides-foot__journal" href="/blog">Read the blog →</a>
+    </div>
   </section>
 </Base>

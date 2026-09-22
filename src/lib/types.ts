@@ -314,11 +314,16 @@ export interface Guide {
   slug: string;
   order?: number;
   standfirst: string;
+  /** The guides-page description, written to stand alone. */
+  summary?: string;
   /** ISO date. What matters to a reader of a guide is whether it is still right. */
   lastReviewed?: string;
   coverImage?: SanityImage;
-  relatedAssets?: Array<{ title: string; slug: string; nounPlural: string }>;
   body: unknown[];
+  signature?: string;
+  sources?: Array<{ label: string; href?: string }>;
+  closing?: string;
+  cta?: { label?: string; href?: string };
   seo?: Seo;
 }
 
@@ -326,5 +331,6 @@ export interface GuidesIndex {
   eyebrow?: string;
   title: string;
   standfirst?: string;
+  cta?: { label?: string; href?: string };
   seo: Seo;
 }

@@ -332,10 +332,14 @@ const GUIDE = `{
   "slug": slug.current,
   order,
   standfirst,
+  summary,
   lastReviewed,
   coverImage ${IMAGE},
-  relatedAssets[]->{ title, "slug": slug.current, nounPlural },
   body,
+  signature,
+  sources[]{ label, href },
+  closing,
+  cta,
   ${SEO}
 }`;
 
@@ -344,4 +348,4 @@ export const getGuides = () =>
   query<Guide[]>(`*[_type == "guide" && defined(slug.current)] | order(order asc, title asc) ${GUIDE}`);
 
 export const getGuidesIndex = () =>
-  query<GuidesIndex | null>(`*[_type == "guidesIndex"][0]{ eyebrow, title, standfirst, ${SEO} }`);
+  query<GuidesIndex | null>(`*[_type == "guidesIndex"][0]{ eyebrow, title, standfirst, cta, ${SEO} }`);

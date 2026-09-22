@@ -1,7 +1,7 @@
 ---
-/* A section heading carrying the anchor lib/guides.ts stamped on it, so the
-   contents list can link here. The id comes from the node, not from anything
-   computed in this component, which is what keeps the two in step. */
-const { node } = Astro.props as { node: { anchor?: string } };
+/* h2 and h3 both carry the anchor withContents() stamped on them, so every
+   section and sub-section can be linked to directly. */
+const { node } = Astro.props as { node: { anchor?: string; style?: string } };
+const Tag = node.style === 'h3' ? 'h3' : 'h2';
 ---
-<h2 id={node.anchor} class="guide-section"><slot /></h2>
+<Tag id={node.anchor} class={Tag === 'h2' ? 'guide-section' : 'guide-subsection'}><slot /></Tag>

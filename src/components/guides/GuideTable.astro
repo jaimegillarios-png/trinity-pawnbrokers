@@ -1,0 +1,25 @@
+---
+/* A real <table>, first row as headings, in its own scroller so a wide table
+   scrolls sideways on a phone instead of squeezing or pushing the page. */
+type Cell = { text?: string; href?: string };
+const { node } = Astro.props as { node: { caption?: string; rows?: Array<{ cells?: Cell[] }> } };
+const [head, ...rows] = node.rows ?? [];
+---
+<div class="guide-table" role="region" aria-label={node.caption || 'Table'} tabindex="0">
+  <table>
+    {node.caption && <caption class="sr-only">{node.caption}</caption>}
+    {head && (
+      <thead><tr>{(head.cells ?? []).map((c) => <th scope="col">{c.text}</th>)}</tr></thead>
+    )}
+    <tbody>
+      {rows.map((row) => (
+        <tr>
+          {(row.cells ?? []).map((c, i) => {
+            const content = c.href ? <a href={c.href}>{c.text}</a> : c.text;
+            return i === 0 ? <th scope="row">{content}</th> : <td>{content}</td>;
+          })}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

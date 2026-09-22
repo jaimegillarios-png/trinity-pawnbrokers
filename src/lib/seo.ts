@@ -8,7 +8,11 @@ import { urlFor } from './sanity/image';
  */
 export function pageTitle(seo: Seo, site: SiteSettings): string {
   const brand = site.name;
-  return seo.title.includes(brand) ? seo.title : `${seo.title} | ${brand}`;
+  // "… | Trinity" counts as branded: the guide titles are written to a
+  // character count with the short name, and must not gain a second suffix.
+  const short = brand.split(' ')[0];
+  const branded = seo.title.includes(brand) || seo.title.trimEnd().endsWith(`| ${short}`);
+  return branded ? seo.title : `${seo.title} | ${brand}`;
 }
 
 export function canonical(pathname: string, origin: string): string {

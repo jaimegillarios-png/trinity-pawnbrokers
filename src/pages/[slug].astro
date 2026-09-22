@@ -12,6 +12,8 @@ import type { AssetPage, LegalPage, SiteSettings } from '../lib/types';
  * than two dynamic routes colliding at the same path depth.
  */
 export async function getStaticPaths() {
+  // getStaticPaths runs in isolation, so this has to live inside it.
+  const RETIRED = new Set(['trust-and-security']);
   const [assets, legals, site] = await Promise.all([
     getAssetPages(),
     getLegalPages(),
@@ -20,7 +22,12 @@ export async function getStaticPaths() {
 
   return [
     ...assets.map((page) => ({ params: { slug: page.slug }, props: { kind: 'asset' as const, page, site } })),
-    ...legals.map((page) => ({ params: { slug: page.slug }, props: { kind: 'legal' as const, page, site } })),
+    ...legals
+      /* Retired (Stephano, 22 Sep): /trust-and-security now 301s to
+         /how-it-works — see public/_redirects. Not built, so no stale page
+         sits behind the redirect. */
+      .filter((page) => !RETIRED.has(page.slug))
+      .map((page) => ({ params: { slug: page.slug }, props: { kind: 'legal' as const, page, site } })),
   ];
 }
 

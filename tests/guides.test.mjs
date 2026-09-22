@@ -40,3 +40,59 @@ test('bracketed placeholders reach the page untouched', () => {
     assert.ok(!/\]\(/.test(body), `${slug}: raw markdown link syntax on the page`);
   }
 });
+
+test('both launch guides are built', () => {
+  for (const slug of ['pawnbroking', 'types-of-gold']) page(`guides/${slug}`);
+});
+
+test('unconfirmed figures are shown exactly as written', () => {
+  const t = text(page('guides/pawnbroking'));
+  for (const placeholder of ['[80%]', '[CONFIRM]', '[£25,000]', '[£500]', '[ROLE]', '[DATE]', '[741896]',
+    '[COMPLIANCE-APPROVED REPRESENTATIVE EXAMPLE, VERBATIM]']) {
+    assert.ok(t.includes(placeholder), `pawnbroking guide has lost ${placeholder}`);
+  }
+});
+
+test('notes meant for us never reach the page', () => {
+  const t = text(page('guides/pawnbroking'));
+  for (const note of ['This paragraph does more work', 'Box this', 'Do not soften it', 'callout treatment']) {
+    assert.ok(!t.includes(note), `a note is on the page: "${note}"`);
+  }
+  assert.ok(!text(page('guides/types-of-gold')).includes('The 916.6 is deliberate'));
+});
+
+test('each guide has one call to action, at the foot after the sources', () => {
+  for (const slug of guideSlugs()) {
+    const html = page(`guides/${slug}`);
+    const article = html.slice(html.indexOf('<article'), html.indexOf('</article>'));
+    assert.equal((article.match(/class="tr-cta/g) || []).length, 1, `${slug}: CTA count`);
+    assert.ok(article.indexOf('class="tr-cta') > article.indexOf('guide-sources'), `${slug}: CTA is above the sources`);
+  }
+});
+
+test('quick answers are in the page on load and match the FAQPage schema', () => {
+  for (const slug of guideSlugs()) {
+    const html = page(`guides/${slug}`);
+    const faq = structuredData(html).find((d) => d['@type'] === 'FAQPage');
+    assert.ok(faq, `${slug}: no FAQPage`);
+    // Stripping a link's tags leaves a space before the next full stop.
+    // Entities are decoded so an apostrophe compares as an apostrophe.
+    const norm = (s) => s
+      .replace(/&#39;|&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&')
+      .replace(/\s+([.,;:?])/g, '$1');
+    const t = norm(text(html));
+    for (const q of faq.mainEntity) {
+      assert.ok(t.includes(norm(q.name)), `${slug}: question not on the page: ${q.name}`);
+      assert.ok(t.includes(norm(q.acceptedAnswer.text)), `${slug}: answer differs from the page: ${q.name}`);
+    }
+  }
+});
+
+test('every h2 and h3 in a guide has an anchor', () => {
+  for (const slug of guideSlugs()) {
+    const html = page(`guides/${slug}`);
+    const prose = html.slice(html.indexOf('guide-prose'), html.indexOf('guide-end'));
+    const bare = prose.match(/<h[23](?![^>]*\bid=)[^>]*>/g) || [];
+    assert.deepEqual(bare, [], `${slug}: headings without an id`);
+  }
+});

@@ -42,7 +42,7 @@
    than the width of a title. */
 .guide-entry__link {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr) auto;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr) 7.5em;
   gap: 8px 48px;
   align-items: baseline;
   padding: 34px 0;
@@ -70,6 +70,7 @@
   color: var(--tr-ink-45);
   margin: 0;
   white-space: nowrap;
+  text-align: right;
   font-variant-numeric: tabular-nums;
 }
 .guide-entry__meta span { display: inline-block; transition: transform 0.25s ease; }
@@ -129,7 +130,9 @@
   gap: 72px;
   align-items: start;
 }
-.guide-prose { padding: 44px 0 0; }
+/* The brief sets the body at about 680px: room for a four-column table
+   without breaking the measure much for running text. */
+.tr-prose.guide-prose { padding: 44px 0 0; max-width: 680px; }
 
 /* A jump to a section should land with the heading visible, not tucked under
    the masthead as it slides back in. */
@@ -182,47 +185,158 @@
 }
 .guide-contents__list a[aria-current='true']::before { color: var(--tr-gold-deep); }
 
-/* ---------- end of a guide ---------- */
-.guide-related,
-.guide-foot {
-  max-width: var(--tr-container);
-  margin: 0 auto;
-  padding: 0 var(--tr-pad-side);
+/* ---------- inside a guide ---------- */
+.guide-subsection { scroll-margin-top: 110px; }
+.guide-prose .guide-subsection { margin-top: 36px; }
+.guide-prose p.small,
+.guide-prose .small { font-size: var(--tr-caption); color: var(--tr-ink-62); }
+
+/* Tables: real tables, ruled rather than boxed, scrolling sideways on a phone
+   instead of crushing their columns. */
+.guide-table {
+  margin-top: 28px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
-.guide-body--with-contents ~ .guide-related,
-.guide-body--with-contents ~ .guide-foot { padding-left: calc(var(--tr-pad-side) + 240px + 72px); }
-.guide-related { margin-top: 56px; }
-.guide-related__label {
+.guide-table:focus-visible { outline: 2px solid var(--tr-gold-deep); outline-offset: 4px; }
+.guide-table caption {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+.guide-table table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  font: 400 var(--tr-body-sm) / 1.5 var(--tr-font-body);
+  font-variant-numeric: tabular-nums;
+}
+.guide-table thead th {
+  font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1.4 var(--tr-font-caps);
+  letter-spacing: var(--tr-caps-sm-track);
+  text-transform: uppercase;
+  color: var(--tr-ink-62);
+  text-align: left;
+  vertical-align: bottom;
+  padding: 0 16px 12px 0;
+  border-bottom: 1px solid var(--tr-line-strong);
+}
+.guide-table tbody th,
+.guide-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 13px 16px 13px 0;
+  border-bottom: 1px solid var(--tr-line-soft);
+  color: var(--tr-ink-80);
+}
+.guide-table tbody th { font-weight: 600; color: var(--tr-green-vault); }
+.guide-table a { color: var(--tr-green-vault); }
+
+/* The passages the brief singles out: a fact to remember, a checklist worth a
+   screenshot. A gold rule and a faint panel, nothing louder. */
+.guide-callout {
+  margin-top: 28px;
+  padding: 24px 28px;
+  background: var(--tr-warm-panel);
+  border-left: 2px solid var(--tr-gold-deep);
+}
+.guide-callout > * { margin: 0; }
+.guide-callout > * + * { margin-top: 14px; }
+.guide-callout p,
+.guide-callout li { color: var(--tr-ink); }
+.guide-callout ol,
+.guide-callout ul { padding-left: 22px; margin: 14px 0 0; }
+.guide-callout li + li { margin-top: 10px; }
+/* Compliance wording: boxed and set apart from the running text, so the
+   approved wording reads as one fixed block. */
+.guide-callout--verbatim {
+  background: none;
+  border: 1px solid var(--tr-line-strong);
+}
+
+/* Quick answers — folded, but every answer is in the page from the start. */
+.guide-faq { margin-top: 20px; border-top: 1px solid var(--tr-line); }
+.guide-faq__item { border-bottom: 1px solid var(--tr-line-soft); }
+.guide-faq__q {
+  list-style: none;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  padding: 18px 0;
+  font: 500 var(--tr-h4) var(--tr-font-display);
+  color: var(--tr-green-vault);
+}
+.guide-faq__q::-webkit-details-marker { display: none; }
+.guide-faq__q::after { content: '+'; color: var(--tr-gold-deep); font: 400 20px/1 var(--tr-font-body); }
+.guide-faq__item[open] .guide-faq__q::after { content: '−'; }
+.guide-faq__q:hover { color: var(--tr-gold-deep); }
+.guide-faq__q:focus-visible { outline: 2px solid var(--tr-gold-deep); outline-offset: 2px; }
+.guide-faq__a { padding: 0 0 20px; }
+.guide-faq__a p { margin: 0; }
+
+/* ---------- end of a guide ---------- */
+.guide-main { min-width: 0; }
+.guide-end {
+  margin-top: 64px;
+  padding: 40px 0 var(--tr-section-bottom);
+  border-top: 1px solid var(--tr-line-soft);
+  max-width: 680px;
+}
+.guide-end__signature {
+  font: 400 var(--tr-body-sm) var(--tr-font-body);
+  color: var(--tr-ink-62);
+  margin: 0;
+}
+.guide-sources { margin-top: 36px; }
+.guide-sources__title {
   font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1 var(--tr-font-caps);
   letter-spacing: var(--tr-caps-sm-track);
   text-transform: uppercase;
   color: var(--tr-ink-62);
-  margin: 0 0 12px;
+  margin: 0 0 14px;
 }
-.guide-related ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--tr-line-soft); }
-.guide-related li { border-bottom: 1px solid var(--tr-line-soft); }
-.guide-related a {
-  display: block;
-  padding: 14px 0;
-  font: 500 var(--tr-h4) var(--tr-font-display);
-  color: var(--tr-green-vault);
-  text-decoration: none;
+.guide-sources ul { margin: 0; padding-left: 18px; }
+.guide-sources li {
+  font: 400 var(--tr-body-sm) / 1.55 var(--tr-font-body);
+  color: var(--tr-ink-72);
 }
-.guide-related a:hover { color: var(--tr-gold-deep); }
-.guide-foot { padding-top: 48px; padding-bottom: var(--tr-section-bottom); }
-.guide-foot a {
+.guide-sources li + li { margin-top: 6px; }
+.guide-sources li::marker { color: var(--tr-gold-deep); }
+.guide-sources a { color: var(--tr-green-vault); text-underline-offset: 3px; }
+.guide-close {
+  margin-top: 48px;
+  padding-top: 36px;
+  border-top: 1px solid var(--tr-line-soft);
+}
+.guide-close p {
+  font: 400 var(--tr-body) var(--tr-font-body);
+  color: var(--tr-ink-80);
+  margin: 0 0 14px;
+  max-width: 60ch;
+}
+.guide-close .tr-cta { margin-top: 14px; }
+
+/* Hub foot: one quiet call to action and the way through to the journal. */
+.guides-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px 32px;
+  margin-top: 48px;
+}
+.guides-foot__journal {
   font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-caps);
   letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
   color: var(--tr-ink-62);
   text-decoration: none;
 }
-.guide-foot a:hover { color: var(--tr-green-vault); }
+.guides-foot__journal:hover { color: var(--tr-green-vault); }
 
 /* ---------- narrow ---------- */
 @media (max-width: 900px) {
   .guides-head__inner { padding: 56px var(--tr-pad-side) 32px; }
   .guide-entry__link { grid-template-columns: minmax(0, 1fr); padding: 26px 0; }
+  .guide-entry__meta { text-align: left; }
 
   .guide-head { padding: 48px var(--tr-pad-side) 32px; }
   .guide-body--with-contents { grid-template-columns: minmax(0, 1fr); gap: 0; }
@@ -241,7 +355,7 @@
   .guide-contents__label::after { content: '+'; font-size: 16px; color: var(--tr-gold-deep); }
   .guide-contents__details[open] .guide-contents__label::after { content: '−'; }
   .guide-contents__details[open] .guide-contents__label { margin-bottom: 14px; }
-  .guide-prose { padding-top: 32px; }
-  .guide-body--with-contents ~ .guide-related,
-  .guide-body--with-contents ~ .guide-foot { padding-left: var(--tr-pad-side); }
+  .tr-prose.guide-prose { padding-top: 32px; }
+  .guide-callout { padding: 20px; }
+  .guide-end { margin-top: 48px; }
 }

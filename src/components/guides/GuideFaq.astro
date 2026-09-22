@@ -1,0 +1,15 @@
+---
+import { PortableText } from 'astro-portabletext';
+/* Native <details>: every answer is in the HTML on load, only folded — so it
+   is read by search engines and works with no JavaScript. */
+type QA = { _key?: string; question?: string; answer?: unknown[] };
+const { node } = Astro.props as { node: { items?: QA[] } };
+---
+<div class="guide-faq">
+  {(node.items ?? []).map((qa) => (
+    <details class="guide-faq__item">
+      <summary class="guide-faq__q">{qa.question}</summary>
+      <div class="guide-faq__a"><PortableText value={(qa.answer ?? []) as any} /></div>
+    </details>
+  ))}
+</div>

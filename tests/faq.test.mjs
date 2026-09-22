@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { page, text, count, structuredData, ASSET_SLUGS } from './helpers.mjs';
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { dist, page, text, count, structuredData, ASSET_SLUGS } from './helpers.mjs';
 
 const faq = () => page('faq');
 
@@ -49,12 +51,10 @@ test('answers carry the figures they were sourced with', () => {
   }
 });
 
-test('trust and security is empty on purpose and says so', () => {
-  const html = page('trust-and-security');
-  assert.match(text(html), /not written yet/i, 'the placeholder wording has gone');
-  assert.match(html, /name="robots" content="noindex/, 'an unwritten page must not be indexed');
-  // It has to point somewhere useful — the masthead links to it.
-  assert.match(html, /href="\/faq"/, 'no route out of the empty page');
+test('trust and security is retired and redirects to how it works', () => {
+  assert.ok(!existsSync(resolve(dist, 'trust-and-security', 'index.html')), 'the retired page is still built');
+  const redirects = readFileSync(resolve(dist, '_redirects'), 'utf8');
+  assert.match(redirects, /^\/trust-and-security\s+\/how-it-works\s+301$/m);
 });
 
 test('the closing band is styled on every page that uses it', () => {

@@ -488,7 +488,7 @@ async function buildAboutPage() {
         '*Trinity Pawnbrokers* receives, values and safeguards your item. *Unbolted* funds the loan against it.',
       note:
         'One firm stands behind both: Open Access Finance Ltd, authorised and regulated by the Financial Conduct Authority under reference 741896. Trinity is the counter and the strongroom; Unbolted is the capital and the permission to lend. You deal with Trinity from the valuation to the moment your item comes home.',
-      cta: { _type: 'cta', label: 'How your item is protected →', href: '/trust-and-security' },
+      cta: { _type: 'cta', label: 'How your item is protected →', href: '/how-it-works' },
       // Sourced rather than reused. Every photograph already in the repo is
       // one of the seven category product shots — each stored under three or
       // four paths (images/cards, images/hero, images/v2, images/v4), so the
