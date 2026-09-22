@@ -8,7 +8,16 @@ export const dist = resolve(root, 'dist');
 /** Every item page. Kept explicit so a page silently disappearing is a failure. */
 export const ASSET_SLUGS = [
   'gold', 'watches', 'jewellery', 'diamonds', 'fine-art', 'handbags', 'silver',
+  'classic-cars', 'wine', 'musical-instruments',
 ];
+
+/** The seven that were migrated from the hand-built site, and have a source
+ *  content file in legacy/src/content as the record of what was moved. The
+ *  three added later were written straight into Sanity. */
+export const MIGRATED_SLUGS = ASSET_SLUGS.slice(0, 7);
+
+/** Item pages written after the migration, as first drafts awaiting review. */
+export const DRAFT_SLUGS = ['classic-cars', 'wine', 'musical-instruments'];
 
 export function home() {
   return readFileSync(resolve(dist, 'index.html'), 'utf8');

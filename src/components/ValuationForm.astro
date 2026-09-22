@@ -51,7 +51,10 @@ const stepLabels = { 1: form.stepOneLabel ?? 'Step 1 of 2', 2: form.stepTwoLabel
                   {f.optional && <span class="tr-label__opt">(optional)</span>}
                 </label>
                 {f.type === 'select' ? (
-                  <select id={f.id} name={f.id}>
+                  <select id={f.id} name={f.id} required={!f.optional}>
+                    {/* A blank start, so a skipped question is sent as nothing
+                        rather than as whatever happens to be listed first. */}
+                    <option value="" selected disabled={!f.optional}>Choose one</option>
                     {(f.options ?? []).map((o) => <option>{o}</option>)}
                   </select>
                 ) : (
@@ -115,7 +118,8 @@ const stepLabels = { 1: form.stepOneLabel ?? 'Step 1 of 2', 2: form.stepTwoLabel
                     {f.optional && <span class="tr-label__opt">(optional)</span>}
                   </label>
                   {f.type === 'select' ? (
-                    <select id={f.id} name={f.id}>
+                    <select id={f.id} name={f.id} required={!f.optional}>
+                      <option value="" selected disabled={!f.optional}>Choose one</option>
                       {(f.options ?? []).map((o) => <option>{o}</option>)}
                     </select>
                   ) : (

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { page, home, ASSET_SLUGS, root, count } from './helpers.mjs';
+import { page, home, ASSET_SLUGS, MIGRATED_SLUGS, root, count } from './helpers.mjs';
 
 /**
  * The migration is one-way, so the source content files stay the record of
@@ -19,10 +19,10 @@ async function source(slug) {
 
 test('the source content files still exist as the migration record', () => {
   const files = readdirSync(CONTENT).filter((f) => f.endsWith('.js'));
-  assert.equal(files.length, ASSET_SLUGS.length);
+  assert.equal(files.length, MIGRATED_SLUGS.length);
 });
 
-for (const slug of ASSET_SLUGS) {
+for (const slug of MIGRATED_SLUGS) {
   test(`${slug}: every compliance marker survives`, async () => {
     const c = await source(slug);
     const html = page(slug);

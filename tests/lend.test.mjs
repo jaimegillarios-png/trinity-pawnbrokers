@@ -8,9 +8,9 @@ const lend = () => page('what-we-lend-against');
 
 test('the hub lists every item page, and links to each', () => {
   const html = lend();
-  // Seven categories plus the overflow card, which fills the eighth cell of
-  // the two-up grid rather than leaving an orphan.
-  assert.equal(count(html, /class="lend-item"/g), 7, 'expected all seven categories');
+  // Every category plus the overflow card, which spans the last row of the
+  // two-up grid rather than sitting in it as an orphan.
+  assert.equal(count(html, /class="lend-item"/g), ASSET_SLUGS.length, 'expected every category');
   assert.equal(count(html, /class="lend-item lend-item--other"/g), 1, 'no overflow card');
   for (const slug of ASSET_SLUGS) {
     assert.ok(html.includes(`href="/${slug}"`), `no link to /${slug}`);
@@ -38,15 +38,15 @@ test('the four tests are stated', () => {
   }
 });
 
-test('the seven are published as an ordered ItemList', () => {
+test('the categories are published as an ordered ItemList', () => {
   const cp = structuredData(lend()).find((b) => b['@type'] === 'CollectionPage');
   assert.ok(cp, 'no CollectionPage block');
   const list = cp.mainEntity;
   assert.equal(list['@type'], 'ItemList');
-  assert.equal(list.itemListElement.length, 7);
+  assert.equal(list.itemListElement.length, ASSET_SLUGS.length);
   assert.deepEqual(
     list.itemListElement.map((e) => e.position),
-    [1, 2, 3, 4, 5, 6, 7],
+    ASSET_SLUGS.map((_, i) => i + 1),
     'the list positions are not sequential',
   );
 });

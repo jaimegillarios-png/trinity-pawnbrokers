@@ -113,13 +113,16 @@
 .lend-item__link:hover { color: var(--tr-green-vault); }
 
 /* ---- the eighth cell ---- */
+/* After ten items it would sit alone in the last row; across the full width
+   it reads as the close of the list, not a missing card. */
+.lend-item--other { grid-column: 1 / -1; }
 .lend-item--other {
   background: var(--tr-green-vault);
   color: var(--tr-neutral);
   padding: 40px 38px 38px;
 }
 .lend-item--other .lend-item__title { color: var(--tr-neutral); }
-.lend-item--other .lend-item__teaser { color: var(--tr-on-green-strong); }
+.lend-item--other .lend-item__teaser { color: var(--tr-on-green-strong); max-width: 64ch; }
 .lend-item--other .lend-item__link { color: var(--tr-gold-bright); }
 .lend-item--other .lend-item__link:hover { color: var(--tr-neutral); }
 

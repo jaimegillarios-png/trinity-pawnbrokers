@@ -54,6 +54,17 @@
       var back = e.target.closest('[data-step-back]');
       if (!next && !back) return;
       e.preventDefault();
+      // Going forward, the questions on this step have to be answered first —
+      // the browser only checks required fields on submit, and by then this
+      // step is hidden and disabled, so it would never be checked at all.
+      if (next) {
+        var pane = next.closest('[data-step]');
+        var invalid = pane && Array.prototype.find.call(
+          pane.querySelectorAll('input, select, textarea'),
+          function (el) { return !el.disabled && !el.checkValidity(); }
+        );
+        if (invalid) { invalid.reportValidity(); invalid.focus(); return; }
+      }
       show(next ? next.getAttribute('data-step-next') : back.getAttribute('data-step-back'),
            next ? 'next' : 'back');
       root.scrollIntoView({ block: 'nearest', behavior: 'smooth' });

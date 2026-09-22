@@ -248,6 +248,11 @@
   text-transform: uppercase;
   color: var(--tr-gold-deep);
 }
+/* Ten items and this card make eleven cells; two cells wide, it closes the
+   last row at four across and at two. On one column it is just a row. */
+@media (min-width: 621px) {
+  .ix-dark { grid-column: span 2; }
+}
 .ix-dark {
   display: flex;
   flex-direction: column;

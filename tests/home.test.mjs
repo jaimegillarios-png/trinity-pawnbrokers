@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { dist, home, count } from './helpers.mjs';
+import { dist, home, count, ASSET_SLUGS } from './helpers.mjs';
 
 test('the homepage is built', () => {
   assert.ok(existsSync(resolve(dist, 'index.html')));
@@ -46,10 +46,11 @@ test('the trust strip sits inside the hero', () => {
 
 test('all seven items appear in the grid, each with a teaser', () => {
   const html = home();
-  assert.equal(count(html, /class="ix-card"/g), 7, 'wrong number of item cards');
-  assert.equal(count(html, /class="ix-card__teaser"/g), 7, 'an item is missing its teaser');
-  assert.equal(count(html, /class="ix-card__more"/g), 7, 'an item is missing its call to action');
-  for (const slug of ['gold', 'watches', 'jewellery', 'diamonds', 'fine-art', 'handbags', 'silver']) {
+  const n = ASSET_SLUGS.length;
+  assert.equal(count(html, /class="ix-card"/g), n, 'wrong number of item cards');
+  assert.equal(count(html, /class="ix-card__teaser"/g), n, 'an item is missing its teaser');
+  assert.equal(count(html, /class="ix-card__more"/g), n, 'an item is missing its call to action');
+  for (const slug of ASSET_SLUGS) {
     assert.match(html, new RegExp(`href="/${slug}"`), `no link to /${slug}`);
   }
 });
