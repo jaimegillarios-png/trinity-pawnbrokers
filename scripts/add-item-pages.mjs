@@ -335,7 +335,7 @@ const pages = [
     title: 'Musical instruments',
     nounSingular: 'instrument',
     nounPlural: 'musical instruments',
-    card: ['images/items/musical-instruments-card.jpg', 'A vintage sunburst electric guitar in warm light'],
+    card: ['images/items/musical-instruments-card.jpg', 'The f-holes and bridge of a cello, close up'],
     heroImg: ['images/items/musical-instruments-hero.jpg', 'The f-holes and bridge of a cello, close up'],
     cardTeaser: 'Fine stringed instruments, bows and vintage guitars.',
     hero: {
