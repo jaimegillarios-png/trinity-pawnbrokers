@@ -147,8 +147,8 @@ const pages = [
     title: 'Classic cars',
     nounSingular: 'car',
     nounPlural: 'classic cars',
-    card: ['images/items/classic-cars-card.jpg', 'A classic saloon in a dark garage'],
-    heroImg: ['images/items/classic-cars-hero.jpg', 'A classic car in low light'],
+    card: ['images/items/classic-cars-card.jpg', 'The wooden steering wheel and dials of a classic car'],
+    heroImg: ['images/items/classic-cars-hero.jpg', 'The cockpit of a classic car, wooden wheel and chrome dials'],
     cardTeaser: 'Classic and collectable cars — kept in secure storage, not on a logbook.',
     hero: {
       eyebrow: 'Pawn loans against classic cars · City of London · Est. 2013',
@@ -335,8 +335,8 @@ const pages = [
     title: 'Musical instruments',
     nounSingular: 'instrument',
     nounPlural: 'musical instruments',
-    card: ['images/items/musical-instruments-card.jpg', 'A violin and bow on a dark background'],
-    heroImg: ['images/items/musical-instruments-hero.jpg', 'Detail of a violin in low light'],
+    card: ['images/items/musical-instruments-card.jpg', 'A vintage sunburst electric guitar in warm light'],
+    heroImg: ['images/items/musical-instruments-hero.jpg', 'The f-holes and bridge of a cello, close up'],
     cardTeaser: 'Fine stringed instruments, bows and vintage guitars.',
     hero: {
       eyebrow: 'Pawn loans against fine instruments · City of London · Est. 2013',
