@@ -11,6 +11,7 @@ import ClosingBand from '../../components/ClosingBand.astro';
 import { getGuides, getGuidesIndex, getSiteSettings } from '../../lib/sanity/queries';
 import { breadcrumbSchema } from '../../lib/seo';
 import { withContents, readingMinutes, faqEntries } from '../../lib/guides';
+import { urlFor, croppedSrcSetFor } from '../../lib/sanity/image';
 
 export async function getStaticPaths() {
   const [guides, index, site] = await Promise.all([getGuides(), getGuidesIndex(), getSiteSettings()]);
@@ -31,7 +32,10 @@ const reviewed = guide.lastReviewed
   ? new Date(guide.lastReviewed).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
   : null;
 
-const seo = guide.seo?.title ? guide.seo : { title: `${guide.title} | Trinity Pawnbrokers`, description: guide.standfirst };
+const baseSeo = guide.seo?.title ? guide.seo : { title: `${guide.title} | Trinity Pawnbrokers`, description: guide.standfirst };
+/* The cover doubles as the share image unless one was set on purpose. */
+const seo = { ...baseSeo, ogImage: baseSeo.ogImage ?? (guide.coverImage?.asset ? guide.coverImage : undefined) };
+const cover = guide.coverImage?.asset ? guide.coverImage : null;
 
 const schemas = [
   {
@@ -80,6 +84,21 @@ const components = {
         {reviewed && <>Last reviewed <time datetime={guide.lastReviewed}>{reviewed}</time><span aria-hidden="true"> · </span></>}
         {minutes} min read
       </p>
+      {cover && (
+        /* A wide band under the heading, as the blog does with its covers —
+           wide rather than 3:2 because it spans the page, not a column. */
+        <img
+          class="guide-head__cover"
+          src={urlFor(cover).width(1600).height(640).fit('crop').url()}
+          srcset={croppedSrcSetFor(cover, 2.5, [800, 1200, 1600, 2400])}
+          sizes="(max-width: 1320px) calc(100vw - 48px), 1240px"
+          alt={cover.alt ?? ''}
+          width="1600"
+          height="640"
+          fetchpriority="high"
+          decoding="async"
+        />
+      )}
     </header>
 
     <div class={showContents ? 'guide-body guide-body--with-contents' : 'guide-body'}>

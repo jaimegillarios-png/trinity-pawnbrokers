@@ -159,6 +159,16 @@
   margin: 20px 0 0;
   text-wrap: pretty;
 }
+.guide-head__cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 5 / 2;
+  object-fit: cover;
+  border-radius: var(--tr-radius);
+  margin: 40px 0 0;
+  background: var(--tr-green-vault);
+}
 .guide-head__meta {
   font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1.5 var(--tr-font-caps);
   letter-spacing: var(--tr-caps-sm-track);
@@ -391,6 +401,7 @@
   .guide-card__body { padding: 24px 24px 24px; }
 
   .guide-head { padding: 48px var(--tr-pad-side) 32px; }
+  .guide-head__cover { aspect-ratio: 16 / 9; margin-top: 28px; }
   .guide-body--with-contents { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .guide-contents { position: static; padding-top: 24px; }
   .guide-contents__details {
