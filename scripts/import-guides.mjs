@@ -78,7 +78,7 @@ const GUIDES = [
     file: 'Trinity_Copy_Guide_TypesOfGold.md',
     slug: 'types-of-gold',
     order: 2,
-    cover: ['images/guides/types-of-gold.jpg', 'A stack of ornate 22-carat gold bangles'],
+    cover: ['images/guides/types-of-gold.jpg', 'Gold bars and coins of different shapes on a black surface'],
     from: /^#+\s*H1:/,
     to: /^# 4\. Notes/,
     seo: {
