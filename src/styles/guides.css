@@ -187,7 +187,6 @@
 
 /* ---------- inside a guide ---------- */
 .guide-subsection { scroll-margin-top: 110px; }
-.guide-prose .guide-subsection { margin-top: 36px; }
 .guide-prose p.small,
 .guide-prose .small { font-size: var(--tr-caption); color: var(--tr-ink-62); }
 

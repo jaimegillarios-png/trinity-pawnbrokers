@@ -53,6 +53,19 @@
 .tr-prose h2 + *,
 .tr-prose h3 + * { margin-top: 12px; }
 
+/* Long reads — blog articles and guides — are scanned by their headings, so
+   the headings step up a size there. Legal pages keep the quieter scale. */
+.tr-prose--article h2 {
+  font: 500 clamp(27px, 3vw, 32px)/1.2 var(--tr-font-display);
+  margin-top: 56px;
+}
+.tr-prose--article h3 {
+  font: 600 clamp(21px, 2.2vw, 23px)/1.3 var(--tr-font-display);
+  margin-top: 40px;
+}
+.tr-prose--article h2 + *,
+.tr-prose--article h3 + * { margin-top: 14px; }
+
 .tr-prose a {
   color: var(--tr-green-leaf);
   text-decoration: underline;
