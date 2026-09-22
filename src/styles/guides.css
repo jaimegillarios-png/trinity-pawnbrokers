@@ -312,9 +312,9 @@
   margin: 0 0 14px;
   max-width: 60ch;
 }
-.guide-close .tr-cta { margin-top: 14px; }
 
-/* Hub foot: one quiet call to action and the way through to the journal. */
+
+/* Hub foot: the way through to the blog. */
 .guides-foot {
   display: flex;
   flex-wrap: wrap;

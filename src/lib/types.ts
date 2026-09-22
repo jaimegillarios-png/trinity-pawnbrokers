@@ -323,7 +323,7 @@ export interface Guide {
   signature?: string;
   sources?: Array<{ label: string; href?: string }>;
   closing?: string;
-  cta?: { label?: string; href?: string };
+  closingBand?: ClosingSection;
   seo?: Seo;
 }
 
@@ -331,6 +331,6 @@ export interface GuidesIndex {
   eyebrow?: string;
   title: string;
   standfirst?: string;
-  cta?: { label?: string; href?: string };
+  closing?: ClosingSection;
   seo: Seo;
 }

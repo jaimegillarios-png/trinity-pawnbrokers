@@ -7,16 +7,17 @@ import GuideHeading from '../../components/guides/GuideHeading.astro';
 import GuideTable from '../../components/guides/GuideTable.astro';
 import GuideCallout from '../../components/guides/GuideCallout.astro';
 import GuideFaq from '../../components/guides/GuideFaq.astro';
-import { getGuides, getSiteSettings } from '../../lib/sanity/queries';
+import ClosingBand from '../../components/ClosingBand.astro';
+import { getGuides, getGuidesIndex, getSiteSettings } from '../../lib/sanity/queries';
 import { breadcrumbSchema } from '../../lib/seo';
 import { withContents, readingMinutes, faqEntries } from '../../lib/guides';
 
 export async function getStaticPaths() {
-  const [guides, site] = await Promise.all([getGuides(), getSiteSettings()]);
-  return guides.map((guide) => ({ params: { slug: guide.slug }, props: { guide, site } }));
+  const [guides, index, site] = await Promise.all([getGuides(), getGuidesIndex(), getSiteSettings()]);
+  return guides.map((guide) => ({ params: { slug: guide.slug }, props: { guide, site, band: guide.closingBand ?? index?.closing } }));
 }
 
-const { guide, site } = Astro.props;
+const { guide, site, band } = Astro.props;
 const origin = Astro.site?.origin ?? '';
 const { body, contents } = withContents(guide.body);
 const minutes = readingMinutes(guide.body);
@@ -102,8 +103,8 @@ const components = {
           <PortableText value={body as any} components={components} />
         </div>
 
-        {/* The foot, in the order the brief sets: signature, sources, then the
-            closing and the page's only call to action. Nothing sells above it. */}
+        {/* The foot, in the order the brief sets: signature, sources, closing.
+            The page's only call to action is the band below, above the footer. */}
         <footer class="guide-end">
           {guide.signature && <p class="guide-end__signature">{guide.signature}</p>}
 
@@ -120,18 +121,17 @@ const components = {
             </section>
           )}
 
-          {(guide.closing || guide.cta?.label) && (
+          {guide.closing && (
             <div class="guide-close">
-              {guide.closing?.split(/\n\s*\n/).map((para) => <p>{para}</p>)}
-              {guide.cta?.label && guide.cta.href && (
-                <a class="tr-cta tr-cta--gold" href={guide.cta.href}>{guide.cta.label}</a>
-              )}
+              {guide.closing.split(/\n\s*\n/).map((para) => <p>{para}</p>)}
             </div>
           )}
         </footer>
       </div>
     </div>
   </article>
+
+  <ClosingBand closing={band} site={site} />
 
   <script>
     import '../../scripts/guide-contents.js';

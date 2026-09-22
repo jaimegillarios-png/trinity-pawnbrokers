@@ -21,6 +21,9 @@
  *   - The copy is not edited. Links are added only where the spec names an
  *     anchor phrase that is actually in the copy.
  *
+ * The spec's single button at the foot is served by the closing band above
+ * the footer (set on the Guides page, overridable per guide).
+ *
  * Guides are createOrReplace'd: re-running reverts edits made in the Studio.
  */
 import { createClient } from '@sanity/client';
@@ -55,7 +58,6 @@ const GUIDES = [
       description: 'What a pawnbroker does, what a pawn loan costs, what happens if you cannot repay, and what the Consumer Credit Act entitles you to. Written by valuers.',
     },
     summary: 'How a pawn loan actually runs, from valuation to redemption. What a pawnbroker can and cannot do under the Consumer Credit Act, what the loan costs, what happens if you cannot repay, and when a pawn loan is the wrong choice.',
-    ctaHref: '/what-we-lend-against',
     assetTable: true,
     links: [
       ['watch loans', '/watches'],
@@ -79,8 +81,18 @@ const GUIDES = [
       description: 'What 375, 585, 750 and 916 mean, how to read a UK hallmark, and why Asian, Indian, Italian and American gold differ in purity and colour. From our valuers.',
     },
     summary: 'Why Italian, Asian, Indian and British gold differ in colour and purity, what hallmarks tell you, and how purity and weight translate into a loan. Written for people lending against pieces that have been in the family.',
-    ctaHref: '/gold#value-form',
     assetTable: false,
+    // Its own closing band, pointing at the gold valuation form. Wording is
+    // the /gold page's own band.
+    closingBand: {
+      _type: 'closingSection',
+      eyebrow: 'Get started',
+      heading: 'Find out what your gold is worth',
+      intro: 'A confidential valuation, at no cost, with no obligation to proceed.',
+      cta: { _type: 'cta', label: 'Value my gold item', href: '/gold#value-form' },
+      contactPrefix: 'Or speak to a specialist on',
+      contactSuffix: 'weekdays, 9am to 5.30pm.',
+    },
     links: [
       ['guide to how pawnbroking works', '/guides/pawnbroking'],
     ],
@@ -93,7 +105,17 @@ const INDEX = {
   _type: 'guidesIndex',
   title: 'Guides',
   standfirst: 'Straightforward explanations of how pawnbroking works, what it costs and how items are valued, written by the people who do the valuing. No sales pitch, and no assumption that you have done this before.',
-  cta: { label: 'Request a valuation', href: '/what-we-lend-against' },
+  // The dark band above the footer, on the hub and on every guide without its
+  // own. Wording is the How it works page's band.
+  closing: {
+    _type: 'closingSection',
+    eyebrow: 'Start whenever',
+    heading: 'See what your item is worth first',
+    intro: 'Every item page values your item before asking anything of you. Nothing here commits you to a loan.',
+    cta: { _type: 'cta', label: 'Value your item', href: '/what-we-lend-against' },
+    contactPrefix: 'Or speak to a specialist on',
+    contactSuffix: 'weekdays, 9am to 5.30pm.',
+  },
   seo: {
     _type: 'seo',
     title: 'Guides to Pawnbroking, Gold and Valuation | Trinity',
@@ -164,7 +186,6 @@ function parse(md, guide) {
     signature: '',
     sources: [],
     closing: [],
-    ctaLabel: '',
     notes: [],
   };
 
@@ -210,9 +231,9 @@ function parse(md, guide) {
 
     if (mode === 'signature') { out.signature = clean(text); return; }
     if (mode === 'closing') {
-      const cta = clean(text).match(/^\*\*\[\s*(.+?)\s*\]\*\*$/);
-      if (cta) out.ctaLabel = cta[1];
-      else out.closing.push(clean(text).replace(/\*\*/g, ''));
+      // The spec's "[ Request a valuation ]" button line is not copy: the
+      // closing band above the footer is the page's call to action.
+      if (!/^\*\*\[\s*.+?\s*\]\*\*$/.test(clean(text))) out.closing.push(clean(text).replace(/\*\*/g, ''));
       return;
     }
     if (mode === 'faq') {
@@ -362,7 +383,7 @@ for (const guide of GUIDES) {
     signature: p.signature,
     sources: p.sources,
     closing: p.closing.join('\n\n'),
-    cta: { label: p.ctaLabel, href: guide.ctaHref },
+    ...(guide.closingBand ? { closingBand: guide.closingBand } : {}),
     seo: { _type: 'seo', ...guide.seo },
   };
   const brackets = checkBrackets(md, guide, doc);
@@ -371,7 +392,6 @@ for (const guide of GUIDES) {
   console.log(`\n${guide.slug}: "${p.title}"`);
   console.log(`  ${count('h2')} sections, ${count('h3')} sub-sections, ${p.body.filter((b) => b._type === 'dataTable').length} tables, ${p.body.filter((b) => b._type === 'callout').length} boxes, ${p.body.find((b) => b._type === 'faqList')?.items.length ?? 0} quick answers, ${p.sources.length} sources`);
   console.log(`  ${brackets} bracketed placeholders, all kept`);
-  console.log(`  button: "${p.ctaLabel}" → ${guide.ctaHref}`);
   console.log(`  ${p.notes.length} notes left off the page`);
   docs.push(doc);
 }

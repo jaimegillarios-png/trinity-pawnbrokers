@@ -61,13 +61,22 @@ test('notes meant for us never reach the page', () => {
   assert.ok(!text(page('guides/types-of-gold')).includes('The 916.6 is deliberate'));
 });
 
-test('each guide has one call to action, at the foot after the sources', () => {
-  for (const slug of guideSlugs()) {
-    const html = page(`guides/${slug}`);
-    const article = html.slice(html.indexOf('<article'), html.indexOf('</article>'));
-    assert.equal((article.match(/class="tr-cta/g) || []).length, 1, `${slug}: CTA count`);
-    assert.ok(article.indexOf('class="tr-cta') > article.indexOf('guide-sources'), `${slug}: CTA is above the sources`);
+test('the only call to action is the closing band above the footer', () => {
+  for (const slug of [...guideSlugs().map((g) => `guides/${g}`), 'guides']) {
+    const html = page(slug);
+    const footer = html.lastIndexOf('<footer class="tr-footer');
+    const band = html.indexOf('class="closing-band"');
+    assert.ok(band > 0 && band < footer, `${slug}: no closing band above the footer`);
+    const beforeBand = html.slice(html.indexOf('</header>'), band);
+    assert.equal((beforeBand.match(/class="tr-cta/g) || []).length, 0, `${slug}: a button above the closing band`);
+    assert.equal((html.slice(band, footer).match(/class="tr-cta/g) || []).length, 1, `${slug}: band has no button`);
   }
+});
+
+test('the gold guide sends people to the gold valuation form', () => {
+  const html = page('guides/types-of-gold');
+  const band = html.slice(html.indexOf('class="closing-band"'));
+  assert.match(band, /href="\/gold#value-form"/);
 });
 
 test('quick answers are in the page on load and match the FAQPage schema', () => {

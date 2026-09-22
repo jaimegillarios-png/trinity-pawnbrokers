@@ -339,7 +339,7 @@ const GUIDE = `{
   signature,
   sources[]{ label, href },
   closing,
-  cta,
+  closingBand,
   ${SEO}
 }`;
 
@@ -348,4 +348,4 @@ export const getGuides = () =>
   query<Guide[]>(`*[_type == "guide" && defined(slug.current)] | order(order asc, title asc) ${GUIDE}`);
 
 export const getGuidesIndex = () =>
-  query<GuidesIndex | null>(`*[_type == "guidesIndex"][0]{ eyebrow, title, standfirst, cta, ${SEO} }`);
+  query<GuidesIndex | null>(`*[_type == "guidesIndex"][0]{ eyebrow, title, standfirst, closing, ${SEO} }`);

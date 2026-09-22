@@ -1,6 +1,7 @@
 ---
 import '../../styles/guides.css';
 import Base from '../../layouts/Base.astro';
+import ClosingBand from '../../components/ClosingBand.astro';
 import { getGuides, getGuidesIndex, getSiteSettings } from '../../lib/sanity/queries';
 import { breadcrumbSchema } from '../../lib/seo';
 import { readingMinutes } from '../../lib/guides';
@@ -63,10 +64,9 @@ const schemas = [
     )}
 
     <div class="guides-foot">
-      {index?.cta?.label && index.cta.href && (
-        <a class="tr-cta tr-cta--gold" href={index.cta.href}>{index.cta.label}</a>
-      )}
       <a class="guides-foot__journal" href="/blog">Read the blog →</a>
     </div>
   </section>
+
+  <ClosingBand closing={index?.closing} site={site} />
 </Base>
