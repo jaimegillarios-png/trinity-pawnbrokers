@@ -69,7 +69,7 @@
    image is decorative (alt=""): the title beside it names the guide. */
 .guide-card__media {
   display: block;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 2 / 1;
   overflow: hidden;
   background: var(--tr-green-vault);
 }
