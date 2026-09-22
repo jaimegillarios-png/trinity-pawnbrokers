@@ -147,8 +147,8 @@ const pages = [
     title: 'Classic cars',
     nounSingular: 'car',
     nounPlural: 'classic cars',
-    card: ['images/items/classic-cars-card.jpg', 'The wooden steering wheel and dials of a classic car'],
-    heroImg: ['images/items/classic-cars-hero.jpg', 'The cockpit of a classic car, wooden wheel and chrome dials'],
+    card: ['images/items/classic-cars-card.jpg', 'A classic roadster in a dark garage'],
+    heroImg: ['images/items/classic-cars-hero.jpg', 'A 1960s roadster in low light'],
     cardTeaser: 'Classic and collectable cars — kept in secure storage, not on a logbook.',
     hero: {
       eyebrow: 'Pawn loans against classic cars · City of London · Est. 2013',
