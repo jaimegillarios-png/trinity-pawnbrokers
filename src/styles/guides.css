@@ -34,49 +34,75 @@
 .guides-list {
   max-width: var(--tr-container);
   margin: 0 auto;
-  padding: 0 var(--tr-pad-side) var(--tr-section-bottom);
+  padding: 64px var(--tr-pad-side) var(--tr-section-bottom);
 }
-.guides-list__items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--tr-line); }
-.guide-entry { border-bottom: 1px solid var(--tr-line-soft); }
-/* The whole row is the link, so the target is the width of the page rather
-   than the width of a title. */
-.guide-entry__link {
+/* Cards, as the brief asks: a reading destination, so the description is the
+   load-bearing part and gets the room. Text-led until there is photography.
+   auto-fit lets two guides share the row and a third join it. */
+.guides-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr) 7.5em;
-  gap: 8px 48px;
-  align-items: baseline;
-  padding: 34px 0;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 28px;
+}
+.guide-card { display: flex; }
+.guide-card__link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 40px 40px 32px;
+  background: var(--tr-white);
+  border: 1px solid var(--tr-line-card);
+  border-radius: var(--tr-radius);
   text-decoration: none;
   color: inherit;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
-.guide-entry__title {
-  font: 500 var(--tr-h3) var(--tr-font-display);
+.guide-card__link:hover {
+  border-color: var(--tr-line-gold);
+  box-shadow: var(--tr-shadow-on-light);
+}
+.guide-card__link:focus-visible { outline: 2px solid var(--tr-gold-deep); outline-offset: 3px; }
+.guide-card__meta {
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
+  text-transform: uppercase;
+  color: var(--tr-gold-deep);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.guide-card__title {
+  font: 500 clamp(27px, 3vw, 32px)/1.15 var(--tr-font-display);
   color: var(--tr-green-vault);
   margin: 0;
   text-wrap: balance;
   transition: color 0.2s ease;
 }
-.guide-entry__standfirst {
+.guide-card__summary {
   font: 400 var(--tr-body) var(--tr-font-body);
   color: var(--tr-ink-72);
   margin: 0;
-  max-width: 58ch;
+  max-width: 52ch;
   text-wrap: pretty;
 }
-.guide-entry__meta {
-  font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1 var(--tr-font-caps);
-  letter-spacing: var(--tr-caps-sm-track);
+.guide-card__more {
+  margin-top: auto;
+  padding-top: 22px;
+  border-top: 1px solid var(--tr-line-soft);
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
   text-transform: uppercase;
-  color: var(--tr-ink-45);
-  margin: 0;
-  white-space: nowrap;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
+  color: var(--tr-green-vault);
 }
-.guide-entry__meta span { display: inline-block; transition: transform 0.25s ease; }
-.guide-entry__link:hover .guide-entry__title { color: var(--tr-gold-deep); }
-.guide-entry__link:hover .guide-entry__meta span { transform: translateX(4px); }
-.guide-entry__link:focus-visible { outline: 2px solid var(--tr-gold-deep); outline-offset: 4px; }
+.guide-card__more span { display: inline-block; transition: transform 0.25s ease; }
+.guide-card__link:hover .guide-card__title { color: var(--tr-green-leaf); }
+.guide-card__link:hover .guide-card__more span { transform: translateX(4px); }
+@media (prefers-reduced-motion: reduce) {
+  .guide-card__link, .guide-card__more span, .guide-card__title { transition: none; }
+}
 .guides-empty { font: 400 var(--tr-body-lg) var(--tr-font-body); color: var(--tr-ink-62); }
 
 /* ---------- a guide ---------- */
@@ -314,28 +340,11 @@
 }
 
 
-/* Hub foot: the way through to the blog. */
-.guides-foot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 20px 32px;
-  margin-top: 48px;
-}
-.guides-foot__journal {
-  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-caps);
-  letter-spacing: var(--tr-microcaps-track);
-  text-transform: uppercase;
-  color: var(--tr-ink-62);
-  text-decoration: none;
-}
-.guides-foot__journal:hover { color: var(--tr-green-vault); }
 
 /* ---------- narrow ---------- */
 @media (max-width: 900px) {
   .guides-head__inner { padding: 56px var(--tr-pad-side) 32px; }
-  .guide-entry__link { grid-template-columns: minmax(0, 1fr); padding: 26px 0; }
-  .guide-entry__meta { text-align: left; }
+  .guide-card__link { padding: 28px 24px 24px; }
 
   .guide-head { padding: 48px var(--tr-pad-side) 32px; }
   .guide-body--with-contents { grid-template-columns: minmax(0, 1fr); gap: 0; }

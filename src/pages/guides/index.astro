@@ -36,7 +36,7 @@ const schemas = [
   ]),
 ];
 ---
-<Base seo={seo} site={site} schemas={schemas} reveal=".guide-entry">
+<Base seo={seo} site={site} schemas={schemas} reveal=".guide-card">
   <section class="guides-head">
     <div class="guides-head__inner">
       {index?.eyebrow && <p class="tr-eyebrow">{index.eyebrow}</p>}
@@ -49,23 +49,20 @@ const schemas = [
     {guides.length === 0 ? (
       <p class="guides-empty">The first guides are being written.</p>
     ) : (
-      <ol class="guides-list__items">
+      <ol class="guides-grid">
         {guides.map((guide) => (
-          <li class="guide-entry">
-            <a href={`/guides/${guide.slug}`} class="guide-entry__link">
-              <h2 class="guide-entry__title">{guide.title}</h2>
+          <li class="guide-card">
+            <a href={`/guides/${guide.slug}`} class="guide-card__link">
+              <p class="guide-card__meta">{readingMinutes(guide.body)} min read</p>
+              <h2 class="guide-card__title">{guide.title}</h2>
               {/* The description written for this page, not the article's opening. */}
-              <p class="guide-entry__standfirst">{guide.summary ?? guide.standfirst}</p>
-              <p class="guide-entry__meta">{readingMinutes(guide.body)} min read <span aria-hidden="true">→</span></p>
+              <p class="guide-card__summary">{guide.summary ?? guide.standfirst}</p>
+              <span class="guide-card__more">Read the guide <span aria-hidden="true">→</span></span>
             </a>
           </li>
         ))}
       </ol>
     )}
-
-    <div class="guides-foot">
-      <a class="guides-foot__journal" href="/blog">Read the blog →</a>
-    </div>
   </section>
 
   <ClosingBand closing={index?.closing} site={site} />
