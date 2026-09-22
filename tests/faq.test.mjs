@@ -54,7 +54,7 @@ test('answers carry the figures they were sourced with', () => {
 test('trust and security is retired and redirects to how it works', () => {
   assert.ok(!existsSync(resolve(dist, 'trust-and-security', 'index.html')), 'the retired page is still built');
   const redirects = readFileSync(resolve(dist, '_redirects'), 'utf8');
-  assert.match(redirects, /^\/trust-and-security\s+\/how-it-works\s+301$/m);
+  assert.match(redirects, /^\/trust-and-security\s+\/how-it-works\/?\s+301$/m);
 });
 
 test('the closing band is styled on every page that uses it', () => {
