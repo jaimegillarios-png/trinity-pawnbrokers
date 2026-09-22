@@ -1,0 +1,103 @@
+---
+import '../../styles/prose.css';
+import '../../styles/guides.css';
+import { PortableText } from 'astro-portabletext';
+import Base from '../../layouts/Base.astro';
+import GuideHeading from '../../components/guides/GuideHeading.astro';
+import { getGuides, getSiteSettings } from '../../lib/sanity/queries';
+import { breadcrumbSchema } from '../../lib/seo';
+import { withContents, readingMinutes } from '../../lib/guides';
+
+export async function getStaticPaths() {
+  const [guides, site] = await Promise.all([getGuides(), getSiteSettings()]);
+  return guides.map((guide) => ({ params: { slug: guide.slug }, props: { guide, site } }));
+}
+
+const { guide, site } = Astro.props;
+const origin = Astro.site?.origin ?? '';
+const { body, contents } = withContents(guide.body);
+const minutes = readingMinutes(guide.body);
+
+/* A contents list earns its place once there is somewhere to jump to. Below
+   three sections it is just the headings said twice. */
+const showContents = contents.length >= 3;
+
+const reviewed = guide.lastReviewed
+  ? new Date(guide.lastReviewed).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+  : null;
+
+const seo = guide.seo?.title ? guide.seo : { title: `${guide.title} | Trinity Pawnbrokers`, description: guide.standfirst };
+
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: guide.title,
+    description: guide.standfirst,
+    ...(guide.lastReviewed ? { dateModified: guide.lastReviewed } : {}),
+    author: { '@id': `${origin}/#organisation` },
+    publisher: { '@id': `${origin}/#organisation` },
+    mainEntityOfPage: `${origin}/guides/${guide.slug}`,
+  },
+  breadcrumbSchema([
+    { name: 'Home', url: `${origin}/` },
+    { name: 'Guides', url: `${origin}/guides` },
+    { name: guide.title, url: `${origin}/guides/${guide.slug}` },
+  ]),
+];
+---
+<Base seo={seo} site={site} schemas={schemas}>
+  <article class="guide">
+    <header class="guide-head">
+      <nav class="guide-crumbs" aria-label="Breadcrumb">
+        <a href="/guides">Guides</a>
+      </nav>
+      <h1 class="guide-head__title">{guide.title}</h1>
+      <p class="guide-head__standfirst">{guide.standfirst}</p>
+      <p class="guide-head__meta">
+        {reviewed && <>Last reviewed <time datetime={guide.lastReviewed}>{reviewed}</time><span aria-hidden="true"> · </span></>}
+        {minutes} min read
+      </p>
+    </header>
+
+    <div class={showContents ? 'guide-body guide-body--with-contents' : 'guide-body'}>
+      {showContents && (
+        <aside class="guide-contents" aria-label="Contents">
+          {/* A disclosure on a phone, where a list pinned beside the text has
+              nowhere to sit; open and sticky beside it on a wider screen. */}
+          <details class="guide-contents__details" open data-guide-contents>
+            <summary class="guide-contents__label">Contents</summary>
+            <ol class="guide-contents__list">
+              {contents.map((entry) => (
+                <li><a href={`#${entry.id}`} data-contents-link={entry.id}>{entry.text}</a></li>
+              ))}
+            </ol>
+          </details>
+        </aside>
+      )}
+
+      <div class="tr-prose guide-prose">
+        <PortableText value={body as any} components={{ block: { h2: GuideHeading } }} />
+      </div>
+    </div>
+
+    {guide.relatedAssets && guide.relatedAssets.length > 0 && (
+      <aside class="guide-related">
+        <p class="guide-related__label">Borrow against it</p>
+        <ul>
+          {guide.relatedAssets.map((asset) => (
+            <li><a href={`/${asset.slug}`}>Pawn loans against {asset.nounPlural} →</a></li>
+          ))}
+        </ul>
+      </aside>
+    )}
+
+    <footer class="guide-foot">
+      <a href="/guides">← All guides</a>
+    </footer>
+  </article>
+
+  <script>
+    import '../../scripts/guide-contents.js';
+  </script>
+</Base>

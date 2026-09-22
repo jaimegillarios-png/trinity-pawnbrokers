@@ -133,6 +133,24 @@ export const structure: StructureResolver = (S) =>
         ),
 
       S.listItem()
+        .title('Guides')
+        .child(
+          S.list()
+            .title('Guides')
+            .items([
+              single(S, 'Guides page', 'guidesIndex'),
+              S.listItem()
+                .title('Guides')
+                .schemaType('guide')
+                .child(
+                  S.documentTypeList('guide')
+                    .title('Guides')
+                    .defaultOrdering([{ field: 'order', direction: 'asc' }]),
+                ),
+            ]),
+        ),
+
+      S.listItem()
         .title('Blog')
         .child(
           S.list()

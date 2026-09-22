@@ -1,6 +1,22 @@
 import { query } from './client';
 import type {
-  AssetPage, AssetLendEntry, HomePage, AboutPage, FaqPage, ContactPage, LendPage, HowPage, LegalPage, Product, ShopPage, SiteSettings, AssetPageCard, Post, BlogIndex,
+  AssetPage,
+  AssetLendEntry,
+  HomePage,
+  AboutPage,
+  FaqPage,
+  ContactPage,
+  LendPage,
+  HowPage,
+  LegalPage,
+  Product,
+  ShopPage,
+  SiteSettings,
+  AssetPageCard,
+  Post,
+  BlogIndex,
+  Guide,
+  GuidesIndex,
 } from '../types';
 
 /** Images always carry their metadata so we can emit dimensions and an LQIP. */
@@ -308,3 +324,24 @@ export const getPosts = () =>
 
 export const getBlogIndex = () =>
   query<BlogIndex | null>(`*[_type == "blogIndex"][0]{ eyebrow, title, standfirst, ${SEO} }`);
+
+/* ---------- guides ---------- */
+
+const GUIDE = `{
+  title,
+  "slug": slug.current,
+  order,
+  standfirst,
+  lastReviewed,
+  coverImage ${IMAGE},
+  relatedAssets[]->{ title, "slug": slug.current, nounPlural },
+  body,
+  ${SEO}
+}`;
+
+/** In the order someone chose — the guide to read first comes first. */
+export const getGuides = () =>
+  query<Guide[]>(`*[_type == "guide" && defined(slug.current)] | order(order asc, title asc) ${GUIDE}`);
+
+export const getGuidesIndex = () =>
+  query<GuidesIndex | null>(`*[_type == "guidesIndex"][0]{ eyebrow, title, standfirst, ${SEO} }`);

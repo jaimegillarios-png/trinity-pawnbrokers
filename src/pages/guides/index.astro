@@ -1,0 +1,56 @@
+---
+import '../../styles/guides.css';
+import Base from '../../layouts/Base.astro';
+import { getGuides, getGuidesIndex, getSiteSettings } from '../../lib/sanity/queries';
+import { breadcrumbSchema } from '../../lib/seo';
+import { readingMinutes } from '../../lib/guides';
+
+const [guides, index, site] = await Promise.all([getGuides(), getGuidesIndex(), getSiteSettings()]);
+const origin = Astro.site?.origin ?? '';
+
+const seo = index?.seo ?? {
+  title: 'Guides | Trinity Pawnbrokers',
+  description: 'Plain guides to how pawnbroking works and what affects the value of what you own.',
+};
+
+const schemas = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: index?.title ?? 'Guides',
+    url: `${origin}/guides`,
+    hasPart: guides.map((g) => ({ '@type': 'Article', headline: g.title, url: `${origin}/guides/${g.slug}` })),
+  },
+  breadcrumbSchema([
+    { name: 'Home', url: `${origin}/` },
+    { name: 'Guides', url: `${origin}/guides` },
+  ]),
+];
+---
+<Base seo={seo} site={site} schemas={schemas} reveal=".guide-entry">
+  <section class="guides-head">
+    <div class="guides-head__inner">
+      {index?.eyebrow && <p class="tr-eyebrow">{index.eyebrow}</p>}
+      <h1 class="guides-head__title">{index?.title ?? 'Guides'}</h1>
+      {index?.standfirst && <p class="guides-head__standfirst">{index.standfirst}</p>}
+    </div>
+  </section>
+
+  <section class="guides-list">
+    {guides.length === 0 ? (
+      <p class="guides-empty">The first guides are being written.</p>
+    ) : (
+      <ol class="guides-list__items">
+        {guides.map((guide) => (
+          <li class="guide-entry">
+            <a href={`/guides/${guide.slug}`} class="guide-entry__link">
+              <h2 class="guide-entry__title">{guide.title}</h2>
+              <p class="guide-entry__standfirst">{guide.standfirst}</p>
+              <p class="guide-entry__meta">{readingMinutes(guide.body)} min read <span aria-hidden="true">→</span></p>
+            </a>
+          </li>
+        ))}
+      </ol>
+    )}
+  </section>
+</Base>

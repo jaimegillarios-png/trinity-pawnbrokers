@@ -29,6 +29,7 @@ const SINGLETONS = [
   'contactPage',
   'shopPage',
   'blogIndex',
+  'guidesIndex',
 ];
 
 export default defineConfig({

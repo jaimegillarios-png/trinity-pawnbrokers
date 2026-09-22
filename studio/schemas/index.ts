@@ -31,10 +31,14 @@ import { shopPage } from './documents/shopPage';
 import { post } from './documents/post';
 import { blogIndex } from './documents/blogIndex';
 import { valuationRequest } from './documents/valuationRequest';
+import { guide } from './documents/guide';
+import { guidesIndex } from './documents/guidesIndex';
 
 export const schemaTypes = [
   // documents
   valuationRequest,
+  guide,
+  guidesIndex,
   siteSettings,
   homePage,
   assetPage,

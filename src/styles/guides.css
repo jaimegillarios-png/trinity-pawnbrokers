@@ -1,0 +1,247 @@
+/* ==========================================================================
+   Guides — /guides and /guides/<slug>
+
+   Reference pieces rather than articles: read in part, returned to, searched
+   for one answer. So the page is built around a contents list that stays
+   beside the text and marks where you are, and the hub is a plain ruled list —
+   text-led, because guides do not need a photograph each to be worth opening.
+   ========================================================================== */
+
+/* ---------- hub ---------- */
+.guides-head { background: var(--tr-white); }
+.guides-head__inner {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 88px var(--tr-pad-side) 48px;
+}
+.guides-head__inner .tr-eyebrow { margin-top: 0; }
+/* The interior-hero scale, matching the blog and every other page title. */
+.guides-head__title {
+  font: 500 var(--tr-h1) var(--tr-font-display);
+  color: var(--tr-green-vault);
+  margin: 0;
+  max-width: 20ch;
+  text-wrap: balance;
+}
+.guides-head__standfirst {
+  font: 400 var(--tr-body-lg) var(--tr-font-body);
+  color: var(--tr-ink-72);
+  max-width: 56ch;
+  margin: 18px 0 0;
+  text-wrap: pretty;
+}
+
+.guides-list {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 0 var(--tr-pad-side) var(--tr-section-bottom);
+}
+.guides-list__items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--tr-line); }
+.guide-entry { border-bottom: 1px solid var(--tr-line-soft); }
+/* The whole row is the link, so the target is the width of the page rather
+   than the width of a title. */
+.guide-entry__link {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr) auto;
+  gap: 8px 48px;
+  align-items: baseline;
+  padding: 34px 0;
+  text-decoration: none;
+  color: inherit;
+}
+.guide-entry__title {
+  font: 500 var(--tr-h3) var(--tr-font-display);
+  color: var(--tr-green-vault);
+  margin: 0;
+  text-wrap: balance;
+  transition: color 0.2s ease;
+}
+.guide-entry__standfirst {
+  font: 400 var(--tr-body) var(--tr-font-body);
+  color: var(--tr-ink-72);
+  margin: 0;
+  max-width: 58ch;
+  text-wrap: pretty;
+}
+.guide-entry__meta {
+  font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-caps-sm-track);
+  text-transform: uppercase;
+  color: var(--tr-ink-45);
+  margin: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.guide-entry__meta span { display: inline-block; transition: transform 0.25s ease; }
+.guide-entry__link:hover .guide-entry__title { color: var(--tr-gold-deep); }
+.guide-entry__link:hover .guide-entry__meta span { transform: translateX(4px); }
+.guide-entry__link:focus-visible { outline: 2px solid var(--tr-gold-deep); outline-offset: 4px; }
+.guides-empty { font: 400 var(--tr-body-lg) var(--tr-font-body); color: var(--tr-ink-62); }
+
+/* ---------- a guide ---------- */
+.guide { background: var(--tr-white); }
+.guide-head {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 72px var(--tr-pad-side) 44px;
+}
+.guide-crumbs {
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
+  text-transform: uppercase;
+  margin: 0 0 22px;
+}
+.guide-crumbs a { color: var(--tr-gold-deep); text-decoration: none; }
+.guide-crumbs a::before { content: '← '; }
+.guide-crumbs a:hover { color: var(--tr-green-vault); }
+.guide-head__title {
+  font: 500 var(--tr-h1) var(--tr-font-display);
+  color: var(--tr-green-vault);
+  margin: 0;
+  max-width: 22ch;
+  text-wrap: balance;
+}
+.guide-head__standfirst {
+  font: 400 var(--tr-body-lg) var(--tr-font-body);
+  color: var(--tr-ink-72);
+  max-width: 60ch;
+  margin: 20px 0 0;
+  text-wrap: pretty;
+}
+.guide-head__meta {
+  font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1.5 var(--tr-font-caps);
+  letter-spacing: var(--tr-caps-sm-track);
+  text-transform: uppercase;
+  color: var(--tr-ink-45);
+  margin: 22px 0 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.guide-body {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 0 var(--tr-pad-side);
+  border-top: 1px solid var(--tr-line-soft);
+}
+.guide-body--with-contents {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 72px;
+  align-items: start;
+}
+.guide-prose { padding: 44px 0 0; }
+
+/* A jump to a section should land with the heading visible, not tucked under
+   the masthead as it slides back in. */
+.guide-section { scroll-margin-top: 110px; }
+.guide-prose > .guide-section:first-child { margin-top: 0; }
+
+/* ---------- contents ---------- */
+.guide-contents { position: sticky; top: 64px; padding-top: 44px; }
+.guide-contents__label {
+  font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-caps-sm-track);
+  text-transform: uppercase;
+  color: var(--tr-ink-62);
+  list-style: none;
+  margin: 0 0 16px;
+  cursor: default;
+}
+.guide-contents__label::-webkit-details-marker { display: none; }
+.guide-contents__list {
+  list-style: none;
+  counter-reset: section;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid var(--tr-line-soft);
+}
+.guide-contents__list li { counter-increment: section; }
+/* Numbered, because a guide's sections do run in order — "section three" is
+   a reasonable thing to say to someone on the phone. */
+.guide-contents__list a {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 6px;
+  padding: 7px 0 7px 16px;
+  margin-left: -1px;
+  border-left: 1px solid transparent;
+  font: 400 var(--tr-caption) var(--tr-font-body);
+  color: var(--tr-ink-62);
+  text-decoration: none;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.guide-contents__list a::before {
+  content: counter(section, decimal-leading-zero);
+  font-variant-numeric: tabular-nums;
+  color: var(--tr-ink-45);
+}
+.guide-contents__list a:hover { color: var(--tr-green-vault); }
+.guide-contents__list a[aria-current='true'] {
+  color: var(--tr-green-vault);
+  border-left-color: var(--tr-gold-deep);
+}
+.guide-contents__list a[aria-current='true']::before { color: var(--tr-gold-deep); }
+
+/* ---------- end of a guide ---------- */
+.guide-related,
+.guide-foot {
+  max-width: var(--tr-container);
+  margin: 0 auto;
+  padding: 0 var(--tr-pad-side);
+}
+.guide-body--with-contents ~ .guide-related,
+.guide-body--with-contents ~ .guide-foot { padding-left: calc(var(--tr-pad-side) + 240px + 72px); }
+.guide-related { margin-top: 56px; }
+.guide-related__label {
+  font: var(--tr-caps-sm-weight) var(--tr-caps-sm-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-caps-sm-track);
+  text-transform: uppercase;
+  color: var(--tr-ink-62);
+  margin: 0 0 12px;
+}
+.guide-related ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--tr-line-soft); }
+.guide-related li { border-bottom: 1px solid var(--tr-line-soft); }
+.guide-related a {
+  display: block;
+  padding: 14px 0;
+  font: 500 var(--tr-h4) var(--tr-font-display);
+  color: var(--tr-green-vault);
+  text-decoration: none;
+}
+.guide-related a:hover { color: var(--tr-gold-deep); }
+.guide-foot { padding-top: 48px; padding-bottom: var(--tr-section-bottom); }
+.guide-foot a {
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
+  text-transform: uppercase;
+  color: var(--tr-ink-62);
+  text-decoration: none;
+}
+.guide-foot a:hover { color: var(--tr-green-vault); }
+
+/* ---------- narrow ---------- */
+@media (max-width: 900px) {
+  .guides-head__inner { padding: 56px var(--tr-pad-side) 32px; }
+  .guide-entry__link { grid-template-columns: minmax(0, 1fr); padding: 26px 0; }
+
+  .guide-head { padding: 48px var(--tr-pad-side) 32px; }
+  .guide-body--with-contents { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .guide-contents { position: static; padding-top: 24px; }
+  .guide-contents__details {
+    border-bottom: 1px solid var(--tr-line-soft);
+    padding-bottom: 16px;
+  }
+  .guide-contents__label {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+  }
+  .guide-contents__label::after { content: '+'; font-size: 16px; color: var(--tr-gold-deep); }
+  .guide-contents__details[open] .guide-contents__label::after { content: '−'; }
+  .guide-contents__details[open] .guide-contents__label { margin-bottom: 14px; }
+  .guide-prose { padding-top: 32px; }
+  .guide-body--with-contents ~ .guide-related,
+  .guide-body--with-contents ~ .guide-foot { padding-left: var(--tr-pad-side); }
+}

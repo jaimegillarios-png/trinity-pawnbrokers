@@ -306,3 +306,25 @@ export interface BlogIndex {
   standfirst?: string;
   seo: Seo;
 }
+
+/* ---------- guides ---------- */
+
+export interface Guide {
+  title: string;
+  slug: string;
+  order?: number;
+  standfirst: string;
+  /** ISO date. What matters to a reader of a guide is whether it is still right. */
+  lastReviewed?: string;
+  coverImage?: SanityImage;
+  relatedAssets?: Array<{ title: string; slug: string; nounPlural: string }>;
+  body: unknown[];
+  seo?: Seo;
+}
+
+export interface GuidesIndex {
+  eyebrow?: string;
+  title: string;
+  standfirst?: string;
+  seo: Seo;
+}

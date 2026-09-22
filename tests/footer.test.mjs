@@ -31,11 +31,26 @@ test('the footer lists every item page', () => {
   }
 });
 
-test('the footer carries the legal pages and the journal', () => {
+test('the footer carries the legal pages, the guides and the journal', () => {
   const hrefs = internal(links(home()));
-  for (const href of ['/terms', '/privacy', '/cookies', '/complaints', '/trust-and-security', '/blog']) {
+  for (const href of ['/terms', '/privacy', '/cookies', '/complaints', '/guides', '/blog']) {
     assert.ok(hrefs.includes(href), `footer is missing ${href}`);
   }
+});
+
+test('trust & security is out of the footer and the masthead', () => {
+  // Stephano, 22 Sep: taken out of both. The page itself still exists.
+  const hrefs = internal(links(footer(home())));
+  assert.ok(!hrefs.includes('/trust-and-security'), 'footer still links /trust-and-security');
+  const masthead = home().match(/<header[\s\S]*?<\/header>/)[0];
+  assert.ok(!masthead.includes('/trust-and-security'), 'masthead still links /trust-and-security');
+});
+
+test('guides sits between how it works and the shop in the main nav', () => {
+  const masthead = home().match(/<header[\s\S]*?<\/header>/)[0];
+  const at = (href) => masthead.indexOf(`href="${href}"`);
+  assert.ok(at('/guides') > at('/how-it-works'), 'guides is not after how it works');
+  assert.ok(at('/guides') < at('/shop'), 'guides is not before the shop');
 });
 
 test('every footer entry is a link, or is marked as not one', () => {
