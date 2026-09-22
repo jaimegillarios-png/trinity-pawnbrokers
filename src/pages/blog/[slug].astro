@@ -71,7 +71,7 @@ const schemas = [
         decoding="async"
       />
 
-      <div class="tr-prose tr-prose--article"><PortableText value={post.body as any} /></div>
+      <div class="tr-prose tr-prose--article" data-reveal-skip><PortableText value={post.body as any} /></div>
 
       {post.relatedAssets && post.relatedAssets.length > 0 && (
         <aside class="article__related">

@@ -87,11 +87,19 @@
       document.querySelectorAll('.rv').forEach(function (el) { el.classList.add('in'); });
       return;
     }
+    // "8% visible" is a sensible trigger for a section, but an element taller
+    // than about twelve screens can never be 8% visible — a long article was
+    // left blank until something else nudged it. Anything taller than the
+    // screen is revealed as soon as its top edge arrives instead.
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        var tall = e.boundingClientRect.height > window.innerHeight;
+        if (e.isIntersecting && (tall || e.intersectionRatio >= 0.08)) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
       });
-    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: [0, 0.08], rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.rv:not(.in)').forEach(function (el) { io.observe(el); });
   }
 
