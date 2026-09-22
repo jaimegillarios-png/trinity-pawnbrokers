@@ -84,7 +84,7 @@ test('article body copy is styled, not raw', () => {
   // The legal pages rendered Portable Text with no stylesheet at all for a
   // while; the class alone is not proof, so check the stylesheet is loaded.
   for (const html of articles()) {
-    assert.match(html, /class="tr-prose"/, 'no prose container');
+    assert.match(html, /class="tr-prose[ "]/, 'no prose container');
     assert.ok(/<link rel="stylesheet"[^>]+_astro\/[^"]+\.css/.test(html), 'no bundled stylesheet');
   }
 });
