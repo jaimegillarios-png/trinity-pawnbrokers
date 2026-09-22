@@ -335,6 +335,23 @@
   padding-top: 36px;
   border-top: 1px solid var(--tr-line-soft);
 }
+/* The link after the closing paragraph: the site's small-caps text link, in
+   the dark gold that reads on white. */
+.guide-close__link {
+  display: inline-block;
+  margin-top: 10px;
+  font: var(--tr-microcaps-weight) var(--tr-microcaps-size)/1 var(--tr-font-caps);
+  letter-spacing: var(--tr-microcaps-track);
+  text-transform: uppercase;
+  color: var(--tr-gold-deep);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+.guide-close__link span { display: inline-block; transition: transform 0.25s ease; }
+.guide-close__link:hover { color: var(--tr-green-vault); }
+.guide-close__link:hover span { transform: translateX(4px); }
+.guide-close__link:focus-visible { outline: 2px solid var(--tr-gold-deep); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .guide-close__link span { transition: none; } }
 .guide-close p {
   font: 400 var(--tr-body) var(--tr-font-body);
   color: var(--tr-ink-80);

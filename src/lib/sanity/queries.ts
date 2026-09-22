@@ -339,6 +339,7 @@ const GUIDE = `{
   signature,
   sources[]{ label, href },
   closing,
+  closingLink,
   closingBand,
   ${SEO}
 }`;

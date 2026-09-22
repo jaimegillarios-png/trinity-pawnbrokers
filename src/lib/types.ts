@@ -323,6 +323,7 @@ export interface Guide {
   signature?: string;
   sources?: Array<{ label: string; href?: string }>;
   closing?: string;
+  closingLink?: { label?: string; href?: string };
   closingBand?: ClosingSection;
   seo?: Seo;
 }

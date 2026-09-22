@@ -59,6 +59,8 @@ const GUIDES = [
     },
     summary: 'How a pawn loan actually runs, from valuation to redemption. What a pawnbroker can and cannot do under the Consumer Credit Act, what the loan costs, what happens if you cannot repay, and when a pawn loan is the wrong choice.',
     assetTable: true,
+    // The spec's "[ Request a valuation ]" line, as a text link after the closing.
+    closingLink: { _type: 'cta', label: 'Request a valuation', href: '/what-we-lend-against' },
     links: [
       ['watch loans', '/watches'],
       ['silver loans', '/silver'],
@@ -82,6 +84,7 @@ const GUIDES = [
     },
     summary: 'Why Italian, Asian, Indian and British gold differ in colour and purity, what hallmarks tell you, and how purity and weight translate into a loan. Written for people lending against pieces that have been in the family.',
     assetTable: false,
+    closingLink: { _type: 'cta', label: 'Value my gold', href: '/gold#value-form' },
     // Its own closing band, pointing at the gold valuation form. Wording is
     // the /gold page's own band.
     closingBand: {
@@ -231,8 +234,8 @@ function parse(md, guide) {
 
     if (mode === 'signature') { out.signature = clean(text); return; }
     if (mode === 'closing') {
-      // The spec's "[ Request a valuation ]" button line is not copy: the
-      // closing band above the footer is the page's call to action.
+      // The spec's "[ Request a valuation ]" button line is not copy: it
+      // becomes the closing link (set per guide above).
       if (!/^\*\*\[\s*.+?\s*\]\*\*$/.test(clean(text))) out.closing.push(clean(text).replace(/\*\*/g, ''));
       return;
     }
@@ -383,6 +386,7 @@ for (const guide of GUIDES) {
     signature: p.signature,
     sources: p.sources,
     closing: p.closing.join('\n\n'),
+    closingLink: guide.closingLink,
     ...(guide.closingBand ? { closingBand: guide.closingBand } : {}),
     seo: { _type: 'seo', ...guide.seo },
   };

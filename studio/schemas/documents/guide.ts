@@ -185,6 +185,13 @@ export const guide = defineType({
     }),
     defineField({ name: 'closing', type: 'text', rows: 4, group: 'content', description: 'The last paragraph of the guide, after the sources.' }),
     defineField({
+      name: 'closingLink',
+      title: 'Link after the closing paragraph',
+      type: 'cta',
+      group: 'content',
+      description: 'A quiet text link, e.g. "Request a valuation". The arrow is added automatically.',
+    }),
+    defineField({
       name: 'closingBand',
       title: 'Closing band (optional)',
       type: 'closingSection',

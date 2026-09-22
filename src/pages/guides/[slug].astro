@@ -121,9 +121,14 @@ const components = {
             </section>
           )}
 
-          {guide.closing && (
+          {(guide.closing || guide.closingLink?.label) && (
             <div class="guide-close">
-              {guide.closing.split(/\n\s*\n/).map((para) => <p>{para}</p>)}
+              {guide.closing?.split(/\n\s*\n/).map((para) => <p>{para}</p>)}
+              {guide.closingLink?.label && guide.closingLink.href && (
+                <a class="guide-close__link" href={guide.closingLink.href}>
+                  {guide.closingLink.label} <span aria-hidden="true">→</span>
+                </a>
+              )}
             </div>
           )}
         </footer>
