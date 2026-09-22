@@ -144,10 +144,13 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* The space under the text belongs to the body, not to either column: the
+   sticky contents stops where the text stops, instead of riding down into
+   the gap and meeting the closing band. */
 .guide-body {
   max-width: var(--tr-container);
   margin: 0 auto;
-  padding: 0 var(--tr-pad-side);
+  padding: 0 var(--tr-pad-side) var(--tr-section-bottom);
   border-top: 1px solid var(--tr-line-soft);
 }
 .guide-body--with-contents {
@@ -302,7 +305,7 @@
 .guide-main { min-width: 0; }
 .guide-end {
   margin-top: 64px;
-  padding: 40px 0 var(--tr-section-bottom);
+  padding: 40px 0 0;
   border-top: 1px solid var(--tr-line-soft);
   max-width: 680px;
 }
